@@ -1,57 +1,56 @@
-<div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
-    <span class="label-node text-cyan-400">CENTRO_DE_INTELIGENCIA_IA</span>
-    <div id="agent-display">
-        <div id="agent-orders" class="h-24 overflow-y-auto font-mono text-[7px] space-y-1 p-1">
-            <p class="agent-log text-yellow-600 animate-pulse">[!] VALIDACIÓN REQUERIDA PARA CARGAR MANIFIESTO...</p>
-        </div>
-        
-        <div id="youtube-core" class="hidden mt-2 border border-cyan-500">
-            <iframe id="video-frame" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="w-full aspect-video"></iframe>
-        </div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-10">
+    <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
+        <span class="label-node text-cyan-400">CENTRO_DE_INTELIGENCIA_IA</span>
+        <div id="agent-display">
+            <div id="agent-orders" class="h-24 overflow-y-auto font-mono text-[7px] space-y-1 p-1">
+                <p class="agent-log">[SYSTEM]: AGENTE ESPERANDO CLAVE DE ACCESO...</p>
+            </div>
+            
+            <div id="youtube-core" class="hidden mt-2 border border-cyan-500 shadow-[0_0_15px_rgba(54,244,208,0.2)]">
+                <iframe src="https://www.youtube.com/embed/LIVE_ID" frameborder="0" allowfullscreen class="w-full aspect-video"></iframe>
+            </div>
 
-        <div id="synergy-panel" class="hidden mt-3 grid grid-cols-3 gap-2 pt-2 border-t border-zinc-800">
-            <div class="btn-synergy bg-black text-cyan-400 border border-cyan-400/40 p-2 text-center cursor-pointer hover:bg-cyan-400 hover:text-black transition text-[7px] font-bold" onclick="window.open('URL_DONACIONES')">DONACIONES</div>
-            <div class="btn-synergy bg-black text-cyan-400 border border-cyan-400/40 p-2 text-center cursor-pointer hover:bg-cyan-400 hover:text-black transition text-[7px] font-bold" onclick="window.open('URL_SUSCRIPCIONES')">SUSCRIPCIONES</div>
-            <div class="btn-synergy bg-black text-cyan-400 border border-cyan-400/40 p-2 text-center cursor-pointer hover:bg-cyan-400 hover:text-black transition text-[7px] font-bold" onclick="window.open('URL_COLABORACIONES')">COLABORACIONES</div>
+            <div id="synergy-panel" class="hidden mt-3 grid grid-cols-3 gap-2 pt-2 border-t border-zinc-800">
+                <div class="btn-synergy bg-black text-cyan-400 border border-cyan-400/40 p-3 text-center cursor-pointer hover:bg-cyan-400 hover:text-black transition" onclick="window.open('URL_DONACION')">DONACIONES</div>
+                <div class="btn-synergy bg-black text-cyan-400 border border-cyan-400/40 p-3 text-center cursor-pointer hover:bg-cyan-400 hover:text-black transition" onclick="window.open('URL_SUSCRIP')">SUSCRIPCIONES</div>
+                <div class="btn-synergy bg-black text-cyan-400 border border-cyan-400/40 p-3 text-center cursor-pointer hover:bg-cyan-400 hover:text-black transition" onclick="window.open('URL_COLAB')">COLABORACIONES</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid-node border-yellow-900 bg-yellow-950/10">
+        <span class="label-node text-yellow-500 italic">ACCESO_NÚCLEO_8_7</span>
+        <div id="action-box">
+            <input type="text" id="master-key" placeholder="CLAVE GX" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-1 text-[8px] uppercase">
+            <button onclick="triggerCoreV5()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase">Sincronizar e Ingresar</button>
         </div>
     </div>
 </div>
 
 <script>
-    async function triggerCore() {
+    async function triggerCoreV5() {
         const key = document.getElementById('master-key').value.toUpperCase();
-        if(key !== "GX-8-7-IMMORTAL") { alert("ERROR_DE_ID"); return; }
+        if(key !== "GX-8-7-IMMORTAL") { alert("ERROR: CLAVE_INVALIDA"); return; }
         
         const logBox = document.getElementById('agent-orders');
         const yt = document.getElementById('youtube-core');
         const syn = document.getElementById('synergy-panel');
-        const frame = document.getElementById('video-frame');
         
-        const sequence = [
-            "> CLAVE ACEPTADA.",
-            "> SINCRONIZANDO PANEL DE SINERGIA...",
-            "> CARGANDO MANIFIESTO_8 (SUMINISTRO ETERNO)..."
-        ];
-
-        for(let msg of sequence) {
-            const p = document.createElement('p');
-            p.className = 'agent-log text-cyan-400';
-            p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        // Simulación de carga técnica
+        const msgs = ["> VALIDANDO PROTOCOLO...", "> DESBLOQUEANDO PANEL DE SINERGIA...", "> TRANSMISIÓN SINCRONIZADA."];
+        for(let m of msgs) {
+            let p = document.createElement('p'); p.className='agent-log text-cyan-400';
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${m}`;
             logBox.prepend(p);
-            await new Promise(r => setTimeout(r, 600));
+            await new Promise(r => setTimeout(r, 500));
         }
 
-        // 1. Inyectar URL del video (Asegúrate de usar la versión /embed/)
-        frame.src = "https://www.youtube.com/embed/TU_ID_DE_VIDEO?autoplay=1&mute=0";
-        
-        // 2. Desplegar visuales (Forzado para visualización en Vercel)
+        // ACTIVACIÓN VISUAL DEFINITIVA
         logBox.style.height = "40px";
-        yt.style.display = "block";
-        yt.classList.remove('hidden');
+        yt.classList.remove('hidden'); // Muestra el video
+        syn.classList.remove('hidden'); // Muestra los botones
+        syn.style.display = 'grid';     // Fuerza el renderizado en grid
         
-        syn.style.display = "grid";
-        syn.classList.remove('hidden');
-
-        document.getElementById('action-box').innerHTML = `<div class="p-2 border border-cyan-500 text-center text-cyan-500 text-[6px]">SISTEMA OPERATIVO</div>`;
+        document.getElementById('action-box').innerHTML = `<div class="p-2 border border-cyan-500 text-center text-cyan-500 text-[6px] animate-pulse">SISTEMA OPERATIVO AL 100%</div>`;
     }
 </script>
