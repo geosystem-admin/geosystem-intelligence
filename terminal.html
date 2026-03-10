@@ -3,39 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Intelligence</title>
+    <title>GEOSYSTEM | Terminal de Inteligencia</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        body { font-family: 'JetBrains Mono', monospace; background-color: #020617; color: #36f4d0; }
+        .grid-node { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); padding: 15px; }
+        .label-node { font-size: 10px; font-weight: bold; border-bottom: 1px solid #1e293b; margin-bottom: 10px; display: block; }
+    </style>
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col items-center justify-center p-6 text-center font-['Inter']">
+<body class="p-4 uppercase text-[10px]">
 
-    <header class="mb-12">
-        <svg class="w-16 h-16 text-[#36f4d0] mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="12" cy="12" r="10"></circle>
-            <circle cx="12" cy="12" r="4"></circle>
-            <line x1="12" y1="2" x2="12" y2="22"></line>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-        </svg>
-        <h2 class="text-2xl font-bold tracking-[0.2em] uppercase">Geosystem</h2>
-        <p class="text-xs tracking-[0.4em] text-gray-500 uppercase">Intelligence</p>
-    </header>
+    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-4">
+        <span>GEOSYSTEM_OS v2.0 // STATUS: ENCRYPTED</span>
+        <span id="reloj">00:00:00</span>
+    </nav>
 
-    <main class="max-w-2xl">
-        <h1 class="text-4xl md:text-6xl font-black mb-8 leading-none uppercase">
-            Monitorea el eje del poder global desde LATAM.
-        </h1>
-        <p class="text-xl text-gray-400 mb-12 uppercase tracking-tight">
-            Anticípate a los cambios geopolíticos con datos en tiempo real.
-        </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="grid-node border-l-4 border-l-red-600">
+            <span class="label-node text-red-500">NODO_ASIA_PACIFICO</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ%3AKWEB&theme=dark" class="w-full h-48"></iframe>
+        </div>
+        <div class="grid-node border-l-4 border-l-blue-500">
+            <span class="label-node text-blue-400">NODO_USA_FEDERAL</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-48"></iframe>
+        </div>
+        <div class="grid-node border-l-4 border-l-zinc-300">
+            <span class="label-node text-zinc-300">NODO_EURO_ZONE</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-48"></iframe>
+        </div>
+        <div class="grid-node border-l-4 border-l-yellow-600">
+            <span class="label-node text-yellow-500">NODO_LATAM_EMERGING</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-48"></iframe>
+        </div>
+    </div>
 
-        <a href="terminal.html" class="inline-block bg-[#36f4d0] text-black font-black py-5 px-12 rounded-xl text-2xl hover:bg-white transition-all transform active:scale-95 shadow-[0_0_30px_rgba(54,244,208,0.3)] uppercase">
-            Acceder a la terminal
-        </a>
-    </main>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="lg:col-span-2 grid-node">
+            <span class="label-node">INTELIGENCIA_IA // MACROTENDENCIAS</span>
+            <p class="normal-case text-zinc-400 mb-4">Análisis detecta rotación de capital hacia mercados asiáticos por desdolarización acelerada. Recomendación técnica: Monitorear ETF KLIP.</p>
+            <div class="p-2 bg-zinc-900 border border-zinc-800">
+                <span class="text-yellow-500">[MANIFIESTO]:</span> "El suministro de datos es eterno. La verdad absoluta no se enseña, se transmite."
+            </div>
+        </div>
+        <div class="grid-node border-cyan-800 bg-cyan-950/20">
+            <span class="label-node">SUSCRIPCIÓN_AL_ORÁCULO</span>
+            <input type="text" placeholder="USER_ID" class="w-full bg-black border border-zinc-700 p-2 mb-2 outline-none">
+            <button class="w-full bg-[#36f4d0] text-black font-bold p-2 hover:bg-white transition uppercase">Vincular Nodo</button>
+        </div>
+    </div>
 
-    <footer class="mt-20 text-[10px] text-gray-600 tracking-[0.5em] uppercase border-t border-zinc-900 pt-8 w-full">
-        Esta es la verdad eterna • El éxito es inevitable
-    </footer>
-
+    <script>
+        setInterval(() => { document.getElementById('reloj').innerText = new Date().toLocaleTimeString(); }, 1000);
+    </script>
 </body>
 </html>
