@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Sinergia Operativa v6.0</title>
+    <title>GEOSYSTEM | Nexus Core v6.1 Full</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -19,92 +19,20 @@
         .status-pill { padding: 2px 5px; border-radius: 2px; font-size: 6px; border: 1px solid; }
         .open { color: #34d399; border-color: #34d399; box-shadow: 0 0 8px #34d399; }
         .closed { color: #f87171; border-color: #f87171; opacity: 0.5; }
-        .btn-synergy { background: black; border: 1px solid rgba(54, 244, 208, 0.4); padding: 10px; text-align: center; font-weight: bold; font-size: 8px; transition: all 0.3s; }
+        .agent-log { font-size: 7px; color: #a1a1aa; border-left: 1px solid #1e293b; padding-left: 5px; margin-bottom: 2px; }
+        .btn-synergy { background: black; border: 1px solid rgba(54, 244, 208, 0.4); padding: 10px; text-align: center; font-weight: bold; font-size: 8px; transition: all 0.3s; cursor: pointer; }
         .btn-synergy:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
         .sync-flash { animation: flash 0.5s ease-out; }
         @keyframes flash { 0% { background-color: #36f4d0; opacity: 0.8; } 100% { background-color: var(--bg); } }
+        iframe { filter: contrast(1.1) brightness(0.9); border: none; }
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="uppercase text-[9px]">
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-2 items-center">
         <div class="flex flex-col">
-            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // OP_V6.0</span>
+            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // CORE_V6.1_PRO</span>
             <span class="text-[6px] text-zinc-500 italic">TRANSMISOR DE VERDADES ETERNAS</span>
         </div>
-        <div id="reloj-v6" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700">00:00:00</div>
-    </nav>
-
-    <div class="grid-node !p-0 border-zinc-800 mb-3 overflow-hidden h-8 flex items-center">
-        <div class="bg-red-900 text-white px-3 h-full flex items-center font-bold text-[7px] animate-pulse">LIVE</div>
-        <div class="flex-1 h-full"><iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0" scrolling="no"></iframe></div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
-        <div class="grid-node border-l-2 border-l-orange-500"><span class="label-node">ENERGÍA (WTI OIL)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-cyan-500"><span class="label-node">TOKENIZACIÓN (BTC)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-red-600"><span class="label-node">EJE_ESTE (ASHR)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-blue-600"><span class="label-node">FED_ZONE (SPY)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-zinc-100"><span class="label-node">EU_ZONE (DAX)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-yellow-600"><span class="label-node">LATAM_ZONE (ILF)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
-            <span class="label-node">INTELIGENCIA_DESPLEGADA</span>
-            <div id="terminal-msg" class="h-8 text-[7px] text-zinc-500 italic mb-2">> SISTEMA LISTO PARA VALIDACIÓN...</div>
-            
-            <div id="portal-sinergia" class="hidden">
-                <div class="border border-cyan-500 bg-black mb-3"><iframe id="yt-player" src="" frameborder="0" allow="autoplay; fullscreen" class="w-full aspect-video"></iframe></div>
-                <div class="grid grid-cols-3 gap-2">
-                    <button onclick="redirigir('donacion')" class="btn-synergy">DONACIONES</button>
-                    <button onclick="redirigir('suscripcion')" class="btn-synergy">SUSCRIPCIONES</button>
-                    <button onclick="redirigir('colaboracion')" class="btn-synergy">COLABORACIONES</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid-node border-yellow-900 bg-yellow-950/10">
-            <span class="label-node text-yellow-500 italic text-center">VALIDACIÓN_GX</span>
-            <div id="login-form">
-                <input type="text" id="pass-input" placeholder="INGRESE CLAVE GX" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 mb-2 text-[8px] outline-none uppercase">
-                <button onclick="unlockSystem()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] uppercase hover:bg-white active:scale-95 transition shadow-lg">SINCRONIZAR</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // MOTOR DE TIEMPO
-        function clock() {
-            document.getElementById('reloj-v6').innerText = new Date().toLocaleTimeString();
-        }
-        setInterval(clock, 1000);
-
-        // SISTEMA DE REDIRECCIÓN AVANZADA
-        function redirigir(tipo) {
-            const destinos = {
-                'donacion': 'https://tusitioweb.com/donar-datos', // Cambia por tu link de captura
-                'suscripcion': 'https://tusitioweb.com/suscribir-datos',
-                'colaboracion': 'https://tusitioweb.com/colaborar-datos'
-            };
-            window.open(destinos[tipo], '_blank');
-        }
-
-        // ACTIVACIÓN DE NÚCLEO
-        function unlockSystem() {
-            const key = document.getElementById('pass-input').value.trim().toUpperCase();
-            if(key === "GX-8-7-IMMORTAL") {
-                document.body.classList.add('sync-flash');
-                setTimeout(() => document.body.classList.remove('sync-flash'), 500);
-                
-                document.getElementById('terminal-msg').innerHTML = "<span class='text-cyan-400 font-bold'>> NÚCLEO VIVO. BIENVENIDO EMISARIO.</span>";
-                document.getElementById('yt-player').src = "https://www.youtube.com/embed/TU_ID_AQUI?autoplay=13"; // Tu ID real aquí
-                document.getElementById('portal-sinergia').classList.remove('hidden');
-                document.getElementById('login-form').innerHTML = '<div class="text-cyan-400 text-center py-2 border border-cyan-900 font-bold animate-pulse">SISTEMA SINCRONIZADO</div>';
-            } else {
-                alert("ERROR: CLAVE INCORRECTA");
-            }
-        }
-    <script src="core.js"></script>
-</body>
-</html>
+        <div id="reloj-v6" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700 text-[#36f4d0]">0
