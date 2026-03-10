@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Omni-Core v4.5</title>
+    <title>GEOSYSTEM | Tactical Intelligence v4.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -13,85 +13,133 @@
             background-color: var(--bg); color: var(--neon); 
             background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
             background-size: 100% 4px;
+            overflow-x: hidden;
         }
-        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; margin-bottom: 8px; }
+        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; position: relative; }
         .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
-        .session-active { color: var(--neon); text-shadow: 0 0 10px var(--neon); font-weight: bold; }
-        .session-off { color: #18181b; }
-        .agent-log { font-size: 7px; color: #a1a1aa; border-left: 1px solid #3f3f46; padding-left: 5px; margin-bottom: 2px; }
+        
+        /* Estilos de Sesión Avanzados */
+        .status-pill { padding: 2px 5px; border-radius: 2px; font-size: 6px; margin-left: 4px; }
+        .open { background: #064e3b; color: #34d399; border: 1px solid #34d399; box-shadow: 0 0 5px #34d399; }
+        .closed { background: #450a0a; color: #f87171; border: 1px solid #f87171; opacity: 0.6; }
+
+        .telex-container { background: rgba(0, 0, 0, 0.9); border-y: 1px solid var(--neon); overflow: hidden; white-space: nowrap; padding: 4px 0; }
+        .telex-text { display: inline-block; animation: marquee 50s linear infinite; font-size: 9px; font-weight: bold; }
+        @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        input { background: #000 !important; border: 1px solid #1e293b !important; color: var(--neon) !important; transition: 0.3s; }
+        input:focus { border-color: var(--neon) !important; box-shadow: 0 0 10px rgba(54, 244, 208, 0.2); }
     </style>
 </head>
 <body class="p-2 md:p-4 uppercase text-[9px]">
 
-    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3">
-        <span class="tracking-tighter font-bold italic text-cyan-400">GEOSYSTEM // OMNI_CORE_V4.5</span>
-        <span id="reloj-principal" class="font-bold">00:00:00</span>
+    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3 items-center">
+        <div class="flex flex-col">
+            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM_INTEL // V4.5</span>
+            <span class="text-[6px] text-zinc-500">SYSTEM_UPDATE: 7% // ENCRYPTED_LINK</span>
+        </div>
+        <div id="reloj-principal" class="font-bold text-[12px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700">00:00:00</div>
     </nav>
 
-    <div class="grid grid-cols-4 gap-1 mb-3 text-center border border-zinc-800 p-2 bg-black/60 text-[7px]">
-        <div><p class="text-zinc-600">TOKIO</p><p id="sess-tokyo" class="session-off">● ACTIVE</p></div>
-        <div><p class="text-zinc-600">LONDRES</p><p id="sess-london" class="session-off">● ACTIVE</p></div>
-        <div><p class="text-zinc-600">N. YORK</p><p id="sess-ny" class="session-off">● ACTIVE</p></div>
-        <div><p class="text-zinc-600">LATAM</p><p id="sess-latam" class="session-off">● ACTIVE</p></div>
-    </div>
-
-    <div class="grid-node border-cyan-500 mb-3 bg-black/80">
-        <span class="label-node text-cyan-400">BUSCADOR_UNIVERSAL_NEXUS</span>
-        <div class="flex gap-2">
-            <input type="text" id="search-symbol" placeholder="TICKER (EJ: KLIP, ASHR, BTCUSD)" class="flex-1 bg-black border border-zinc-800 p-2 text-cyan-400 outline-none text-[10px]">
-            <button onclick="projectSymbol()" class="bg-cyan-500 text-black font-black px-4 py-2 text-[9px]">PROYECTAR</button>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-[7px]">
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center">
+            <span>TOKIO (TSE)</span><span id="mkt-tokyo" class="status-pill closed">CLOSED</span>
+        </div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center">
+            <span>LONDRES (LSE)</span><span id="mkt-london" class="status-pill closed">CLOSED</span>
+        </div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center">
+            <span>N. YORK (NYSE)</span><span id="mkt-ny" class="status-pill closed">CLOSED</span>
+        </div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center">
+            <span>LATAM (HAPI)</span><span id="mkt-latam" class="status-pill closed">CLOSED</span>
         </div>
     </div>
 
-    <div id="projection-node" class="grid-node border-l-2 border-l-white mb-3 hidden">
-        <span class="label-node text-white" id="projection-label">PROYECCIÓN_ACTIVA</span>
+    <div class="grid-node border-cyan-500 mb-4 bg-black/80">
+        <div class="flex gap-2">
+            <div class="flex-1 relative">
+                <span class="absolute -top-2 left-2 bg-black px-1 text-[6px] text-cyan-500">COMMAND_INPUT</span>
+                <input type="text" id="search-symbol" placeholder="INGRESE TICKER (AAPL, BTCUSD, ASHR...)" class="w-full p-2 text-[10px] outline-none">
+            </div>
+            <button onclick="projectSymbol()" class="bg-cyan-500 text-black font-black px-6 py-2 text-[10px] hover:bg-white active:scale-95 transition">EXEC</button>
+        </div>
+    </div>
+
+    <div id="projection-node" class="grid-node border-2 border-dashed border-zinc-700 mb-4 hidden">
+        <span class="label-node text-white" id="projection-label">DATA_STREAM_ANALYSIS</span>
         <div id="search-result-container" class="w-full h-48"></div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
         <div class="grid-node border-l-2 border-l-orange-500">
-            <span class="label-node">ENERGÍA (WTI)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe>
+            <span class="label-node">ENERGÍA (WTI OIL)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-32" frameborder="0"></iframe>
         </div>
         <div class="grid-node border-l-2 border-l-cyan-500">
-            <span class="label-node">TOKEN (BTC)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-28" frameborder="0"></iframe>
+            <span class="label-node">TOKENIZACIÓN (BTC)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-32" frameborder="0"></iframe>
         </div>
         <div class="grid-node border-l-2 border-l-red-600">
-            <span class="label-node">ASIA (ASHR)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-28" frameborder="0"></iframe>
+            <span class="label-node">EJE_ESTE (ASHR)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-32" frameborder="0"></iframe>
         </div>
         <div class="grid-node border-l-2 border-l-blue-600">
-            <span class="label-node">USA (SPY)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-28" frameborder="0"></iframe>
+            <span class="label-node">FED_RESERVE (SPY)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-32" frameborder="0"></iframe>
         </div>
         <div class="grid-node border-l-2 border-l-zinc-100">
-            <span class="label-node">EUROPA (DAX)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-28" frameborder="0"></iframe>
+            <span class="label-node">EU_MARKET (DAX)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-32" frameborder="0"></iframe>
         </div>
         <div class="grid-node border-l-2 border-l-yellow-600">
-            <span class="label-node">LATAM (ILF)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-28" frameborder="0"></iframe>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-10">
-        <div class="md:col-span-2 grid-node border-cyan-700 bg-black">
-            <span class="label-node text-cyan-400">AGENTE_IA // MANIFIESTOS_EMISARIO</span>
-            <div id="agent-orders" class="h-24 overflow-y-auto font-mono text-[7px] space-y-1">
-                <p class="text-zinc-500">[STATUS]: ESPERANDO SINCRONIZACIÓN DEL EMISARIO...</p>
-            </div>
-        </div>
-        <div class="grid-node border-yellow-900 bg-yellow-950/10">
-            <span class="label-node text-yellow-500">ACCESO_NÚCLEO_7%</span>
-            <div id="action-box">
-                <input type="text" id="master-key" placeholder="ID_ALPHA_7" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-1 text-[8px] uppercase">
-                <button onclick="triggerNexus()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] mb-1">INGRESAR</button>
-                <button class="w-full bg-zinc-800 text-white font-bold p-1 text-[7px] opacity-50 cursor-not-allowed">SUSCRIPCIONES</button>
-            </div>
+            <span class="label-node">LATAM_ZONE (ILF)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-32" frameborder="0"></iframe>
         </div>
     </div>
 
     <script>
-        function updateEngine
+        function updateSystem() {
+            const now = new Date();
+            const h = now.getUTCHours();
+            const m = now.getUTCMinutes();
+            
+            // Función auxiliar para verificar estados de mercado
+            const isMarketOpen = (start, end) => h >= start && h < end;
 
+            const markets = {
+                'mkt-tokyo': isMarketOpen(0, 6),
+                'mkt-london': isMarketOpen(8, 16),
+                'mkt-ny': isMarketOpen(13, 21), // NYSE 9:30-16:00 EST aprox
+                'mkt-latam': isMarketOpen(14, 21)
+            };
+
+            for (const [id, open] of Object.entries(markets)) {
+                const el = document.getElementById(id);
+                el.innerText = open ? 'OPEN' : 'CLOSED';
+                el.className = `status-pill ${open ? 'open' : 'closed'}`;
+            }
+
+            document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
+        }
+
+        function projectSymbol() {
+            const sym = document.getElementById('search-symbol').value.toUpperCase().replace(/\s/g, "");
+            if(!sym) return;
+            
+            const node = document.getElementById('projection-node');
+            node.classList.remove('hidden');
+            document.getElementById('projection-label').innerText = `ANALÍTICA_PROYECTADA: ${sym}`;
+            document.getElementById('search-result-container').innerHTML = `
+                <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=${sym}&theme=dark" 
+                        class="w-full h-48" frameborder="0"></iframe>`;
+            
+            // Scroll suave hacia la proyección
+            node.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        setInterval(updateSystem, 1000);
+        updateSystem();
+    </script>
+</body>
+</html>
