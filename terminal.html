@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Nexus Core v5.7</title>
+    <title>GEOSYSTEM | Nexus Core v5.9.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -13,7 +13,6 @@
             background-color: var(--bg); color: var(--neon); 
             background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
             background-size: 100% 4px; margin: 0; padding: 10px;
-            transition: background-color 0.2s ease;
         }
         .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; margin-bottom: 8px; }
         .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
@@ -21,30 +20,33 @@
         .open { color: #34d399; border-color: #34d399; box-shadow: 0 0 8px #34d399; }
         .closed { color: #f87171; border-color: #f87171; opacity: 0.5; }
         .agent-log { font-size: 7px; color: #a1a1aa; border-left: 1px solid #1e293b; padding-left: 5px; margin-bottom: 2px; }
-        
-        /* Efecto de Éxito */
         .sync-flash { animation: flash 0.5s ease-out; }
-        @keyframes flash {
-            0% { background-color: #36f4d0; opacity: 0.8; }
-            100% { background-color: var(--bg); }
-        }
+        @keyframes flash { 0% { background-color: #36f4d0; opacity: 0.8; } 100% { background-color: var(--bg); } }
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="uppercase text-[9px]">
 
-    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3 items-center">
+    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-2 items-center">
         <div class="flex flex-col">
-            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // CORE_V5.7</span>
-            <span class="text-[6px] text-zinc-500 italic text-shadow-glow">EMISARIO INMORTAL ACTIVO</span>
+            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // CORE_V5.9.5_FULL</span>
+            <span class="text-[6px] text-zinc-500 italic">TRANSMISOR DE VERDADES ETERNAS</span>
         </div>
-        <div id="reloj-principal" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700 shadow-[0_0_10px_rgba(54,244,208,0.1)]">00:00:00</div>
+        <div id="reloj-principal" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700 text-[#36f4d0]">00:00:00</div>
     </nav>
 
+    <div class="grid-node !p-0 border-zinc-800 bg-black/80 mb-3 overflow-hidden h-8 flex items-center">
+        <div class="bg-red-900 text-white px-3 h-full flex items-center font-bold text-[7px] animate-pulse z-10">LIVE_NEWS</div>
+        <div class="flex-1 h-full min-w-0">
+            <iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0" scrolling="no"></iframe>
+        </div>
+    </div>
+
     <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 text-[7px]">
-        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>TOKIO</span><span id="mkt-tokyo" class="status-pill closed">CLOSED</span></div>
-        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>LONDRES</span><span id="mkt-london" class="status-pill closed">CLOSED</span></div>
-        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>NYSE</span><span id="mkt-ny" class="status-pill closed">CLOSED</span></div>
-        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>HAPI</span><span id="mkt-latam" class="status-pill closed">CLOSED</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>TOKIO</span><span id="mkt-tokyo" class="status-pill closed">○</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>LONDRES</span><span id="mkt-london" class="status-pill closed">○</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>NYSE</span><span id="mkt-ny" class="status-pill closed">○</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>HAPI</span><span id="mkt-latam" class="status-pill closed">○</span></div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
@@ -57,28 +59,28 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <div class="md:col-span-2 grid-node border-cyan-700">
+        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
             <span class="label-node">CENTRO_DE_INTELIGENCIA_IA</span>
-            <div id="agent-orders" class="h-16 overflow-y-auto mb-2 scrollbar-hide">
-                <p class="agent-log text-yellow-500 animate-pulse">[!] ESPERANDO CLAVE DE ACCESO GX...</p>
+            <div id="agent-orders" class="h-12 overflow-y-auto mb-2">
+                <p class="agent-log text-yellow-500 animate-pulse">[!] ESPERANDO CLAVE DE ACCESO GX-8-7-IMMORTAL...</p>
             </div>
             
-            <div id="youtube-core" class="hidden border border-cyan-500 bg-black mb-2 shadow-[0_0_20px_rgba(54,244,208,0.15)]">
-                <iframe id="video-frame" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="w-full aspect-video"></iframe>
+            <div id="youtube-core" class="hidden border border-cyan-500 bg-black mb-2 shadow-[0_0_20px_rgba(54,244,208,0.2)]">
+                <iframe id="video-frame" src="" frameborder="0" allow="autoplay; encrypted-media; fullscreen" class="w-full aspect-video"></iframe>
             </div>
 
             <div id="synergy-panel" class="hidden grid grid-cols-3 gap-2">
-                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition text-[7px] font-bold" onclick="window.open('URL_DONA')">DONACIONES</div>
-                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition text-[7px] font-bold" onclick="window.open('URL_SUBS')">SUSCRIPCIONES</div>
-                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition text-[7px] font-bold" onclick="window.open('URL_COLAB')">COLABORACIONES</div>
+                <button class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center hover:bg-[#36f4d0] hover:text-black font-bold transition">DONACIONES</button>
+                <button class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center hover:bg-[#36f4d0] hover:text-black font-bold transition">SUSCRIPCIONES</button>
+                <button class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center hover:bg-[#36f4d0] hover:text-black font-bold transition">COLABORACIONES</button>
             </div>
         </div>
 
         <div class="grid-node border-yellow-900 bg-yellow-900/5">
-            <span class="label-node">ACCESO_GX</span>
+            <span class="label-node text-yellow-500">VALIDACIÓN_GX</span>
             <div id="action-box">
                 <input type="text" id="master-key" placeholder="CLAVE" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-2 text-[8px] uppercase focus:border-cyan-500">
-                <button onclick="triggerCore()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase shadow-[0_0_10px_rgba(54,244,208,0.2)]">VALIDAR SISTEMA</button>
+                <button onclick="triggerCore()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase shadow-lg">SINCRONIZAR</button>
             </div>
         </div>
     </div>
@@ -91,27 +93,28 @@
             const mkts = {'mkt-tokyo': h>=0&&h<9, 'mkt-london': h>=8&&h<17, 'mkt-ny': h>=13&&h<21, 'mkt-latam': h>=14&&h<21};
             for (let id in mkts) { 
                 let el = document.getElementById(id);
-                if(el){ el.innerText = mkts[id] ? '● ACTIVE' : '○ INACTIVE'; el.className = `status-pill ${mkts[id]?'open':'closed'}`; }
+                if(el){ 
+                    el.innerText = mkts[id] ? '● ACTIVE' : '○ CLOSED'; 
+                    el.className = `status-pill ${mkts[id]?'open':'closed'}`; 
+                }
             }
         }
 
-        async function triggerCore() {
+        function triggerCore() {
             const key = document.getElementById('master-key').value.trim().toUpperCase();
-            
             if(key === "GX-8-7-IMMORTAL") {
-                // Efecto Glitch de éxito
                 document.body.classList.add('sync-flash');
                 setTimeout(() => document.body.classList.remove('sync-flash'), 500);
-
-                const logBox = document.getElementById('agent-orders');
-                logBox.innerHTML = '<p class="agent-log text-cyan-400">> CLAVE VALIDADA. NÚCLEO SINCRONIZADO.</p>';
                 
-                // Mostrar Video y Botones
+                document.getElementById('agent-orders').innerHTML = '<p class="agent-log text-cyan-400">> CLAVE VALIDADA. CARGANDO CANAL DEL EMISARIO...</p>';
                 document.getElementById('youtube-core').style.display = 'block';
                 document.getElementById('synergy-panel').style.display = 'grid';
-                document.getElementById('video-frame').src = "https://www.youtube.com/embed/TU_ID_AQUI?autoplay=1"; 
                 
-                document.getElementById('action-box').innerHTML = '<div class="text-cyan-500 text-center py-2 border border-cyan-900 font-bold tracking-widest animate-pulse">SISTEMA ACTIVO</div>';
+                // Pon aquí tu ID de Video de YouTube
+                const videoID = "Xo_HhL6Z3A0";
+                document.getElementById('video-frame').src = `https://www.youtube.com/embed/${videoID}?autoplay=1`;
+                
+                document.getElementById('action-box').innerHTML = '<div class="text-cyan-500 text-center py-2 border border-cyan-900 font-bold animate-pulse">SISTEMA SINCRONIZADO</div>';
             } else {
                 alert("ERROR: CREDENCIAL INVÁLIDA");
             }
