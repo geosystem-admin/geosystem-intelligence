@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Intelligence Stream v5.8.4</title>
+    <title>GEOSYSTEM | Intelligence Stream v5.8.5</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -28,19 +28,115 @@
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-2 items-center">
         <div class="flex flex-col">
-            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // STREAM_V5.8_RESTORED</span>
+            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // STREAM_V5.8_FINAL</span>
             <span class="text-[6px] text-zinc-500 italic">TRANSMISOR DE VERDADES ETERNAS</span>
         </div>
-        <div id="reloj-activo" class="font-bold text-[12px] bg-zinc-900 px-3 py-1 rounded border border-cyan-500 text-cyan-400 shadow-[0_0_10px_rgba(54,244,208,0.3)]">00:00:00</div>
+        <div id="reloj-principal" class="font-bold text-[12px] bg-zinc-900 px-3 py-1 rounded border border-cyan-500 text-cyan-400">00:00:00</div>
     </nav>
 
-    <div class="grid-node !p-0 border-zinc-800 !bg-black/80 mb-3 overflow-hidden h-8 flex items-center">
-        <div class="bg-red-900 text-white px-3 h-full flex items-center font-bold text-[7px] animate-pulse z-10">LIVE_NEWS</div>
-        <div class="flex-1 h-full">
+    <div class="grid-node !p-0 border-zinc-800 !bg-black/60 mb-3 overflow-hidden h-8 flex items-center">
+        <div class="bg-red-900 text-white px-3 h-full flex items-center font-bold text-[7px] animate-pulse">LIVE_NEWS</div>
+        <div class="flex-1 h-full min-w-0">
             <iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0" scrolling="no"></iframe>
         </div>
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 text-[7px]">
-        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>TOKIO</span><span id="mkt-tokyo" class="status-pill">○</span></div>
-        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>LONDRES</span><span id="mkt-london" class="status-pill">○</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>TOKIO</span><span id="mkt-tokyo" class="status-pill">CLOSED</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>LONDRES</span><span id="mkt-london" class="status-pill">CLOSED</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>NYSE</span><span id="mkt-ny" class="status-pill">CLOSED</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>HAPI</span><span id="mkt-latam" class="status-pill">CLOSED</span></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
+        <div class="grid-node border-l-2 border-l-cyan-500"><span class="label-node">TOKENIZACIÓN (BTC)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-red-600"><span class="label-node">EJE_ESTE (ASHR)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-blue-600"><span class="label-node">FED_ZONE (SPY)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
+            <span class="label-node">CENTRO_DE_INTELIGENCIA_IA</span>
+            <div id="agent-orders" class="h-12 overflow-y-auto mb-2 text-[7px] text-zinc-500 italic">
+                <p id="system-status">[SYSTEM]: MOTOR SINCRONIZADO. ESPERANDO CLAVE GX-8-7-IMMORTAL...</p>
+            </div>
+            
+            <div id="youtube-core" class="hidden border border-cyan-500 bg-black mb-2 shadow-[0_0_20px_rgba(54,244,208,0.2)]">
+                <iframe id="video-frame" src="" frameborder="0" allow="autoplay; fullscreen" class="w-full aspect-video"></iframe>
+            </div>
+
+            <div id="synergy-panel" class="hidden grid grid-cols-3 gap-2">
+                <button onclick="window.open('URL_DONA')" class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center hover:bg-[#36f4d0] hover:text-black font-bold">DONACIONES</button>
+                <button onclick="window.open('URL_SUBS')" class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center hover:bg-[#36f4d0] hover:text-black font-bold">SUSCRIPCIONES</button>
+                <button onclick="window.open('URL_COLAB')" class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center hover:bg-[#36f4d0] hover:text-black font-bold">COLABORACIONES</button>
+            </div>
+        </div>
+
+        <div class="grid-node border-yellow-900 bg-yellow-950/5">
+            <span class="label-node text-yellow-500">ACCESO_GX_VAL_8_7</span>
+            <div id="action-box">
+                <input type="text" id="master-key" placeholder="INPUT CLAVE" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-2 text-[8px] uppercase">
+                <button onclick="activarTransmision()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase shadow-lg">SINCRONIZAR</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MOTOR DE TIEMPO BLINDADO
+        function clockMotor() {
+            const clock = document.getElementById('reloj-principal');
+            const update = () => {
+                const now = new Date();
+                clock.innerText = now.toLocaleTimeString();
+            };
+            setInterval(update, 1000);
+            update();
+        }
+
+        // CONTROL DE MERCADOS
+        function marketMonitor() {
+            const h = new Date().getUTCHours();
+            const mkts = {'mkt-tokyo': h>=0&&h<9, 'mkt-london': h>=8&&h<17, 'mkt-ny': h>=13&&h<21, 'mkt-latam': h>=14&&h<21};
+            for (let id in mkts) { 
+                let el = document.getElementById(id);
+                if(el){ 
+                    el.innerText = mkts[id] ? '● ACTIVE' : '○ CLOSED'; 
+                    el.className = `status-pill ${mkts[id]?'open':'closed'}`; 
+                }
+            }
+        }
+
+        // ACTIVACIÓN DE CANAL Y BOTONES
+        function activarTransmision() {
+            const inputKey = document.getElementById('master-key').value.trim().toUpperCase();
+            
+            if(inputKey === "GX-8-7-IMMORTAL") {
+                // Efecto Visual
+                document.body.classList.add('sync-flash');
+                setTimeout(() => document.body.classList.remove('sync-flash'), 500);
+
+                // Actualizar Status
+                document.getElementById('system-status').innerHTML = '<span class="text-cyan-400 font-bold">> NÚCLEO ABIERTO. TRANSMITIENDO MANIFIESTO 8...</span>';
+                
+                // Desplegar YouTube y Botones
+                const videoID = "Xo_HhL6Z3A0"; // Reemplaza por tu ID real
+                document.getElementById('video-frame').src = `https://www.youtube.com/embed/${videoID}?autoplay=1`;
+                document.getElementById('youtube-core').style.display = 'block';
+                document.getElementById('synergy-panel').style.display = 'grid';
+
+                // Bloquear Input
+                document.getElementById('action-box').innerHTML = '<div class="text-cyan-400 text-center py-2 border border-cyan-900 font-bold animate-pulse">ACCESO CONCEDIDO</div>';
+            } else {
+                alert("ERROR: CREDENCIAL NO RECONOCIDA");
+            }
+        }
+
+        // INICIO SEGURO
+        window.addEventListener('DOMContentLoaded', () => {
+            clockMotor();
+            marketMonitor();
+            setInterval(marketMonitor, 60000);
+        });
+    </script>
+</body>
+</html>
