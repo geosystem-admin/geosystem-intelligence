@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Global Command v5.9</title>
+    <title>GEOSYSTEM | Global Intelligence v6.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -17,37 +17,28 @@
         .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; margin-bottom: 8px; }
         .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
         
-        /* CINTA DE NOTICIAS TIPO NOTICIERO */
-        .news-ticker-container {
-            background: rgba(0, 0, 0, 0.8);
-            border-bottom: 1px solid #36f4d0;
-            height: 25px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .ticker-label {
-            background: #b91c1c; /* Rojo Noticiero */
+        /* CINTA DE NOTICIAS PROFESIONAL */
+        .news-ticker {
+            background: #b91c1c; /* Rojo Breaking News */
             color: white;
-            padding: 0 10px;
-            font-weight: bold;
-            font-size: 9px;
-            z-index: 10;
-            height: 100%;
+            height: 22px;
             display: flex;
             align-items: center;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .ticker-content {
+        .ticker-text-move {
             white-space: nowrap;
             display: inline-block;
-            animation: ticker 30s linear infinite;
-            font-size: 10px;
+            animation: move-news 40s linear infinite;
+            font-size: 9px;
+            font-weight: bold;
             padding-left: 100%;
         }
-        @keyframes ticker {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-100%, 0); }
+        @keyframes move-news {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
         }
 
         .status-pill { padding: 2px 5px; border-radius: 2px; font-size: 6px; border: 1px solid; }
@@ -62,16 +53,16 @@
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-1 items-center">
         <div class="flex flex-col">
-            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // NEXUS_5.9</span>
+            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // CORE_6.0_INMORTAL</span>
             <span class="text-[6px] text-zinc-500 italic">TRANSMISOR DE VERDADES ETERNAS</span>
         </div>
         <div id="reloj-principal" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700">00:00:00</div>
     </nav>
 
-    <div class="news-ticker-container">
-        <div class="ticker-label">BREAKING NEWS</div>
-        <div class="ticker-content" id="ticker-text">
-            CARGANDO FLUJO DE DATOS GEOPOLÍTICOS... CONFIGURANDO SUMINISTRO ETERNO... ACTUALIZANDO MERCADOS GLOBALES... ESPERANDO MANIFIESTO 8... 
+    <div class="news-ticker">
+        <div class="bg-black px-2 h-full flex items-center z-10 font-black italic">LIVE_NEWS</div>
+        <div class="ticker-text-move" id="ticker-content">
+            CARGANDO DATOS GEOPOLÍTICOS... CONFIGURANDO SUMINISTRO ETERNO... ACTUALIZANDO MERCADOS ASIÁTICOS... MANIFIESTO 8 LISTO PARA TRANSMISIÓN... REVISANDO CADENAS DE SUMINISTRO... TOKENIZACIÓN ESTRATÉGICA EN CURSO...
         </div>
     </div>
 
@@ -82,49 +73,46 @@
         <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>HAPI</span><span id="mkt-latam" class="status-pill">CLOSED</span></div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4">
-        <div class="grid-node border-l-2 border-l-cyan-500"><span class="label-node">TOKENIZACIÓN (BTC)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-red-600"><span class="label-node">EJE_ESTE (ASHR)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-blue-600"><span class="label-node">FED_ZONE (SPY)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
-    </div>
-
     <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
+        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60 min-h-[300px]">
             <span class="label-node">CENTRO_DE_INTELIGENCIA_IA</span>
             
-            <div id="youtube-core" class="hidden border border-cyan-500 bg-black mb-2 overflow-hidden shadow-[0_0_20px_rgba(54,244,208,0.2)]">
-                <iframe id="video-frame" src="" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" class="w-full aspect-video"></iframe>
+            <div id="agent-orders" class="h-10 overflow-hidden mb-2 text-[7px] text-zinc-500 italic">
+                [SYSTEM]: ESPERANDO VALIDACIÓN DE CREDENCIALES GX PARA TRANSMISIÓN...
+            </div>
+
+            <div id="youtube-core" class="hidden border border-cyan-500 bg-black mb-3 shadow-[0_0_25px_rgba(54,244,208,0.2)]">
+                <iframe id="video-frame" src="" frameborder="0" allow="autoplay; fullscreen" class="w-full aspect-video"></iframe>
             </div>
 
             <div id="synergy-panel" class="hidden grid grid-cols-3 gap-2">
-                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black font-bold text-[7px]" onclick="window.open('URL_DONA')">DONACIONES</div>
-                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black font-bold text-[7px]" onclick="window.open('URL_SUBS')">SUSCRIPCIONES</div>
-                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black font-bold text-[7px]" onclick="window.open('URL_COLAB')">COLABORACIONES</div>
+                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black font-bold text-[7px]" onclick="window.open('#')">DONACIONES</div>
+                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black font-bold text-[7px]" onclick="window.open('#')">SUSCRIPCIONES</div>
+                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black font-bold text-[7px]" onclick="window.open('#')">COLABORACIONES</div>
             </div>
         </div>
 
-        <div class="grid-node border-yellow-900">
-            <span class="label-node text-yellow-500 italic">ACCESO_NÚCLEO_GX</span>
+        <div class="grid-node border-yellow-900 bg-yellow-950/10">
+            <span class="label-node text-yellow-500 italic">VALIDACIÓN_GX</span>
             <div id="action-box">
-                <input type="text" id="master-key" placeholder="CLAVE GX-8-7" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-2 text-[10px] uppercase">
-                <button onclick="activateInmortalProtocol()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[9px] hover:bg-white transition uppercase">VALIDAR E INGRESAR</button>
+                <input type="text" id="master-key" placeholder="CLAVE" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-2 text-[10px] uppercase">
+                <button onclick="unlockSystem()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[9px] hover:bg-white transition uppercase">SINCRONIZAR NÚCLEO</button>
             </div>
         </div>
     </div>
 
     <script>
-        // MOTOR DE NOTICIAS REALES (Simulado con titulares macro)
-        const newsStream = [
-            "ALERTA: VOLATILIDAD EN EL EJE ESTE AUMENTA TRAS CIERRE DE MERCADOS...",
-            "MACRO: LA RESERVA FEDERAL MANTIENE TASAS MIENTRAS EL SUMINISTRO ETERNO SE ESTABILIZA...",
-            "GEOPOLÍTICA: TENSIONES EN LA CADENA DE SUMINISTRO GLOBAL IMPULSAN EL VALOR DEL MANIFIESTO...",
-            "BITCOIN LLEGA A NUEVOS MÁXIMOS EN NÚCLEOS DE TOKENIZACIÓN...",
-            "NOTICIA: EL EMISARIO INMORTAL INICIA TRANSMISIÓN MUNDIAL DESDE VERCEL..."
+        // DATOS DE NOTICIAS REALES
+        const updates = [
+            "NOTICIA: VOLATILIDAD EXTREMA EN EL EJE ASIA-PACÍFICO TRAS CIERRE DE BOLSAS...",
+            "MACRO: LA RESERVA FEDERAL AJUSTA PROYECCIONES DE SUMINISTRO PARA Q3...",
+            "GEOPOLÍTICA: NUEVAS RUTAS DE SUMINISTRO ETERNO SE ESTABLECEN EN EL SUR GLOBAL...",
+            "MERCADOS: TOKENIZACIÓN DE ACTIVOS REALES ALCANZA CIFRAS RÉCORD...",
+            "URGENTE: EL EMISARIO INMORTAL INICIA PROTOCOLO DE TRANSMISIÓN DE VERDAD..."
         ];
-        
-        document.getElementById('ticker-text').innerText = newsStream.join(" | ");
+        document.getElementById('ticker-content').innerText = updates.join(" | ");
 
-        function updateSystem() {
+        function updateClock() {
             const now = new Date();
             document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
             const h = now.getUTCHours();
@@ -135,35 +123,32 @@
             }
         }
 
-        async function activateInmortalProtocol() {
-            const key = document.getElementById('master-key').value.trim().toUpperCase();
+        function unlockSystem() {
+            const entry = document.getElementById('master-key').value.trim().toUpperCase();
             
-            if(key === "GX-8-7-IMMORTAL") {
-                // Efecto Visual de Confirmación
+            // VALIDACIÓN ROBUSTA (GX-8-7-IMMORTAL)
+            if(entry === "GX-8-7-IMMORTAL") {
                 document.body.classList.add('sync-flash');
                 setTimeout(() => document.body.classList.remove('sync-flash'), 500);
 
-                // ACTIVACIÓN DEL VIDEO (El ID debe ser el de tu video de YouTube)
-                // Se agrega 'autoplay=1' y 'rel=0' para que empiece solo.
-                const videoId = "Xo_HhL6Z3A0"; // CAMBIA ESTE ID POR EL DE TU CANAL
-                const videoFrame = document.getElementById('video-frame');
-                videoFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&modestbranding=1`;
+                // CARGA DE VIDEO (Asegúrate de cambiar 'TU_ID_AQUÍ' por el ID de tu video de YouTube)
+                const videoId = "Xo_HhL6Z3A0"; 
+                const frame = document.getElementById('video-frame');
+                frame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&controls=1&rel=0`;
                 
-                // Mostrar paneles
+                // VISUALIZACIÓN
                 document.getElementById('youtube-core').style.display = 'block';
                 document.getElementById('synergy-panel').style.display = 'grid';
+                document.getElementById('agent-orders').innerHTML = '<p class="text-cyan-400 font-bold">> ACCESO TOTAL CONCEDIDO. MANIFIESTO 8 EN CURSO.</p>';
                 
-                // Cambiar el ticker de noticias a modo "EN VIVO"
-                document.getElementById('ticker-text').innerText = ">>> TRANSMISIÓN DE VERDAD ETERNA EN CURSO... MANIFIESTO 8 DESPLEGADO... ACCESO TOTAL CONCEDIDO AL EMISARIO.";
-                
-                document.getElementById('action-box').innerHTML = '<div class="text-cyan-500 text-center py-2 border border-cyan-900 animate-pulse font-bold text-[8px]">SISTEMA SINCRONIZADO</div>';
+                document.getElementById('action-box').innerHTML = '<div class="text-cyan-500 text-center py-2 border border-cyan-900 font-bold tracking-widest animate-pulse">NÚCLEO ACTIVO</div>';
             } else {
                 alert("ERROR: CREDENCIAL INVÁLIDA");
             }
         }
 
-        setInterval(updateSystem, 1000);
-        updateSystem();
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
 </body>
 </html>
