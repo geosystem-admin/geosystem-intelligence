@@ -1,56 +1,97 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-10">
     <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
-        <span class="label-node text-cyan-400">CENTRO_DE_INTELIGENCIA_IA</span>
+        <span class="label-node text-cyan-400">NÚCLEO_DE_OPERACIONES_IA</span>
         <div id="agent-display">
             <div id="agent-orders" class="h-24 overflow-y-auto font-mono text-[7px] space-y-1 p-1">
-                <p class="agent-log">[SYSTEM]: AGENTE ESPERANDO CLAVE DE ACCESO...</p>
+                <p class="agent-log text-yellow-500 animate-pulse">[!] SISTEMA EN ESPERA: INGRESE CREDENCIALES GX...</p>
             </div>
             
             <div id="youtube-core" class="hidden mt-2 border border-cyan-500 shadow-[0_0_15px_rgba(54,244,208,0.2)]">
-                <iframe src="https://www.youtube.com/embed/LIVE_ID" frameborder="0" allowfullscreen class="w-full aspect-video"></iframe>
+                <iframe id="main-video" src="" frameborder="0" allowfullscreen class="w-full aspect-video"></iframe>
             </div>
 
-            <div id="synergy-panel" class="hidden mt-3 grid grid-cols-3 gap-2 pt-2 border-t border-zinc-800">
-                <div class="btn-synergy bg-black text-cyan-400 border border-cyan-400/40 p-3 text-center cursor-pointer hover:bg-cyan-400 hover:text-black transition" onclick="window.open('URL_DONACION')">DONACIONES</div>
-                <div class="btn-synergy bg-black text-cyan-400 border border-cyan-400/40 p-3 text-center cursor-pointer hover:bg-cyan-400 hover:text-black transition" onclick="window.open('URL_SUSCRIP')">SUSCRIPCIONES</div>
-                <div class="btn-synergy bg-black text-cyan-400 border border-cyan-400/40 p-3 text-center cursor-pointer hover:bg-cyan-400 hover:text-black transition" onclick="window.open('URL_COLAB')">COLABORACIONES</div>
+            <div id="synergy-panel" class="hidden mt-3 grid-cols-3 gap-2 pt-2 border-t border-zinc-800">
+                <div class="btn-action bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-3 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition font-bold" onclick="window.open('URL_DONACIONES')">DONACIONES</div>
+                <div class="btn-action bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-3 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition font-bold" onclick="window.open('URL_SUSCRIPCIONES')">SUSCRIPCIONES</div>
+                <div class="btn-action bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-3 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition font-bold" onclick="window.open('URL_COLABORACIONES')">COLABORACIONES</div>
             </div>
         </div>
     </div>
     
     <div class="grid-node border-yellow-900 bg-yellow-950/10">
-        <span class="label-node text-yellow-500 italic">ACCESO_NÚCLEO_8_7</span>
+        <span class="label-node text-yellow-500 italic">VALIDACIÓN_DE_ACCESO</span>
         <div id="action-box">
             <input type="text" id="master-key" placeholder="CLAVE GX" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-1 text-[8px] uppercase">
-            <button onclick="triggerCoreV5()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase">Sincronizar e Ingresar</button>
+            <button onclick="deployInmortalSystem()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase shadow-[0_0_10px_rgba(54,244,208,0.3)]">Sincronizar e Ingresar</button>
         </div>
     </div>
 </div>
 
 <script>
-    async function triggerCoreV5() {
+    // MOTOR DE TIEMPO BURSÁTIL (Mantenido de v4.6)
+    function updateSystem() {
+        const now = new Date();
+        const h = now.getUTCHours();
+        const isMarketOpen = (start, end) => h >= start && h < end;
+        const markets = {
+            'mkt-tokyo': isMarketOpen(0, 9),
+            'mkt-london': isMarketOpen(8, 17),
+            'mkt-ny': isMarketOpen(13, 21),
+            'mkt-latam': isMarketOpen(14, 21)
+        };
+        for (const [id, open] of Object.entries(markets)) {
+            const el = document.getElementById(id);
+            if(el) {
+                el.innerText = open ? 'OPEN' : 'CLOSED';
+                el.className = `status-pill ${open ? 'open' : 'closed'}`;
+            }
+        }
+        document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
+    }
+
+    // FUNCIÓN DE DESPLIEGUE TOTAL
+    async function deployInmortalSystem() {
         const key = document.getElementById('master-key').value.toUpperCase();
-        if(key !== "GX-8-7-IMMORTAL") { alert("ERROR: CLAVE_INVALIDA"); return; }
+        if(key !== "GX-8-7-IMMORTAL") { alert("ERROR: CREDENCIAL_NO_RECONOCIDA"); return; }
         
         const logBox = document.getElementById('agent-orders');
         const yt = document.getElementById('youtube-core');
         const syn = document.getElementById('synergy-panel');
+        const video = document.getElementById('main-video');
         
-        // Simulación de carga técnica
-        const msgs = ["> VALIDANDO PROTOCOLO...", "> DESBLOQUEANDO PANEL DE SINERGIA...", "> TRANSMISIÓN SINCRONIZADA."];
-        for(let m of msgs) {
-            let p = document.createElement('p'); p.className='agent-log text-cyan-400';
-            p.textContent = `[${new Date().toLocaleTimeString()}] ${m}`;
+        const sequence = [
+            "> CLAVE GX ACEPTADA.",
+            "> ESTABLECIENDO CONEXIÓN CON EL EMISOR...",
+            "> DESPLEGANDO PANEL DE SINERGIA...",
+            "> SUMINISTRO ETERNO ACTIVADO."
+        ];
+
+        for(let msg of sequence) {
+            const p = document.createElement('p');
+            p.className = 'agent-log text-cyan-400';
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
             logBox.prepend(p);
             await new Promise(r => setTimeout(r, 500));
         }
 
-        // ACTIVACIÓN VISUAL DEFINITIVA
+        // ACCIÓN DE DESPLIEGUE (FORZADO PARA VERCEL)
         logBox.style.height = "40px";
-        yt.classList.remove('hidden'); // Muestra el video
-        syn.classList.remove('hidden'); // Muestra los botones
-        syn.style.display = 'grid';     // Fuerza el renderizado en grid
         
-        document.getElementById('action-box').innerHTML = `<div class="p-2 border border-cyan-500 text-center text-cyan-500 text-[6px] animate-pulse">SISTEMA OPERATIVO AL 100%</div>`;
+        // Cargar video y mostrar contenedor
+        video.src = "https://www.youtube.com/embed/TU_ID_DE_VIDEO"; // Reemplaza con tu ID
+        yt.classList.remove('hidden');
+        yt.style.display = "block";
+
+        // Desplegar los 3 botones en modo Grid
+        syn.classList.remove('hidden');
+        syn.style.display = "grid"; 
+        
+        document.getElementById('action-box').innerHTML = `
+            <div class="p-2 border border-cyan-500 text-center text-cyan-500 text-[7px] animate-pulse">
+                SESIÓN INMORTAL ACTIVA
+            </div>`;
     }
+
+    setInterval(updateSystem, 1000);
+    updateSystem();
 </script>
