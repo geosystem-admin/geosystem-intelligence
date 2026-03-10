@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Intelligence Stream v5.8</title>
+    <title>GEOSYSTEM | Intelligence Stream v6.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -21,31 +21,25 @@
         .closed { color: #f87171; border-color: #f87171; opacity: 0.5; }
         .sync-flash { animation: flash 0.5s ease-out; }
         @keyframes flash { 0% { background-color: #36f4d0; opacity: 0.8; } 100% { background-color: var(--bg); } }
-        /* Ocultar scrollbars para estética terminal */
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="uppercase text-[9px]">
 
-    <div class="grid-node border-none !bg-transparent !mb-1">
-        <div class="flex items-center bg-black/60 border border-zinc-800 overflow-hidden h-8">
-            <div class="bg-red-900 text-white px-3 h-full flex items-center font-bold text-[7px] animate-pulse">LIVE_NEWS</div>
-            <div class="flex-1">
-                <iframe src="https://www.reuters.com/news/archive/worldNews" class="hidden"></iframe>
-                <div class="w-full h-full overflow-hidden">
-                    <iframe src="https://s.tradingview.com/embed-widget/timeline/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3 items-center">
+    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-1 items-center">
         <div class="flex flex-col">
-            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // STREAM_V5.8</span>
+            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // STREAM_V6.1</span>
             <span class="text-[6px] text-zinc-500 italic">TRANSMISOR DE VERDADES ETERNAS</span>
         </div>
         <div id="reloj-principal" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700">00:00:00</div>
     </nav>
+
+    <div class="grid-node !p-0 !bg-black/80 border-cyan-900 mb-3 overflow-hidden h-[32px] flex items-center">
+        <div class="bg-red-700 text-white px-2 h-full flex items-center font-bold text-[7px] z-10 shadow-lg">LIVE_NEWS</div>
+        <div class="flex-1 h-full">
+            <iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0"></iframe>
+        </div>
+    </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 text-[7px]">
         <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>TOKIO</span><span id="mkt-tokyo" class="status-pill">CLOSED</span></div>
@@ -63,26 +57,26 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
         <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
             <span class="label-node">CENTRO_DE_INTELIGENCIA_IA</span>
-            <div id="agent-orders" class="h-12 overflow-y-auto mb-2 text-[7px] text-zinc-500">
-                <p>[SYSTEM]: ESPERANDO VALIDACIÓN PARA TRANSMISIÓN DE NOTICIAS Y MANIFIESTO...</p>
+            <div id="agent-orders" class="h-12 overflow-y-auto mb-2 text-[7px] text-zinc-500 italic">
+                <p>[SYSTEM]: ESPERANDO VALIDACIÓN DE NÚCLEO PARA TRANSMITIR MANIFIESTO...</p>
             </div>
             
-            <div id="youtube-core" class="hidden border border-cyan-500 bg-black mb-2 overflow-hidden shadow-[0_0_20px_rgba(54,244,208,0.2)]">
+            <div id="youtube-core" class="hidden border border-cyan-500 bg-black mb-2 overflow-hidden">
                 <iframe id="video-frame" src="" frameborder="0" allow="autoplay; fullscreen" class="w-full aspect-video"></iframe>
             </div>
 
             <div id="synergy-panel" class="hidden grid grid-cols-3 gap-2">
-                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black font-bold" onclick="window.open('URL_DONA')">DONACIONES</div>
-                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black font-bold" onclick="window.open('URL_SUBS')">SUSCRIPCIONES</div>
-                <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black font-bold" onclick="window.open('URL_COLAB')">COLABORACIONES</div>
+                <button class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-[7px] font-bold hover:bg-[#36f4d0] hover:text-black">DONACIONES</button>
+                <button class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-[7px] font-bold hover:bg-[#36f4d0] hover:text-black">SUSCRIPCIONES</button>
+                <button class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-[7px] font-bold hover:bg-[#36f4d0] hover:text-black">COLABORACIONES</button>
             </div>
         </div>
 
-        <div class="grid-node border-yellow-900">
-            <span class="label-node text-yellow-500 italic">ACCESO_GX</span>
+        <div class="grid-node border-yellow-900 bg-yellow-950/10">
+            <span class="label-node text-yellow-500">NÚCLEO_ACCESO_GX</span>
             <div id="action-box">
-                <input type="text" id="master-key" placeholder="CLAVE GX" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-2 text-[8px] uppercase">
-                <button onclick="triggerIntelligence()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase shadow-[0_0_10px_rgba(54,244,208,0.2)]">SINCRONIZAR NÚCLEO</button>
+                <input type="text" id="master-key" placeholder="NUEVA CLAVE" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-2 text-[8px] uppercase">
+                <button onclick="triggerIntelligence()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase shadow-lg">ACTIVAR SISTEMA</button>
             </div>
         </div>
     </div>
@@ -102,22 +96,23 @@
         async function triggerIntelligence() {
             const key = document.getElementById('master-key').value.trim().toUpperCase();
             
-            if(key === "GX-8-7-IMMORTAL") {
+            // NUEVA CLAVE DEFINIDA PARA EL EMISARIO
+            if(key === "EMISARIO-GX-2026") {
                 document.body.classList.add('sync-flash');
                 setTimeout(() => document.body.classList.remove('sync-flash'), 500);
 
                 const logBox = document.getElementById('agent-orders');
-                logBox.innerHTML = '<p class="text-cyan-400">> ACCESO GARANTIZADO. TRANSMISIÓN GEOPOLÍTICA INICIADA.</p>';
+                logBox.innerHTML = '<p class="text-cyan-400 font-bold">> NÚCLEO SINCRONIZADO. TRANSMITIENDO MANIFIESTO 8...</p>';
                 
-                // REPARACIÓN DE VIDEO: Usamos la URL de YouTube Embed correcta con parámetros de reproducción
                 const videoFrame = document.getElementById('video-frame');
-                videoFrame.src = "https://www.youtube.com/embed/O-7N5o7_g7Y?autoplay=1&rel=0"; // Sustituye O-7N5o7_g7Y por tu ID real
+                // IMPORTANTE: Cambia el ID de YouTube por el tuyo
+                videoFrame.src = "https://www.youtube.com/embed/VIDEO_ID2{videoId}?autoplay=1"; 
                 
-                document.getElementById('youtube-core').style.display = 'block';
-                document.getElementById('synergy-panel').style.display = 'grid';
-                document.getElementById('action-box').innerHTML = '<div class="text-cyan-500 text-center py-2 border border-cyan-900 animate-pulse font-bold text-[7px]">OPERATIVO</div>';
+                document.getElementById('youtube-core').classList.remove('hidden');
+                document.getElementById('synergy-panel').classList.remove('hidden');
+                document.getElementById('action-box').innerHTML = '<div class="text-cyan-400 text-center py-2 border border-cyan-900 font-bold animate-pulse">SISTEMA OPERATIVO</div>';
             } else {
-                alert("ERROR: CREDENCIAL NO RECONOCIDA");
+                alert("ERROR DE ACCESO: CREDENCIAL NO AUTORIZADA");
             }
         }
 
