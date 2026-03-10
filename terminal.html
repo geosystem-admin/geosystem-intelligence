@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Terminal v3.0</title>
+    <title>GEOSYSTEM | Terminal v3.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -11,70 +11,73 @@
         .grid-node { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); padding: 12px; }
         .label-node { font-size: 10px; font-weight: bold; border-bottom: 1px solid #1e293b; margin-bottom: 8px; display: block; }
         .session-active { color: #36f4d0; text-shadow: 0 0 8px #36f4d0; font-weight: bold; }
-        .session-inactive { color: #1e293b; }
         
-        /* Télex */
-        .telex-container { background: #000; border-top: 1px solid #36f4d0; border-bottom: 1px solid #36f4d0; overflow: hidden; white-space: nowrap; padding: 4px 0; }
-        .telex-text { display: inline-block; animation: marquee 35s linear infinite; font-size: 11px; }
+        /* Télex Dinámico */
+        .telex-container { background: #000; border-top: 1px solid #36f4d0; border-bottom: 1px solid #36f4d0; overflow: hidden; white-space: nowrap; padding: 6px 0; }
+        .telex-text { display: inline-block; animation: marquee 50s linear infinite; font-size: 11px; font-weight: bold; }
         @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+
+        /* Animación de Datos IA */
+        .data-flow { font-size: 9px; color: #1e293b; line-height: 1; }
     </style>
 </head>
 <body class="p-2 md:p-4 uppercase text-[10px]">
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-4">
-        <span class="font-bold tracking-tighter">GEOSYSTEM_OS v3.0 // OPERATIONAL</span>
+        <span class="tracking-tighter italic">GEOSYSTEM_OS // AGENT_IA_CORE</span>
         <span id="reloj-principal" class="text-cyan-400">00:00:00</span>
     </nav>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-center border border-zinc-800 p-2 bg-black/40">
-        <div><p class="text-zinc-600 text-[8px]">TOKIO</p><p id="sess-tokyo" class="session-inactive">● ACTIVE</p></div>
-        <div><p class="text-zinc-600 text-[8px]">LONDRES</p><p id="sess-london" class="session-inactive">● ACTIVE</p></div>
-        <div><p class="text-zinc-600 text-[8px]">N. YORK</p><p id="sess-ny" class="session-inactive">● ACTIVE</p></div>
-        <div><p class="text-zinc-600 text-[8px]">LATAM</p><p id="sess-latam" class="session-inactive">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[8px]">TOKIO</p><p id="sess-tokyo" class="text-zinc-800">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[8px]">LONDRES</p><p id="sess-london" class="text-zinc-800">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[8px]">N. YORK</p><p id="sess-ny" class="text-zinc-800">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[8px]">LATAM</p><p id="sess-latam" class="text-zinc-800">● ACTIVE</p></div>
     </div>
 
     <div class="telex-container mb-4">
         <div class="telex-text">
-            <span class="mx-10 text-yellow-400 font-bold">[ALERTA]</span> 
-            SISTEMA GEOPOLÍTICO EN FASE DE RECONFIGURACIÓN... 
-            <span class="mx-10 text-cyan-400">●</span> 
-            SUMINISTRO DE DATOS ETERNOS ACTIVADO... 
-            <span class="mx-10 text-cyan-400">●</span> 
-            TRANSFIRIENDO MANIFIESTOS A LOS NODOS GLOBALES... 
-            <span class="mx-10 text-red-500 font-bold">[EXITO INEVITABLE]</span>
+            <span class="mx-10 text-yellow-400">[MANIFIESTO 8]: SUMINISTRO DE VERDAD ABSOLUTA EN PROCESO...</span>
+            <span class="mx-10 text-red-500">[IRAK_ALERT]: INESTABILIDAD EN EL GOLFO RECONFIGURA FLUJOS DE CRIPTO-COMMODITIES...</span>
+            <span class="mx-10 text-cyan-400">[IA_CORE]: AGENTES AUTÓNOMOS EJECUTANDO TOKENIZACIÓN DE ACTIVOS EN EL EJE ASIÁTICO...</span>
+            <span class="mx-10 text-white">[TECH]: LA IA GESTIONA EL 70% DE LA LIQUIDEZ EN MERCADOS EMERGENTES DE NUEVA GENERACIÓN...</span>
+            <span class="mx-10 text-red-500">[GUERRA_DATOS]: ATAQUES CIBERNÉTICOS A NODOS FINANCIEROS DETECTADOS Y NEUTRALIZADOS POR IA...</span>
         </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
         <div class="grid-node border-l-4 border-l-red-600">
-            <span class="label-node text-red-500">NODO_ASIA_PACIFICO</span>
+            <span class="label-node text-red-500">NODO_ASIA_PACIFICO (NI225)</span>
             <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3ANI225&theme=dark" class="w-full h-32"></iframe>
         </div>
         <div class="grid-node border-l-4 border-l-blue-500">
-            <span class="label-node text-blue-400">NODO_USA_FEDERAL</span>
+            <span class="label-node text-blue-400">NODO_USA_FEDERAL (SPY)</span>
             <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-32"></iframe>
-        </div>
-        <div class="grid-node border-l-4 border-l-zinc-300">
-            <span class="label-node text-zinc-300">NODO_EURO_ZONE</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-32"></iframe>
-        </div>
-        <div class="grid-node border-l-4 border-l-yellow-600">
-            <span class="label-node text-yellow-500">NODO_LATAM_EMERGING</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-32"></iframe>
         </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div class="md:col-span-2 grid-node border-cyan-900 bg-cyan-950/10">
-            <span class="label-node">DICTAMEN_DEL_EMISARIO</span>
-            <p class="normal-case text-zinc-400 text-[11px] italic leading-relaxed">
-                "La narrativa coherente debe producir y provocar el algoritmo. No somos tutores, somos transmisores de la verdad absoluta. El éxito es inevitable."
-            </p>
+        <div class="md:col-span-2 grid-node border-cyan-700 bg-cyan-950/20">
+            <span class="label-node text-cyan-400">ESTRATÉGIA DE TOKENIZACIÓN // EJE DEL ESTE</span>
+            <div class="grid grid-cols-2 gap-4 normal-case text-zinc-400 text-[9px]">
+                <div>
+                    <p class="text-cyan-500 font-bold uppercase mb-1">Análisis Geopolítico (Irak/Asia):</p>
+                    <p>La IA identifica patrones de fuga de capital en zonas de conflicto y los redirige automáticamente a activos tokenizados respaldados por infraestructura en Asia.</p>
+                </div>
+                <div>
+                    <p class="text-cyan-500 font-bold uppercase mb-1">Gestión de Agentes IA:</p>
+                    <p>Nuestros agentes operan bajo la premisa de "Suministro Eterno", eliminando el error humano en la interpretación de los Manifiestos y datos sísmicos del mercado.</p>
+                </div>
+            </div>
         </div>
+        
         <div class="grid-node border-yellow-800 bg-yellow-950/10">
-            <span class="label-node text-yellow-500">ORÁCULO_SUSCRIPCIÓN</span>
-            <input type="text" placeholder="ID_NODE_USER" class="w-full bg-black border border-zinc-800 p-2 mb-2 text-cyan-400 outline-none">
-            <button class="w-full bg-[#36f4d0] text-black font-bold p-2 text-[9px] hover:bg-white transition uppercase">Vincular Nodo</button>
+            <span class="label-node text-yellow-500">ACCESO AL ORÁCULO IA</span>
+            <div class="space-y-2">
+                <input type="text" placeholder="ID_NODE_ALPHA" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none text-[8px]">
+                <button class="w-full bg-[#36f4d0] text-black font-bold p-2 text-[9px] hover:bg-white transition uppercase">Sincronizar Agente</button>
+            </div>
+            <p class="mt-3 text-[7px] text-zinc-600 text-center tracking-tighter">EL ÉXITO ES INEVITABLE // ACTUALIZACIÓN AL 7%</p>
         </div>
     </div>
 
@@ -82,11 +85,10 @@
         function updateMarketSessions() {
             const now = new Date();
             const h = now.getUTCHours();
-            // Tokyo (00-09 UTC) | London (08-17 UTC) | NY (13-22 UTC)
-            document.getElementById('sess-tokyo').className = (h >= 0 && h <= 9) ? 'session-active' : 'session-inactive';
-            document.getElementById('sess-london').className = (h >= 8 && h <= 17) ? 'session-active' : 'session-inactive';
-            document.getElementById('sess-ny').className = (h >= 13 && h <= 22) ? 'session-active' : 'session-inactive';
-            document.getElementById('sess-latam').className = (h >= 13 && h <= 21) ? 'session-active' : 'session-inactive';
+            document.getElementById('sess-tokyo').className = (h >= 0 && h <= 9) ? 'session-active' : 'text-zinc-800';
+            document.getElementById('sess-london').className = (h >= 8 && h <= 17) ? 'session-active' : 'text-zinc-800';
+            document.getElementById('sess-ny').className = (h >= 13 && h <= 22) ? 'session-active' : 'text-zinc-800';
+            document.getElementById('sess-latam').className = (h >= 13 && h <= 21) ? 'session-active' : 'text-zinc-800';
             document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
         }
         setInterval(updateMarketSessions, 1000);
