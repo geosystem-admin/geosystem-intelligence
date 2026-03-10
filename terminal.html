@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | IA Agent v4.2</title>
+    <title>GEOSYSTEM | Global Search v4.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -19,26 +19,30 @@
         .telex-container { background: rgba(0, 0, 0, 0.8); border-top: 1px solid var(--neon); border-bottom: 1px solid var(--neon); overflow: hidden; white-space: nowrap; padding: 5px 0; }
         .telex-text { display: inline-block; animation: marquee 50s linear infinite; font-size: 10px; font-weight: bold; }
         @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-        .agent-log { font-size: 7px; color: #a1a1aa; border-left: 1px solid #3f3f46; padding-left: 5px; margin-bottom: 2px; }
-        iframe { filter: contrast(1.1) brightness(0.9); }
+        #search-input::placeholder { color: rgba(54, 244, 208, 0.3); }
     </style>
 </head>
 <body class="p-2 md:p-4 uppercase text-[9px]">
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3">
-        <span class="tracking-tighter font-bold italic">GEOSYSTEM // AUTONOMOUS_AGENT_V4.2</span>
+        <span class="tracking-tighter font-bold italic text-cyan-400">GEOSYSTEM // GLOBAL_SEARCH_V4.3</span>
         <span id="reloj-principal">00:00:00</span>
     </nav>
 
-    <div class="telex-container mb-3">
-        <div class="telex-text text-white">
-            <span class="mx-12 text-cyan-400">[IA]: AGENTE MONITOREANDO NODOS DE ENERGÍA Y TOKENIZACIÓN...</span>
-            <span class="mx-12 text-orange-500">[ALERTA]: VOLATILIDAD DETECTADA EN EJE IRAK...</span>
-            <span class="mx-12">[INFO]: ÉXITO INEVITABLE AL 7%...</span>
+    <div class="grid-node border-cyan-500 mb-4 bg-black/80 shadow-[0_0_15px_rgba(54,244,208,0.1)]">
+        <span class="label-node text-cyan-400">BUSCADOR_DE_ACTIVOS (ACCIONES / ETFS / CRYPTO)</span>
+        <div class="flex gap-2">
+            <input type="text" id="search-symbol" placeholder="EJ: AAPL, TSLA, ETHUSD, KLIP..." class="flex-1 bg-black border border-zinc-800 p-2 text-cyan-400 outline-none text-[10px]">
+            <button onclick="projectSymbol()" class="bg-cyan-500 text-black font-black px-4 py-2 text-[9px] hover:bg-white transition">PROYECTAR</button>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
+    <div id="projection-node" class="grid-node border-l-2 border-l-white mb-4 hidden">
+        <span class="label-node text-white" id="projection-label">PROYECCIÓN_ACTIVA</span>
+        <div id="search-result-container" class="w-full h-48"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
         <div class="grid-node border-l-2 border-l-orange-500">
             <span class="label-node">ENERGÍA (WTI)</span>
             <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe>
@@ -67,16 +71,15 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-10">
         <div class="md:col-span-2 grid-node border-cyan-700 bg-black">
-            <span class="label-node text-cyan-400">AGENT_EXECUTION_LOG (SIMULACIÓN)</span>
-            <div id="agent-orders" class="h-24 overflow-y-auto font-mono">
-                <p class="agent-log">[00:00:00] AGENTE INICIALIZADO...</p>
-                <p class="agent-log">[00:00:05] ESCANEANDO CORRELACIÓN WTI/BTC...</p>
+            <span class="label-node">AGENTE_IA // NEXUS_LOG</span>
+            <div id="agent-orders" class="h-16 overflow-y-auto font-mono text-[7px] space-y-1">
+                <p class="text-zinc-500">[STATUS]: BUSCADOR GLOBAL SINCRONIZADO...</p>
             </div>
         </div>
         <div class="grid-node border-yellow-900">
-            <span class="label-node text-yellow-500">VALIDACIÓN_NEXUS</span>
+            <span class="label-node text-yellow-500">CLAVE_GX</span>
             <input type="text" id="master-key" placeholder="KEY" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-1 text-[8px]">
-            <button onclick="startAgent()" class="w-full bg-cyan-500 text-black font-black p-2 text-[8px]">ACTIVAR AGENTE</button>
+            <button onclick="startNexus()" class="w-full bg-cyan-500 text-black font-black p-2 text-[8px]">SINCRONIZAR</button>
         </div>
     </div>
 
@@ -85,29 +88,40 @@
             document.getElementById('reloj-principal').innerText = new Date().toLocaleTimeString();
         }
 
-        function startAgent() {
-            const key = document.getElementById('master-key').value.toUpperCase();
-            if(key !== "GX-8-7-IMMORTAL") { alert("ERROR"); return; }
-            
-            const logBox = document.getElementById('agent-orders');
-            const orders = [
-                "DETECTADA ALTA VOLATILIDAD EN NODO ENERGÍA (IRAK).",
-                "ORDEN: REDIRIGIR LIQUIDEZ A TOKENIZACIÓN (BTC).",
-                "EJECUTANDO COMPRA EN EJE DEL ESTE (ASIA)...",
-                "STATUS: NARRATIVA COHERENTE PROVOCADA.",
-                "SUMINISTRO ETERNO ASEGURADO."
-            ];
+        function projectSymbol() {
+            const sym = document.getElementById('search-symbol').value.toUpperCase().replace(/\s/g, "");
+            if(!sym) return;
 
-            orders.forEach((msg, i) => {
-                setTimeout(() => {
-                    const p = document.createElement('p');
-                    p.className = 'agent-log text-cyan-300';
-                    p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
-                    logBox.prepend(p);
-                }, i * 1500);
-            });
+            const container = document.getElementById('search-result-container');
+            const node = document.getElementById('projection-node');
+            const label = document.getElementById('projection-label');
+
+            node.classList.remove('hidden');
+            label.innerText = `PROYECCIÓN_ACTIVA: ${sym}`;
+            
+            // Inyectar widget dinámico
+            container.innerHTML = `
+                <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=${sym}&theme=dark" 
+                        class="w-full h-48" frameborder="0" allowtransparency="true"></iframe>
+            `;
+            
+            const log = document.getElementById('agent-orders');
+            const p = document.createElement('p');
+            p.className = 'text-cyan-400';
+            p.textContent = `[${new Date().toLocaleTimeString()}] PROYECTANDO ANALÍTICA PARA: ${sym}`;
+            log.prepend(p);
         }
+
+        function startNexus() {
+            if(document.getElementById('master-key').value.toUpperCase() === "GX-8-7-IMMORTAL") {
+                alert("NEXUS ACTIVADO. EL ÉXITO ES INEVITABLE.");
+            } else {
+                alert("ID_FAILED");
+            }
+        }
+
         setInterval(updateClock, 1000);
+        updateClock();
     </script>
 </body>
 </html>
