@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Global Search v4.3</title>
+    <title>GEOSYSTEM | Nexus Time v4.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -19,21 +19,31 @@
         .telex-container { background: rgba(0, 0, 0, 0.8); border-top: 1px solid var(--neon); border-bottom: 1px solid var(--neon); overflow: hidden; white-space: nowrap; padding: 5px 0; }
         .telex-text { display: inline-block; animation: marquee 50s linear infinite; font-size: 10px; font-weight: bold; }
         @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-        #search-input::placeholder { color: rgba(54, 244, 208, 0.3); }
+        /* Restauración de Estilos de Sesión */
+        .session-active { color: var(--neon); text-shadow: 0 0 10px var(--neon); font-weight: bold; animation: pulse 2s infinite; }
+        .session-off { color: #18181b; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
 <body class="p-2 md:p-4 uppercase text-[9px]">
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3">
-        <span class="tracking-tighter font-bold italic text-cyan-400">GEOSYSTEM // GLOBAL_SEARCH_V4.3</span>
-        <span id="reloj-principal">00:00:00</span>
+        <span class="tracking-tighter font-bold italic text-cyan-400">GEOSYSTEM // NEXUS_TIME_V4.4</span>
+        <span id="reloj-principal" class="font-bold">00:00:00</span>
     </nav>
 
-    <div class="grid-node border-cyan-500 mb-4 bg-black/80 shadow-[0_0_15px_rgba(54,244,208,0.1)]">
-        <span class="label-node text-cyan-400">BUSCADOR_DE_ACTIVOS (ACCIONES / ETFS / CRYPTO)</span>
+    <div class="grid grid-cols-4 gap-1 mb-3 text-center border border-zinc-800 p-2 bg-black/60 text-[7px]">
+        <div><p class="text-zinc-600">TOKIO</p><p id="sess-tokyo" class="session-off">● ACTIVE</p></div>
+        <div><p class="text-zinc-600">LONDRES</p><p id="sess-london" class="session-off">● ACTIVE</p></div>
+        <div><p class="text-zinc-600">N. YORK</p><p id="sess-ny" class="session-off">● ACTIVE</p></div>
+        <div><p class="text-zinc-600">LATAM</p><p id="sess-latam" class="session-off">● ACTIVE</p></div>
+    </div>
+
+    <div class="grid-node border-cyan-500 mb-4 bg-black/80">
+        <span class="label-node text-cyan-400">BUSCADOR_DE_ACTIVOS</span>
         <div class="flex gap-2">
-            <input type="text" id="search-symbol" placeholder="EJ: AAPL, TSLA, ETHUSD, KLIP..." class="flex-1 bg-black border border-zinc-800 p-2 text-cyan-400 outline-none text-[10px]">
-            <button onclick="projectSymbol()" class="bg-cyan-500 text-black font-black px-4 py-2 text-[9px] hover:bg-white transition">PROYECTAR</button>
+            <input type="text" id="search-symbol" placeholder="EJ: AAPL, BTCUSD, ASHR..." class="flex-1 bg-black border border-zinc-800 p-2 text-cyan-400 outline-none text-[10px]">
+            <button onclick="projectSymbol()" class="bg-cyan-500 text-black font-black px-4 py-2 text-[9px]">PROYECTAR</button>
         </div>
     </div>
 
@@ -69,59 +79,33 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-10">
-        <div class="md:col-span-2 grid-node border-cyan-700 bg-black">
-            <span class="label-node">AGENTE_IA // NEXUS_LOG</span>
-            <div id="agent-orders" class="h-16 overflow-y-auto font-mono text-[7px] space-y-1">
-                <p class="text-zinc-500">[STATUS]: BUSCADOR GLOBAL SINCRONIZADO...</p>
-            </div>
-        </div>
-        <div class="grid-node border-yellow-900">
-            <span class="label-node text-yellow-500">CLAVE_GX</span>
-            <input type="text" id="master-key" placeholder="KEY" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-1 text-[8px]">
-            <button onclick="startNexus()" class="w-full bg-cyan-500 text-black font-black p-2 text-[8px]">SINCRONIZAR</button>
-        </div>
-    </div>
-
     <script>
-        function updateClock() {
-            document.getElementById('reloj-principal').innerText = new Date().toLocaleTimeString();
+        // MOTOR DE TIEMPO UNIVERSAL REINSTALADO
+        function updateEngine() {
+            const now = new Date();
+            const h = now.getUTCHours();
+            
+            // Lógica de sesiones (UTC)
+            document.getElementById('sess-tokyo').className = (h >= 0 && h <= 9) ? 'session-active' : 'session-off';
+            document.getElementById('sess-london').className = (h >= 8 && h <= 17) ? 'session-active' : 'session-off';
+            document.getElementById('sess-ny').className = (h >= 13 && h <= 22) ? 'session-active' : 'session-off';
+            document.getElementById('sess-latam').className = (h >= 13 && h <= 21) ? 'session-active' : 'session-off';
+            
+            document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
         }
 
         function projectSymbol() {
             const sym = document.getElementById('search-symbol').value.toUpperCase().replace(/\s/g, "");
             if(!sym) return;
-
-            const container = document.getElementById('search-result-container');
-            const node = document.getElementById('projection-node');
-            const label = document.getElementById('projection-label');
-
-            node.classList.remove('hidden');
-            label.innerText = `PROYECCIÓN_ACTIVA: ${sym}`;
-            
-            // Inyectar widget dinámico
-            container.innerHTML = `
+            document.getElementById('projection-node').classList.remove('hidden');
+            document.getElementById('projection-label').innerText = `PROYECCIÓN_ACTIVA: ${sym}`;
+            document.getElementById('search-result-container').innerHTML = `
                 <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=${sym}&theme=dark" 
-                        class="w-full h-48" frameborder="0" allowtransparency="true"></iframe>
-            `;
-            
-            const log = document.getElementById('agent-orders');
-            const p = document.createElement('p');
-            p.className = 'text-cyan-400';
-            p.textContent = `[${new Date().toLocaleTimeString()}] PROYECTANDO ANALÍTICA PARA: ${sym}`;
-            log.prepend(p);
+                        class="w-full h-48" frameborder="0"></iframe>`;
         }
 
-        function startNexus() {
-            if(document.getElementById('master-key').value.toUpperCase() === "GX-8-7-IMMORTAL") {
-                alert("NEXUS ACTIVADO. EL ÉXITO ES INEVITABLE.");
-            } else {
-                alert("ID_FAILED");
-            }
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock();
+        setInterval(updateEngine, 1000);
+        updateEngine();
     </script>
 </body>
 </html>
