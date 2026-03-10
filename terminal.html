@@ -3,117 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Global Intel v4.0</title>
+    <title>GEOSYSTEM | Nexus Terminal v4.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         :root { --neon: #36f4d0; --bg: #020617; }
         body { 
             font-family: 'JetBrains Mono', monospace; 
-            background-color: var(--bg); 
-            color: var(--neon); 
-            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-color: var(--bg); color: var(--neon); 
+            background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
             background-size: 100% 4px;
         }
-        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 10px; margin-bottom: 10px; }
-        .label-node { font-size: 9px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 8px; color: var(--neon); display: block; letter-spacing: 1px; }
-        .telex-container { background: rgba(0, 0, 0, 0.8); border-top: 1px solid var(--neon); border-bottom: 1px solid var(--neon); overflow: hidden; white-space: nowrap; padding: 6px 0; }
-        .telex-text { display: inline-block; animation: marquee 45s linear infinite; font-size: 10px; font-weight: bold; }
+        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; margin-bottom: 8px; }
+        .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
+        .telex-container { background: rgba(0, 0, 0, 0.8); border-top: 1px solid var(--neon); border-bottom: 1px solid var(--neon); overflow: hidden; white-space: nowrap; padding: 5px 0; }
+        .telex-text { display: inline-block; animation: marquee 50s linear infinite; font-size: 10px; font-weight: bold; }
         @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
         .session-active { color: var(--neon); text-shadow: 0 0 8px var(--neon); font-weight: bold; }
+        iframe { filter: grayscale(1) contrast(1.2) brightness(0.8); transition: 0.3s; }
+        iframe:hover { filter: none; }
     </style>
 </head>
 <body class="p-2 md:p-4 uppercase text-[9px]">
 
-    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-4">
-        <span class="tracking-tighter font-bold">GEOSYSTEM_OS // INTEL_V4.0</span>
+    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3">
+        <span class="tracking-tighter font-bold italic text-cyan-400">GEOSYSTEM // NEXUS_TERMINAL_V4.1</span>
         <span id="reloj-principal">00:00:00</span>
     </nav>
 
-    <div class="grid grid-cols-4 gap-1 mb-4 text-center border border-zinc-800 p-2 bg-black/60">
-        <div><p class="text-zinc-600 text-[7px]">TOKIO</p><p id="sess-tokyo">●</p></div>
-        <div><p class="text-zinc-600 text-[7px]">LONDRES</p><p id="sess-london">●</p></div>
-        <div><p class="text-zinc-600 text-[7px]">N. YORK</p><p id="sess-ny">●</p></div>
-        <div><p class="text-zinc-600 text-[7px]">LATAM</p><p id="sess-latam">●</p></div>
+    <div class="grid grid-cols-4 gap-1 mb-3 text-center border border-zinc-800 p-2 bg-black/60 text-[7px]">
+        <div><p class="text-zinc-600">TOKIO</p><p id="sess-tokyo">●</p></div>
+        <div><p class="text-zinc-600">LONDRES</p><p id="sess-london">●</p></div>
+        <div><p class="text-zinc-600">N. YORK</p><p id="sess-ny">●</p></div>
+        <div><p class="text-zinc-600">LATAM</p><p id="sess-latam">●</p></div>
     </div>
 
-    <div class="telex-container mb-4">
+    <div class="telex-container mb-3">
         <div class="telex-text text-white">
-            <span class="mx-12 text-yellow-400">[IRAK]: MONITOREO DE CRUDO WTI ACTIVADO...</span>
-            <span class="mx-12">[MANIFIESTO]: SUMINISTRO DE DATOS ETERNO...</span>
-            <span class="mx-12 text-cyan-400">[IA]: ÉXITO INEVITABLE AL 7%...</span>
+            <span class="mx-12 text-orange-500">[ENERGÍA]: WTI EN OBSERVACIÓN POR CONFLICTO IRAK...</span>
+            <span class="mx-12 text-cyan-400">[TOKEN]: ACTIVOS DIGITALES INTEGRADOS AL SUMINISTRO...</span>
+            <span class="mx-12">[INFO]: ÉXITO AL 7% GARANTIZADO POR EL EMISARIO...</span>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-        <div class="grid-node border-l-2 border-l-orange-500 md:col-span-2">
-            <span class="label-node">NODO_SÉISMICO_IRAK (WTI OIL)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-32" frameborder="0"></iframe>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
+        <div class="grid-node border-l-2 border-l-orange-500">
+            <span class="label-node">ENERGÍA_IRAK (WTI)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe>
         </div>
-
         <div class="grid-node border-l-2 border-l-red-600">
-            <span class="label-node">NODO_ASIA (ASHR)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-32" frameborder="0"></iframe>
+            <span class="label-node">EJE_ESTE (ASHR)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-28" frameborder="0"></iframe>
         </div>
-        <div class="grid-node border-l-2 border-l-blue-600">
-            <span class="label-node">NODO_USA (SPY)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-32" frameborder="0"></iframe>
-        </div>
-        <div class="grid-node border-l-2 border-l-zinc-100">
-            <span class="label-node">NODO_EUROPA (DAX)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-32" frameborder="0"></iframe>
-        </div>
-        <div class="grid-node border-l-2 border-l-yellow-600">
-            <span class="label-node">NODO_LATAM (ILF)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-32" frameborder="0"></iframe>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-12">
-        <div class="md:col-span-2 grid-node border-cyan-900 bg-cyan-950/20">
-            <span class="label-node">AGENTE_IA // MANIFIESTO_8</span>
-            <div id="display-area" class="h-20 overflow-y-auto">
-                <p id="static-info" class="text-zinc-400 normal-case leading-tight">Agentes de IA analizan la correlación entre la inestabilidad en Irak y el flujo de capital hacia el Este. El Manifiesto 8 está listo para validación.</p>
-                <div id="console-output" class="hidden space-y-1 font-mono text-[7px]"></div>
-            </div>
-        </div>
-        <div class="grid-node border-yellow-900">
-            <span class="label-node text-yellow-500">ACCESO_NUCLEO</span>
-            <div id="action-box">
-                <input type="text" id="master-key" placeholder="CLAVE" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-2 text-[8px] uppercase">
-                <button onclick="triggerProtocol()" class="w-full bg-[#36f4d0] text-black font-black p-2 hover:bg-white transition uppercase text-[8px]">Validar</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function updateClock() {
-            const now = new Date();
-            const h = now.getUTCHours();
-            document.getElementById('sess-tokyo').className = (h >= 0 && h <= 9) ? 'session-active' : 'text-zinc-800';
-            document.getElementById('sess-london').className = (h >= 8 && h <= 17) ? 'session-active' : 'text-zinc-800';
-            document.getElementById('sess-ny').className = (h >= 13 && h <= 22) ? 'session-active' : 'text-zinc-800';
-            document.getElementById('sess-latam').className = (h >= 13 && h <= 21) ? 'session-active' : 'text-zinc-800';
-            document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
-        }
-
-        async function triggerProtocol() {
-            const key = document.getElementById('master-key').value.toUpperCase();
-            if(key !== "GX-8-7-IMMORTAL") { alert("ERROR_ID"); return; }
-            
-            document.getElementById('static-info').classList.add('hidden');
-            const out = document.getElementById('console-output');
-            out.classList.remove('hidden');
-            
-            const lines = ["> ESCANEANDO WTI...", "> IA: CORRELACIÓN DETECTADA...", "> MANIFIESTO_8: ACCESO CONCEDIDO."];
-            for(let l of lines) {
-                let p = document.createElement('p'); p.textContent = l; out.appendChild(p);
-                await new Promise(r => setTimeout(r, 600));
-            }
-            alert("TRANSFERENCIA DE VERDAD ETERNA INICIADA.");
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
-</body>
-</html>
+        <div class="grid-node border-l-2 border-l-cyan-500">
+            <span class="label-node">TOKEN_DIGITAL (BTC)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h
