@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOSYSTEM | Terminal de Datos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;800&display=swap');
+        body { font-family: 'JetBrains Mono', monospace; background-color: #020617; }
+        .grid-layout { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; height: 80vh; }
+        .card-node { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.8); padding: 1rem; overflow: hidden; }
+        .glow-text { text-shadow: 0 0 10px rgba(54, 244, 208, 0.5); }
+    </style>
+</head>
+<body class="text-[#36f4d0] p-4 text-xs">
+
+    <nav class="flex justify-between items-center mb-4 border-b border-zinc-800 pb-2">
+        <div class="flex items-center gap-4">
+            <span class="font-black text-lg">GEOSYSTEM_INTEL_v1.0</span>
+            <span class="animate-pulse bg-red-900 text-red-200 px-2">LIVE DATA FEED</span>
+        </div>
+        <div class="hidden md:flex gap-6 uppercase">
+            <span>Latencia: 14ms</span>
+            <span>Ubicación: Nodo_Colombia</span>
+            <span id="reloj">00:00:00</span>
+        </div>
+    </nav>
+
+    <div class="grid-layout">
+        
+        <div class="card-node border-l-4 border-l-red-600">
+            <h3 class="font-bold mb-2 text-red-500 uppercase">>> NODO_ASIA_PACIFIC</h3>
+            <div class="space-y-2">
+                <div class="flex justify-between border-b border-zinc-800 pb-1">
+                    <span>ETF KLIP (China Tech)</span>
+                    <span class="text-green-400">+2.45% ↑</span>
+                </div>
+                <div class="h-32 bg-zinc-900 flex items-center justify-center italic text-zinc-600 uppercase">
+                    Cargando Gráfico Flujo Capital...
+                </div>
+            </div>
+        </div>
+
+        <div class="card-node border-l-4 border-l-blue-600">
+            <h3 class="font-bold mb-2 text-blue-500 uppercase">>> NODO_EURO_ZONE</h3>
+            <div class="space-y-2">
+                <div class="flex justify-between"><span>DAX 40</span><span class="text-red-400">-0.12% ↓</span></div>
+                <p class="text-[10px] text-zinc-500 mt-4">MACROTENDENCIA: Transición energética en curso.</p>
+            </div>
+        </div>
+
+        <div class="card-node border-l-4 border-l-white">
+            <h3 class="font-bold mb-2 text-white uppercase">>> NODO_USA_FEDERAL</h3>
+            <div class="space-y-2 text-zinc-300">
+                <div class="bg-zinc-900 p-2 border border-zinc-800">
+                    <p class="text-cyan-400 font-bold uppercase">Asesoría IA Personalizada:</p>
+                    <p class="italic">"La FED mantendrá tasas. Oportunidad en bonos del tesoro."</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-node border-l-4 border-l-yellow-600">
+            <h3 class="font-bold mb-2 text-yellow-500 uppercase">>> NODO_LATAM_EMERGING</h3>
+            <div class="flex flex-col gap-2">
+                <span class="bg-yellow-900/20 p-1">NOTICIAS: Expansión de BRICS afecta moneda local.</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="md:col-span-2 card-node bg-zinc-950">
+            <h4 class="font-bold uppercase mb-2 border-b border-zinc-800">Manifiesto del Emisor Inmortal</h4>
+            <p class="text-zinc-400 leading-relaxed">
+                "La narrativa coherente debe producir y provocar el algoritmo. No somos tutores, somos transmisores de la verdad eterna. El suministro de datos es el único poder real en la arquitectura del nuevo orden."
+            </p>
+        </div>
+        <div class="card-node border-cyan-900 bg-cyan-950/20">
+            <h4 class="font-bold uppercase mb-4">Suscripción al Oráculo</h4>
+            <input type="text" placeholder="ID_USUARIO / EMAIL" class="w-full bg-black border border-zinc-700 p-2 mb-2 outline-none focus:border-cyan-400">
+            <button class="w-full bg-[#36f4d0] text-black font-bold p-2 uppercase hover:bg-white transition">Vincular Nodo</button>
+        </div>
+    </div>
+
+    <script>
+        // Actualizar Reloj en tiempo real
+        setInterval(() => {
+            document.getElementById('reloj').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+    </script>
+</body>
+</html>
