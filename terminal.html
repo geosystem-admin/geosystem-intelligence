@@ -3,127 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Terminal v3.5</title>
+    <title>GEOSYSTEM | Tactical Terminal v3.7</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-        body { font-family: 'JetBrains Mono', monospace; background-color: #020617; color: #36f4d0; overflow-x: hidden; }
-        .grid-node { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); padding: 12px; }
-        .label-node { font-size: 10px; font-weight: bold; border-bottom: 1px solid #1e293b; margin-bottom: 8px; display: block; }
-        .session-active { color: #36f4d0; text-shadow: 0 0 8px #36f4d0; font-weight: bold; }
-        .glitch-active { animation: glitch-anim 0.2s infinite; filter: hue-rotate(90deg); }
-        @keyframes glitch-anim {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            100% { transform: translate(0); }
+        :root { --neon: #36f4d0; --bg: #020617; }
+        body { 
+            font-family: 'JetBrains Mono', monospace; 
+            background-color: var(--bg); 
+            color: var(--neon); 
+            overflow-x: hidden;
+            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
         }
-        .telex-container { background: #000; border-top: 1px solid #36f4d0; border-bottom: 1px solid #36f4d0; overflow: hidden; white-space: nowrap; padding: 6px 0; }
-        .telex-text { display: inline-block; animation: marquee 50s linear infinite; font-size: 11px; font-weight: bold; }
+        body::before {
+            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 2px; z-index: 100; pointer-events: none;
+        }
+        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 10px; position: relative; }
+        .label-node { font-size: 9px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 8px; color: var(--neon); display: block; letter-spacing: 2px; }
+        .session-active { color: var(--neon); text-shadow: 0 0 10px var(--neon); font-weight: bold; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .glitch-active { animation: glitch-anim 0.2s infinite; filter: brightness(1.5) contrast(1.2); }
+        @keyframes glitch-anim { 0% { transform: translate(0); } 20% { transform: translate(-3px, 1px); } 100% { transform: translate(0); } }
+        .telex-container { background: rgba(0, 0, 0, 0.8); border-top: 1px solid var(--neon); border-bottom: 1px solid var(--neon); overflow: hidden; white-space: nowrap; padding: 6px 0; }
+        .telex-text { display: inline-block; animation: marquee 60s linear infinite; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
     </style>
 </head>
-<body class="p-2 md:p-4 uppercase text-[10px]" id="main-body">
+<body class="p-2 md:p-4 text-[9px]" id="main-body">
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-4">
-        <span class="tracking-tighter italic font-bold">GEOSYSTEM_OS // TOTAL_CONVERGENCE</span>
-        <span id="reloj-principal" class="text-cyan-400">00:00:00</span>
+        <span class="tracking-widest font-black uppercase italic">GEOSYSTEM_OS // STATUS: OPERATIONAL</span>
+        <span id="reloj-principal" class="font-bold">00:00:00</span>
     </nav>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-center border border-zinc-800 p-2 bg-black/40">
-        <div><p class="text-zinc-600 text-[8px]">TOKIO</p><p id="sess-tokyo" class="text-zinc-800 font-bold">● ACTIVE</p></div>
-        <div><p class="text-zinc-600 text-[8px]">LONDRES</p><p id="sess-london" class="text-zinc-800 font-bold">● ACTIVE</p></div>
-        <div><p class="text-zinc-600 text-[8px]">N. YORK</p><p id="sess-ny" class="text-zinc-800 font-bold">● ACTIVE</p></div>
-        <div><p class="text-zinc-600 text-[8px]">LATAM</p><p id="sess-latam" class="text-zinc-800 font-bold">● ACTIVE</p></div>
+    <div class="grid grid-cols-4 gap-1 mb-4 text-center border border-zinc-800 p-2 bg-black/60">
+        <div><p class="text-zinc-600 text-[7px]">TOKIO</p><p id="sess-tokyo" class="text-zinc-800 italic">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[7px]">LONDRES</p><p id="sess-london" class="text-zinc-800 italic">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[7px]">N. YORK</p><p id="sess-ny" class="text-zinc-800 italic">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[7px]">LATAM</p><p id="sess-latam" class="text-zinc-800 italic">● ACTIVE</p></div>
     </div>
 
     <div class="telex-container mb-4">
         <div class="telex-text">
-            <span class="mx-10 text-yellow-400">[MANIFIESTO_8]: CARGANDO TRANSMISIÓN NÚMERO 8...</span>
-            <span class="mx-10 text-red-500">[IRAK_ALERT]: INESTABILIDAD DETECTADA - RECONFIGURANDO NODOS ENERGÉTICOS...</span>
-            <span class="mx-10 text-cyan-400">[IA_EVOLUTION]: AGENTES AUTÓNOMOS GESTIONANDO INVERSIÓN EN EL ESTE...</span>
-            <span class="mx-10 text-white">[SUMINISTRO]: LA VERDAD ABSOLUTA ES ETERNA // ÉXITO AL 7%...</span>
+            <span class="mx-12 text-yellow-500">[MANIFIESTO_8]: SUMINISTRO DE VERDAD ETERNA...</span>
+            <span class="mx-12 text-red-600">[IRAK_REPORT]: MONITOREO DE INFRAESTRUCTURA ENERGÉTICA EN TIEMPO REAL...</span>
+            <span class="mx-12 text-cyan-400">[IA_EVOLUTION]: AGENTES ANALIZANDO VALORES PARA TOKENIZACIÓN ASIÁTICA...</span>
+            <span class="mx-12 text-white">[SISTEMA]: EL ÉXITO ES INEVITABLE // ACTUALIZACIÓN AL 7%...</span>
         </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-        <div class="grid-node border-l-4 border-l-red-600">
-            <span class="label-node text-red-500">NODO_ASIA (NI225)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3ANI225&theme=dark" class="w-full h-32"></iframe>
+        <div class="grid-node border-l-2 border-l-red-600">
+            <span class="label-node">NODO_01_ASIA (ASHR)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-32" frameborder="0"></iframe>
         </div>
-        <div class="grid-node border-l-4 border-l-blue-500">
-            <span class="label-node text-blue-400">NODO_USA (SPY)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-32"></iframe>
-        </div>
-        <div class="grid-node border-l-4 border-l-zinc-300">
-            <span class="label-node text-zinc-300">NODO_EUROPA (DAX)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-32"></iframe>
-        </div>
-        <div class="grid-node border-l-4 border-l-yellow-600">
-            <span class="label-node text-yellow-500">NODO_LATAM (ILF)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-32"></iframe>
-        </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div class="md:col-span-2 grid-node border-cyan-800 bg-cyan-950/20">
-            <span class="label-node text-cyan-400">INTELIGENCIA DE AGENTES IA // TOKENIZACIÓN</span>
-            <div id="display-area" class="h-[100px] overflow-hidden">
-                <p id="static-info" class="normal-case text-zinc-400 leading-relaxed text-[9px]">Los agentes gestionan la liquidez basándose en la evolución de la IA y el análisis sísmico de zonas de conflicto como Irak, asegurando el éxito inevitable.</p>
-                <div id="console-output" class="hidden font-mono text-[8px] space-y-1"></div>
-            </div>
-        </div>
-        <div class="grid-node border-yellow-800 bg-yellow-950/10">
-            <span class="label-node text-yellow-500">ACCESO_ORÁCULO</span>
-            <div id="action-box">
-                <input type="text" placeholder="ID_NODE_ALPHA" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-2 text-[8px]">
-                <button onclick="triggerProtocol()" class="w-full bg-[#36f4d0] text-black font-black p-2 hover:bg-white transition uppercase text-[9px]">Sincronizar</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function updateClock() {
-            const now = new Date();
-            const h = now.getUTCHours();
-            document.getElementById('sess-tokyo').className = (h >= 0 && h <= 9) ? 'session-active' : 'text-zinc-800';
-            document.getElementById('sess-london').className = (h >= 8 && h <= 17) ? 'session-active' : 'text-zinc-800';
-            document.getElementById('sess-ny').className = (h >= 13 && h <= 22) ? 'session-active' : 'text-zinc-800';
-            document.getElementById('sess-latam').className = (h >= 13 && h <= 21) ? 'session-active' : 'text-zinc-800';
-            document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
-        }
-
-        async function triggerProtocol() {
-            const body = document.getElementById('main-body');
-            const output = document.getElementById('console-output');
-            const staticInfo = document.getElementById('static-info');
-            const actionBox = document.getElementById('action-box');
-            
-            staticInfo.classList.add('hidden');
-            output.classList.remove('hidden');
-            body.classList.add('glitch-active');
-            setTimeout(() => body.classList.remove('glitch-active'), 800);
-
-            const commands = [
-                "> ANALIZANDO EJE ASIA-IRAQ...",
-                "> AGENTE_IA: ESCANEANDO VALORES...",
-                "> PROTOCOLO_TOKEN: ACTIVADO",
-                "> CLAVE_MAESTRA: [GX-8-7-IMMORTAL]",
-                "> EL ÉXITO ES INEVITABLE."
-            ];
-
-            for (let cmd of commands) {
-                const p = document.createElement('p');
-                p.textContent = cmd;
-                output.appendChild(p);
-                await new Promise(r => setTimeout(r, 600));
-            }
-
-            actionBox.innerHTML = `<div class="p-2 border border-cyan-400 text-center text-cyan-400 animate-pulse text-[8px]">SINCRO EXITOSA<br>CLAVE: GX-8-7-IMMORTAL</div>`;
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
-</body>
-</html>
