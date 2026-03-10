@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Tactical Terminal v3.7</title>
+    <title>GEOSYSTEM | Tactical Terminal v3.9</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -12,51 +12,106 @@
             font-family: 'JetBrains Mono', monospace; 
             background-color: var(--bg); 
             color: var(--neon); 
-            overflow-x: hidden;
-            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%;
+            background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
         }
-        body::before {
-            content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            background-size: 100% 2px; z-index: 100; pointer-events: none;
-        }
-        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 10px; position: relative; }
-        .label-node { font-size: 9px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 8px; color: var(--neon); display: block; letter-spacing: 2px; }
-        .session-active { color: var(--neon); text-shadow: 0 0 10px var(--neon); font-weight: bold; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .glitch-active { animation: glitch-anim 0.2s infinite; filter: brightness(1.5) contrast(1.2); }
-        @keyframes glitch-anim { 0% { transform: translate(0); } 20% { transform: translate(-3px, 1px); } 100% { transform: translate(0); } }
+        /* Contenedor flexible para evitar desapariciones */
+        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 10px; min-height: 180px; }
+        .label-node { font-size: 9px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 8px; color: var(--neon); display: block; letter-spacing: 1px; }
         .telex-container { background: rgba(0, 0, 0, 0.8); border-top: 1px solid var(--neon); border-bottom: 1px solid var(--neon); overflow: hidden; white-space: nowrap; padding: 6px 0; }
-        .telex-text { display: inline-block; animation: marquee 60s linear infinite; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .telex-text { display: inline-block; animation: marquee 40s linear infinite; font-size: 10px; font-weight: bold; }
         @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
+        .session-active { color: var(--neon); text-shadow: 0 0 8px var(--neon); font-weight: bold; }
     </style>
 </head>
-<body class="p-2 md:p-4 text-[9px]" id="main-body">
+<body class="p-2 md:p-4 uppercase text-[9px]">
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-4">
-        <span class="tracking-widest font-black uppercase italic">GEOSYSTEM_OS // STATUS: OPERATIONAL</span>
-        <span id="reloj-principal" class="font-bold">00:00:00</span>
+        <span class="tracking-tighter font-bold">GEOSYSTEM_OS // STATUS: OPERATIONAL</span>
+        <span id="reloj-principal">00:00:00</span>
     </nav>
 
     <div class="grid grid-cols-4 gap-1 mb-4 text-center border border-zinc-800 p-2 bg-black/60">
-        <div><p class="text-zinc-600 text-[7px]">TOKIO</p><p id="sess-tokyo" class="text-zinc-800 italic">● ACTIVE</p></div>
-        <div><p class="text-zinc-600 text-[7px]">LONDRES</p><p id="sess-london" class="text-zinc-800 italic">● ACTIVE</p></div>
-        <div><p class="text-zinc-600 text-[7px]">N. YORK</p><p id="sess-ny" class="text-zinc-800 italic">● ACTIVE</p></div>
-        <div><p class="text-zinc-600 text-[7px]">LATAM</p><p id="sess-latam" class="text-zinc-800 italic">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[7px]">TOKIO</p><p id="sess-tokyo">●</p></div>
+        <div><p class="text-zinc-600 text-[7px]">LONDRES</p><p id="sess-london">●</p></div>
+        <div><p class="text-zinc-600 text-[7px]">N. YORK</p><p id="sess-ny">●</p></div>
+        <div><p class="text-zinc-600 text-[7px]">LATAM</p><p id="sess-latam">●</p></div>
     </div>
 
     <div class="telex-container mb-4">
-        <div class="telex-text">
-            <span class="mx-12 text-yellow-500">[MANIFIESTO_8]: SUMINISTRO DE VERDAD ETERNA...</span>
-            <span class="mx-12 text-red-600">[IRAK_REPORT]: MONITOREO DE INFRAESTRUCTURA ENERGÉTICA EN TIEMPO REAL...</span>
-            <span class="mx-12 text-cyan-400">[IA_EVOLUTION]: AGENTES ANALIZANDO VALORES PARA TOKENIZACIÓN ASIÁTICA...</span>
-            <span class="mx-12 text-white">[SISTEMA]: EL ÉXITO ES INEVITABLE // ACTUALIZACIÓN AL 7%...</span>
+        <div class="telex-text text-white">
+            <span class="mx-12">[INFO]: MANIFIESTO 8 DISPONIBLE TRAS SINCRONIZACIÓN...</span>
+            <span class="mx-12 text-yellow-400">[IRAK]: ANALIZANDO IMPACTO EN INFRAESTRUCTURA...</span>
+            <span class="mx-12 text-cyan-400">[IA]: AGENTES REDIRIGIENDO CAPITAL A ASIA...</span>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
         <div class="grid-node border-l-2 border-l-red-600">
             <span class="label-node">NODO_01_ASIA (ASHR)</span>
             <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-32" frameborder="0"></iframe>
         </div>
+        <div class="grid-node border-l-2 border-l-blue-600">
+            <span class="label-node">NODO_02_USA (SPY)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-32" frameborder="0"></iframe>
+        </div>
+        <div class="grid-node border-l-2 border-l-zinc-100">
+            <span class="label-node">NODO_03_EUROPA (DAX)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-32" frameborder="0"></iframe>
+        </div>
+        <div class="grid-node border-l-2 border-l-yellow-600">
+            <span class="label-node">NODO_04_LATAM (ILF)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-32" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-10">
+        <div class="md:col-span-2 grid-node border-cyan-900 bg-cyan-950/20">
+            <span class="label-node">AGENTE_IA // MANIFIESTO_8</span>
+            <div id="display-area" class="h-20 overflow-y-auto">
+                <p id="static-info" class="text-zinc-400 normal-case leading-tight">Agentes IA detectan movimientos sísmicos en Irak. El Manifiesto 8 contiene la clave para la supervivencia financiera en el nuevo orden asiático.</p>
+                <div id="console-output" class="hidden space-y-1 font-mono text-[7px]"></div>
+            </div>
+        </div>
+        <div class="grid-node border-yellow-900">
+            <span class="label-node text-yellow-500">ACCESO_NUCLEO</span>
+            <div id="action-box">
+                <input type="text" id="master-key" placeholder="CLAVE" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-2 text-[8px] uppercase">
+                <button onclick="triggerProtocol()" class="w-full bg-[#36f4d0] text-black font-black p-2 hover:bg-white transition uppercase text-[8px]">Descargar</button>
+            </div>
+        </div>
+    </div>
+
+    <a id="manifesto-file" href="#" style="display:none"></a>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const h = now.getUTCHours();
+            document.getElementById('sess-tokyo').className = (h >= 0 && h <= 9) ? 'session-active' : 'text-zinc-800';
+            document.getElementById('sess-london').className = (h >= 8 && h <= 17) ? 'session-active' : 'text-zinc-800';
+            document.getElementById('sess-ny').className = (h >= 13 && h <= 22) ? 'session-active' : 'text-zinc-800';
+            document.getElementById('sess-latam').className = (h >= 13 && h <= 21) ? 'session-active' : 'text-zinc-800';
+            document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
+        }
+
+        async function triggerProtocol() {
+            const key = document.getElementById('master-key').value.toUpperCase();
+            if(key !== "GX-8-7-IMMORTAL") { alert("ID_ERROR"); return; }
+            
+            document.getElementById('static-info').classList.add('hidden');
+            const out = document.getElementById('console-output');
+            out.classList.remove('hidden');
+            
+            const lines = ["> VALIDANDO...", "> IA: ACCESO AL 7%...", "> DESCARGANDO MANIFIESTO_8..."];
+            for(let l of lines) {
+                let p = document.createElement('p'); p.textContent = l; out.appendChild(p);
+                await new Promise(r => setTimeout(r, 600));
+            }
+            alert("TRANSFERENCIA INICIADA. EL ÉXITO ES INEVITABLE.");
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
