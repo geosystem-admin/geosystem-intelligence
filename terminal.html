@@ -1,97 +1,128 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-10">
-    <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
-        <span class="label-node text-cyan-400">NÚCLEO_DE_OPERACIONES_IA</span>
-        <div id="agent-display">
-            <div id="agent-orders" class="h-24 overflow-y-auto font-mono text-[7px] space-y-1 p-1">
-                <p class="agent-log text-yellow-500 animate-pulse">[!] SISTEMA EN ESPERA: INGRESE CREDENCIALES GX...</p>
-            </div>
-            
-            <div id="youtube-core" class="hidden mt-2 border border-cyan-500 shadow-[0_0_15px_rgba(54,244,208,0.2)]">
-                <iframe id="main-video" src="" frameborder="0" allowfullscreen class="w-full aspect-video"></iframe>
-            </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEOSYSTEM | Golden Core v5.5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        :root { --neon: #36f4d0; --bg: #020617; }
+        body { 
+            font-family: 'JetBrains Mono', monospace; 
+            background-color: var(--bg); color: var(--neon); 
+            background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
+            background-size: 100% 4px;
+        }
+        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; }
+        .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
+        .status-pill { padding: 2px 5px; border-radius: 2px; font-size: 6px; border: 1px solid; }
+        .open { color: #34d399; border-color: #34d399; box-shadow: 0 0 5px #34d399; }
+        .closed { color: #f87171; border-color: #f87171; opacity: 0.5; }
+        .agent-log { font-size: 7px; color: #a1a1aa; border-left: 1px solid #1e293b; padding-left: 5px; margin-bottom: 2px; }
+    </style>
+</head>
+<body class="p-2 md:p-4 uppercase text-[9px]">
 
-            <div id="synergy-panel" class="hidden mt-3 grid-cols-3 gap-2 pt-2 border-t border-zinc-800">
-                <div class="btn-action bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-3 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition font-bold" onclick="window.open('URL_DONACIONES')">DONACIONES</div>
-                <div class="btn-action bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-3 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition font-bold" onclick="window.open('URL_SUSCRIPCIONES')">SUSCRIPCIONES</div>
-                <div class="btn-action bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-3 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition font-bold" onclick="window.open('URL_COLABORACIONES')">COLABORACIONES</div>
+    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3 items-center">
+        <div class="flex flex-col">
+            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // NEXUS_CORE_V5.5</span>
+            <span class="text-[6px] text-zinc-500 italic">TRANSMISOR DE VERDADES ETERNAS</span>
+        </div>
+        <div id="reloj-principal" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700">00:00:00</div>
+    </nav>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3 text-[7px]">
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>TOKIO</span><span id="mkt-tokyo" class="status-pill closed">CLOSED</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>LONDRES</span><span id="mkt-london" class="status-pill closed">CLOSED</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>NYSE</span><span id="mkt-ny" class="status-pill closed">CLOSED</span></div>
+        <div class="bg-black/40 p-2 border border-zinc-800 flex justify-between items-center"><span>HAPI</span><span id="mkt-latam" class="status-pill closed">CLOSED</span></div>
+    </div>
+
+    <div class="grid-node border-cyan-500 mb-3 bg-black/80">
+        <div class="flex gap-2">
+            <input type="text" id="search-symbol" placeholder="PROYECTAR TICKER..." class="flex-1 bg-black border border-zinc-800 p-2 text-cyan-400 outline-none text-[10px]">
+            <button onclick="projectSymbol()" class="bg-cyan-500 text-black font-black px-4 py-2 text-[9px]">PROYECTAR</button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
+        <div class="grid-node border-l-2 border-l-orange-500"><span class="label-node">ENERGÍA (WTI OIL)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-cyan-500"><span class="label-node">TOKENIZACIÓN (BTC)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-red-600"><span class="label-node">EJE_ESTE (ASHR)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-blue-600"><span class="label-node">FED_ZONE (SPY)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-zinc-100"><span class="label-node">EU_ZONE (DAX)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-yellow-600"><span class="label-node">LATAM_ZONE (ILF)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-10">
+        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
+            <span class="label-node text-cyan-400">CENTRO_DE_INTELIGENCIA_IA</span>
+            <div id="agent-display">
+                <div id="agent-orders" class="h-20 overflow-y-auto font-mono text-[7px] space-y-1 p-1">
+                    <p class="agent-log">[SYSTEM]: AGENTE ESPERANDO CLAVE DE ACCESO...</p>
+                </div>
+                
+                <div id="youtube-core" class="hidden mt-2 border border-cyan-500 shadow-[0_0_15px_rgba(54,244,208,0.2)] bg-black">
+                    <iframe id="video-frame" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="w-full aspect-video"></iframe>
+                </div>
+
+                <div id="synergy-panel" class="hidden mt-3 grid grid-cols-3 gap-2 pt-2 border-t border-zinc-800">
+                    <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition font-bold" onclick="window.open('URL_DONA')">DONACIONES</div>
+                    <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition font-bold" onclick="window.open('URL_SUS')">SUSCRIPCIONES</div>
+                    <div class="bg-black text-[#36f4d0] border border-[#36f4d0]/40 p-2 text-center cursor-pointer hover:bg-[#36f4d0] hover:text-black transition font-bold" onclick="window.open('URL_COLAB')">COLABORACIONES</div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-node border-yellow-900 bg-yellow-950/10">
+            <span class="label-node text-yellow-500 italic">VALIDACIÓN_GX</span>
+            <div id="action-box">
+                <input type="text" id="master-key" placeholder="CLAVE" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-1 text-[8px] uppercase">
+                <button onclick="triggerCore()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase">VALIDAR</button>
             </div>
         </div>
     </div>
-    
-    <div class="grid-node border-yellow-900 bg-yellow-950/10">
-        <span class="label-node text-yellow-500 italic">VALIDACIÓN_DE_ACCESO</span>
-        <div id="action-box">
-            <input type="text" id="master-key" placeholder="CLAVE GX" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-1 text-[8px] uppercase">
-            <button onclick="deployInmortalSystem()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] hover:bg-white transition uppercase shadow-[0_0_10px_rgba(54,244,208,0.3)]">Sincronizar e Ingresar</button>
-        </div>
-    </div>
-</div>
 
-<script>
-    // MOTOR DE TIEMPO BURSÁTIL (Mantenido de v4.6)
-    function updateSystem() {
-        const now = new Date();
-        const h = now.getUTCHours();
-        const isMarketOpen = (start, end) => h >= start && h < end;
-        const markets = {
-            'mkt-tokyo': isMarketOpen(0, 9),
-            'mkt-london': isMarketOpen(8, 17),
-            'mkt-ny': isMarketOpen(13, 21),
-            'mkt-latam': isMarketOpen(14, 21)
-        };
-        for (const [id, open] of Object.entries(markets)) {
-            const el = document.getElementById(id);
-            if(el) {
-                el.innerText = open ? 'OPEN' : 'CLOSED';
-                el.className = `status-pill ${open ? 'open' : 'closed'}`;
+    <script>
+        function updateSystem() {
+            const now = new Date();
+            const h = now.getUTCHours();
+            const isMarketOpen = (s, e) => h >= s && h < e;
+            const markets = { 'mkt-tokyo': isMarketOpen(0, 9), 'mkt-london': isMarketOpen(8, 17), 'mkt-ny': isMarketOpen(13, 21), 'mkt-latam': isMarketOpen(14, 21) };
+            for (const [id, open] of Object.entries(markets)) {
+                const el = document.getElementById(id);
+                if(el) { el.innerText = open ? 'OPEN' : 'CLOSED'; el.className = `status-pill ${open ? 'open' : 'closed'}`; }
             }
-        }
-        document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
-    }
-
-    // FUNCIÓN DE DESPLIEGUE TOTAL
-    async function deployInmortalSystem() {
-        const key = document.getElementById('master-key').value.toUpperCase();
-        if(key !== "GX-8-7-IMMORTAL") { alert("ERROR: CREDENCIAL_NO_RECONOCIDA"); return; }
-        
-        const logBox = document.getElementById('agent-orders');
-        const yt = document.getElementById('youtube-core');
-        const syn = document.getElementById('synergy-panel');
-        const video = document.getElementById('main-video');
-        
-        const sequence = [
-            "> CLAVE GX ACEPTADA.",
-            "> ESTABLECIENDO CONEXIÓN CON EL EMISOR...",
-            "> DESPLEGANDO PANEL DE SINERGIA...",
-            "> SUMINISTRO ETERNO ACTIVADO."
-        ];
-
-        for(let msg of sequence) {
-            const p = document.createElement('p');
-            p.className = 'agent-log text-cyan-400';
-            p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
-            logBox.prepend(p);
-            await new Promise(r => setTimeout(r, 500));
+            document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
         }
 
-        // ACCIÓN DE DESPLIEGUE (FORZADO PARA VERCEL)
-        logBox.style.height = "40px";
-        
-        // Cargar video y mostrar contenedor
-        video.src = "https://www.youtube.com/embed/TU_ID_DE_VIDEO"; // Reemplaza con tu ID
-        yt.classList.remove('hidden');
-        yt.style.display = "block";
+        async function triggerCore() {
+            const key = document.getElementById('master-key').value.toUpperCase();
+            if(key !== "GX-8-7-IMMORTAL") { alert("ERROR_DE_ID"); return; }
+            
+            const logBox = document.getElementById('agent-orders');
+            const yt = document.getElementById('youtube-core');
+            const syn = document.getElementById('synergy-panel');
+            const frame = document.getElementById('video-frame');
+            
+            // ELIMINADO window.location.href (No más página blanca)
+            const msgs = ["> ID VALIDADO.", "> CARGANDO MANIFIESTO 8...", "> ACTIVANDO BOTONES DE SINERGIA..."];
+            for(let m of msgs) {
+                let p = document.createElement('p'); p.className='agent-log text-cyan-400';
+                p.textContent = `[${new Date().toLocaleTimeString()}] ${m}`;
+                logBox.prepend(p);
+                await new Promise(r => setTimeout(r, 600));
+            }
 
-        // Desplegar los 3 botones en modo Grid
-        syn.classList.remove('hidden');
-        syn.style.display = "grid"; 
-        
-        document.getElementById('action-box').innerHTML = `
-            <div class="p-2 border border-cyan-500 text-center text-cyan-500 text-[7px] animate-pulse">
-                SESIÓN INMORTAL ACTIVA
-            </div>`;
-    }
+            // Inserción del vídeo sin salir de la terminal
+            frame.src = "https://www.youtube.com/embed/LIVE_ID_HERE"; 
+            yt.style.display = "block";
+            syn.style.display = "grid";
+            document.getElementById('action-box').innerHTML = `<p class="text-cyan-500 text-center text-[7px] animate-pulse">SISTEMA SINCRONIZADO</p>`;
+        }
 
-    setInterval(updateSystem, 1000);
-    updateSystem();
-</script>
+        setInterval(updateSystem, 1000);
+        updateSystem();
+    </script>
+</body>
+</html>
