@@ -3,93 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Terminal de Inteligencia</title>
+    <title>GEOSYSTEM | Terminal v3.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         body { font-family: 'JetBrains Mono', monospace; background-color: #020617; color: #36f4d0; overflow-x: hidden; }
-        .grid-node { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); padding: 15px; }
-        .label-node { font-size: 10px; font-weight: bold; border-bottom: 1px solid #1e293b; margin-bottom: 10px; display: block; }
+        .grid-node { border: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); padding: 12px; }
+        .label-node { font-size: 10px; font-weight: bold; border-bottom: 1px solid #1e293b; margin-bottom: 8px; display: block; }
         .session-active { color: #36f4d0; text-shadow: 0 0 8px #36f4d0; font-weight: bold; }
         .session-inactive { color: #1e293b; }
         
-        /* Efecto Télex / Marquee */
-        .telex-container { background: #000; border-top: 1px solid #36f4d0; border-bottom: 1px solid #36f4d0; overflow: hidden; white-space: nowrap; padding: 5px 0; }
-        .telex-text { display: inline-block; animation: marquee 30s linear infinite; font-size: 12px; }
+        /* Télex */
+        .telex-container { background: #000; border-top: 1px solid #36f4d0; border-bottom: 1px solid #36f4d0; overflow: hidden; white-space: nowrap; padding: 4px 0; }
+        .telex-text { display: inline-block; animation: marquee 35s linear infinite; font-size: 11px; }
         @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
     </style>
 </head>
-<body class="p-4 uppercase text-[10px]">
+<body class="p-2 md:p-4 uppercase text-[10px]">
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-4">
-        <span>GEOSYSTEM_OS v2.5 // STATUS: OPERATIONAL</span>
-        <span id="reloj-principal">00:00:00</span>
+        <span class="font-bold tracking-tighter">GEOSYSTEM_OS v3.0 // OPERATIONAL</span>
+        <span id="reloj-principal" class="text-cyan-400">00:00:00</span>
     </nav>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-center border border-zinc-800 p-3 bg-black/50">
-        <div>
-            <p class="text-zinc-500 text-[9px]">TOKIO (ASIA)</p>
-            <p id="sess-tokyo" class="session-inactive">● ACTIVE</p>
-        </div>
-        <div>
-            <p class="text-zinc-500 text-[9px]">LONDRES (EUROPA)</p>
-            <p id="sess-london" class="session-inactive">● ACTIVE</p>
-        </div>
-        <div>
-            <p class="text-zinc-500 text-[9px]">NUEVA YORK (USA)</p>
-            <p id="sess-ny" class="session-inactive">● ACTIVE</p>
-        </div>
-        <div>
-            <p class="text-zinc-500 text-[9px]">LATAM (MERCADOS)</p>
-            <p id="sess-latam" class="session-inactive">● ACTIVE</p>
-        </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4 text-center border border-zinc-800 p-2 bg-black/40">
+        <div><p class="text-zinc-600 text-[8px]">TOKIO</p><p id="sess-tokyo" class="session-inactive">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[8px]">LONDRES</p><p id="sess-london" class="session-inactive">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[8px]">N. YORK</p><p id="sess-ny" class="session-inactive">● ACTIVE</p></div>
+        <div><p class="text-zinc-600 text-[8px]">LATAM</p><p id="sess-latam" class="session-inactive">● ACTIVE</p></div>
     </div>
 
-    <div class="telex-container mb-6">
+    <div class="telex-container mb-4">
         <div class="telex-text">
-            <span class="mx-10 text-yellow-400 font-bold">[ALERTA GEOPOLÍTICA]</span> 
-            MOVIMIENTOS SÍSMICOS DETECTADOS EN LA CADENA DE SUMINISTRO GLOBAL... 
+            <span class="mx-10 text-yellow-400 font-bold">[ALERTA]</span> 
+            SISTEMA GEOPOLÍTICO EN FASE DE RECONFIGURACIÓN... 
             <span class="mx-10 text-cyan-400">●</span> 
-            ROTACIÓN DE CAPITAL HACIA ACTIVOS TOKENIZADOS EN EL ESTE... 
+            SUMINISTRO DE DATOS ETERNOS ACTIVADO... 
             <span class="mx-10 text-cyan-400">●</span> 
-            ADOPCIÓN DE YUAN DIGITAL SE ACELERA EN EL EJE BRICS... 
-            <span class="mx-10 text-cyan-400">●</span> 
-            MÁXIMOS HISTÓRICOS EN NODO ASIA-PACÍFICO... 
-            <span class="mx-10 text-red-500 font-bold">[SISTEMA ACTUALIZADO AL 7%]</span>
+            TRANSFIRIENDO MANIFIESTOS A LOS NODOS GLOBALES... 
+            <span class="mx-10 text-red-500 font-bold">[EXITO INEVITABLE]</span>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
         <div class="grid-node border-l-4 border-l-red-600">
             <span class="label-node text-red-500">NODO_ASIA_PACIFICO</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=NASDAQ%3AKWEB&theme=dark" class="w-full h-40"></iframe>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3ANI225&theme=dark" class="w-full h-32"></iframe>
         </div>
         <div class="grid-node border-l-4 border-l-blue-500">
             <span class="label-node text-blue-400">NODO_USA_FEDERAL</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-40"></iframe>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-32"></iframe>
+        </div>
+        <div class="grid-node border-l-4 border-l-zinc-300">
+            <span class="label-node text-zinc-300">NODO_EURO_ZONE</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-32"></iframe>
+        </div>
+        <div class="grid-node border-l-4 border-l-yellow-600">
+            <span class="label-node text-yellow-500">NODO_LATAM_EMERGING</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-32"></iframe>
         </div>
     </div>
 
-    <div class="grid-node bg-cyan-950/10 border-cyan-900 mb-6">
-        <span class="label-node">DICTAMEN_DEL_EMISARIO</span>
-        <p class="normal-case text-zinc-400 text-xs">"La narrativa coherente debe provocar el algoritmo. La verdad absoluta no es un tutorial, es una transmisión eterna."</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div class="md:col-span-2 grid-node border-cyan-900 bg-cyan-950/10">
+            <span class="label-node">DICTAMEN_DEL_EMISARIO</span>
+            <p class="normal-case text-zinc-400 text-[11px] italic leading-relaxed">
+                "La narrativa coherente debe producir y provocar el algoritmo. No somos tutores, somos transmisores de la verdad absoluta. El éxito es inevitable."
+            </p>
+        </div>
+        <div class="grid-node border-yellow-800 bg-yellow-950/10">
+            <span class="label-node text-yellow-500">ORÁCULO_SUSCRIPCIÓN</span>
+            <input type="text" placeholder="ID_NODE_USER" class="w-full bg-black border border-zinc-800 p-2 mb-2 text-cyan-400 outline-none">
+            <button class="w-full bg-[#36f4d0] text-black font-bold p-2 text-[9px] hover:bg-white transition uppercase">Vincular Nodo</button>
+        </div>
     </div>
 
     <script>
         function updateMarketSessions() {
             const now = new Date();
-            const hourUTC = now.getUTCHours();
-
-            // Lógica simple de sesiones (UTC)
-            // Tokyo: 00-09 UTC | London: 08-17 UTC | NY: 13-22 UTC
-            document.getElementById('sess-tokyo').className = (hourUTC >= 0 && hourUTC <= 9) ? 'session-active' : 'session-inactive';
-            document.getElementById('sess-london').className = (hourUTC >= 8 && hourUTC <= 17) ? 'session-active' : 'session-inactive';
-            document.getElementById('sess-ny').className = (hourUTC >= 13 && hourUTC <= 22) ? 'session-active' : 'session-inactive';
-            document.getElementById('sess-latam').className = (hourUTC >= 13 && hourUTC <= 21) ? 'session-active' : 'session-inactive';
-
+            const h = now.getUTCHours();
+            // Tokyo (00-09 UTC) | London (08-17 UTC) | NY (13-22 UTC)
+            document.getElementById('sess-tokyo').className = (h >= 0 && h <= 9) ? 'session-active' : 'session-inactive';
+            document.getElementById('sess-london').className = (h >= 8 && h <= 17) ? 'session-active' : 'session-inactive';
+            document.getElementById('sess-ny').className = (h >= 13 && h <= 22) ? 'session-active' : 'session-inactive';
+            document.getElementById('sess-latam').className = (h >= 13 && h <= 21) ? 'session-active' : 'session-inactive';
             document.getElementById('reloj-principal').innerText = now.toLocaleTimeString();
         }
-
         setInterval(updateMarketSessions, 1000);
         updateMarketSessions();
     </script>
