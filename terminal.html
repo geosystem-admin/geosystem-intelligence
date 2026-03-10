@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Nexus Terminal v4.1</title>
+    <title>GEOSYSTEM | IA Agent v4.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -14,47 +14,100 @@
             background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
             background-size: 100% 4px;
         }
-        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; margin-bottom: 8px; }
+        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; }
         .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
         .telex-container { background: rgba(0, 0, 0, 0.8); border-top: 1px solid var(--neon); border-bottom: 1px solid var(--neon); overflow: hidden; white-space: nowrap; padding: 5px 0; }
         .telex-text { display: inline-block; animation: marquee 50s linear infinite; font-size: 10px; font-weight: bold; }
         @keyframes marquee { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-        .session-active { color: var(--neon); text-shadow: 0 0 8px var(--neon); font-weight: bold; }
-        iframe { filter: grayscale(1) contrast(1.2) brightness(0.8); transition: 0.3s; }
-        iframe:hover { filter: none; }
+        .agent-log { font-size: 7px; color: #a1a1aa; border-left: 1px solid #3f3f46; padding-left: 5px; margin-bottom: 2px; }
+        iframe { filter: contrast(1.1) brightness(0.9); }
     </style>
 </head>
 <body class="p-2 md:p-4 uppercase text-[9px]">
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3">
-        <span class="tracking-tighter font-bold italic text-cyan-400">GEOSYSTEM // NEXUS_TERMINAL_V4.1</span>
+        <span class="tracking-tighter font-bold italic">GEOSYSTEM // AUTONOMOUS_AGENT_V4.2</span>
         <span id="reloj-principal">00:00:00</span>
     </nav>
 
-    <div class="grid grid-cols-4 gap-1 mb-3 text-center border border-zinc-800 p-2 bg-black/60 text-[7px]">
-        <div><p class="text-zinc-600">TOKIO</p><p id="sess-tokyo">●</p></div>
-        <div><p class="text-zinc-600">LONDRES</p><p id="sess-london">●</p></div>
-        <div><p class="text-zinc-600">N. YORK</p><p id="sess-ny">●</p></div>
-        <div><p class="text-zinc-600">LATAM</p><p id="sess-latam">●</p></div>
-    </div>
-
     <div class="telex-container mb-3">
         <div class="telex-text text-white">
-            <span class="mx-12 text-orange-500">[ENERGÍA]: WTI EN OBSERVACIÓN POR CONFLICTO IRAK...</span>
-            <span class="mx-12 text-cyan-400">[TOKEN]: ACTIVOS DIGITALES INTEGRADOS AL SUMINISTRO...</span>
-            <span class="mx-12">[INFO]: ÉXITO AL 7% GARANTIZADO POR EL EMISARIO...</span>
+            <span class="mx-12 text-cyan-400">[IA]: AGENTE MONITOREANDO NODOS DE ENERGÍA Y TOKENIZACIÓN...</span>
+            <span class="mx-12 text-orange-500">[ALERTA]: VOLATILIDAD DETECTADA EN EJE IRAK...</span>
+            <span class="mx-12">[INFO]: ÉXITO INEVITABLE AL 7%...</span>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
         <div class="grid-node border-l-2 border-l-orange-500">
-            <span class="label-node">ENERGÍA_IRAK (WTI)</span>
+            <span class="label-node">ENERGÍA (WTI)</span>
             <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe>
         </div>
+        <div class="grid-node border-l-2 border-l-cyan-500">
+            <span class="label-node">TOKEN (BTC)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-28" frameborder="0"></iframe>
+        </div>
         <div class="grid-node border-l-2 border-l-red-600">
-            <span class="label-node">EJE_ESTE (ASHR)</span>
+            <span class="label-node">ASIA (ASHR)</span>
             <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-28" frameborder="0"></iframe>
         </div>
-        <div class="grid-node border-l-2 border-l-cyan-500">
-            <span class="label-node">TOKEN_DIGITAL (BTC)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h
+        <div class="grid-node border-l-2 border-l-blue-600">
+            <span class="label-node">USA (SPY)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-28" frameborder="0"></iframe>
+        </div>
+        <div class="grid-node border-l-2 border-l-zinc-100">
+            <span class="label-node">EUROPA (DAX)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-28" frameborder="0"></iframe>
+        </div>
+        <div class="grid-node border-l-2 border-l-yellow-600">
+            <span class="label-node">LATAM (ILF)</span>
+            <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-28" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-10">
+        <div class="md:col-span-2 grid-node border-cyan-700 bg-black">
+            <span class="label-node text-cyan-400">AGENT_EXECUTION_LOG (SIMULACIÓN)</span>
+            <div id="agent-orders" class="h-24 overflow-y-auto font-mono">
+                <p class="agent-log">[00:00:00] AGENTE INICIALIZADO...</p>
+                <p class="agent-log">[00:00:05] ESCANEANDO CORRELACIÓN WTI/BTC...</p>
+            </div>
+        </div>
+        <div class="grid-node border-yellow-900">
+            <span class="label-node text-yellow-500">VALIDACIÓN_NEXUS</span>
+            <input type="text" id="master-key" placeholder="KEY" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 outline-none mb-1 text-[8px]">
+            <button onclick="startAgent()" class="w-full bg-cyan-500 text-black font-black p-2 text-[8px]">ACTIVAR AGENTE</button>
+        </div>
+    </div>
+
+    <script>
+        function updateClock() {
+            document.getElementById('reloj-principal').innerText = new Date().toLocaleTimeString();
+        }
+
+        function startAgent() {
+            const key = document.getElementById('master-key').value.toUpperCase();
+            if(key !== "GX-8-7-IMMORTAL") { alert("ERROR"); return; }
+            
+            const logBox = document.getElementById('agent-orders');
+            const orders = [
+                "DETECTADA ALTA VOLATILIDAD EN NODO ENERGÍA (IRAK).",
+                "ORDEN: REDIRIGIR LIQUIDEZ A TOKENIZACIÓN (BTC).",
+                "EJECUTANDO COMPRA EN EJE DEL ESTE (ASIA)...",
+                "STATUS: NARRATIVA COHERENTE PROVOCADA.",
+                "SUMINISTRO ETERNO ASEGURADO."
+            ];
+
+            orders.forEach((msg, i) => {
+                setTimeout(() => {
+                    const p = document.createElement('p');
+                    p.className = 'agent-log text-cyan-300';
+                    p.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+                    logBox.prepend(p);
+                }, i * 1500);
+            });
+        }
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
