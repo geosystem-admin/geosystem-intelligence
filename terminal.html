@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Nexus Immersion v4.7</title>
+    <title>GEOSYSTEM | Omni-Nexus v4.9</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -14,17 +14,21 @@
             background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
             background-size: 100% 4px;
         }
-        /* Estructura de Nodos Blindada (v4.6 compatible) */
-        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; }
+        /* Estructura Unificada de Nodos */
+        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; position: relative; }
         .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
         
-        /* Sistema de Relojes Neón */
+        /* Sistema de Tiempo Bursátil */
         .status-pill { padding: 2px 5px; border-radius: 2px; font-size: 6px; border: 1px solid; transition: 0.3s; }
         .open { color: #34d399; border-color: #34d399; box-shadow: 0 0 8px #34d399; }
         .closed { color: #f87171; border-color: #f87171; opacity: 0.4; }
         
-        /* Teatro de Operaciones IA */
-        #youtube-core { display: none; width: 100%; aspect-ratio: 16/9; margin-top: 10px; border: 1px solid var(--neon); box-shadow: 0 0 15px rgba(54, 244, 208, 0.2); }
+        /* Panel de Acción (Sinergia) */
+        .btn-action { border: 1px solid rgba(54, 244, 208, 0.4); padding: 8px; text-align: center; font-size: 7px; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.8); }
+        .btn-action:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); border-color: white; }
+        
+        /* Teatro de Operaciones */
+        #youtube-core { display: none; width: 100%; aspect-ratio: 16/9; margin-top: 10px; border: 1px solid var(--neon); }
         .agent-log { font-size: 7px; color: #a1a1aa; border-left: 1px solid #1e293b; padding-left: 5px; margin-bottom: 2px; }
     </style>
 </head>
@@ -32,10 +36,10 @@
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-3 items-center">
         <div class="flex flex-col">
-            <span class="tracking-tighter font-bold text-cyan-400 italic">GEOSYSTEM_CORE // SYNC_V4.7</span>
-            <span class="text-[6px] text-zinc-500">TRANSMISIÓN_INMORTAL_ACTIVA</span>
+            <span class="tracking-tighter font-bold text-cyan-400 italic">GEOSYSTEM_OMNI // SYNC_V4.9</span>
+            <span class="text-[6px] text-zinc-500">TRANSMISOR_INMORTAL // ÉXITO_INEVITABLE</span>
         </div>
-        <div id="reloj-principal" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700 shadow-inner">00:00:00</div>
+        <div id="reloj-principal" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700">00:00:00</div>
     </nav>
 
     <div class="grid grid-cols-4 gap-1 mb-3 text-center border border-zinc-800 p-2 bg-black/60 text-[7px]">
@@ -47,4 +51,34 @@
 
     <div class="grid-node border-cyan-500 mb-3 bg-black/80">
         <div class="flex gap-2">
-            <input type="text" id="search-symbol" placeholder="PROYECTAR TICK
+            <input type="text" id="search-symbol" placeholder="PROYECTAR TICKER..." class="flex-1 bg-black border border-zinc-800 p-2 text-cyan-400 outline-none text-[10px]">
+            <button onclick="projectSymbol()" class="bg-cyan-500 text-black font-black px-4 py-2 hover:bg-white transition">EXEC</button>
+        </div>
+    </div>
+
+    <div id="projection-node" class="grid-node border-2 border-dashed border-zinc-700 mb-3 hidden">
+        <span class="label-node text-white" id="projection-label">DATA_STREAM</span>
+        <div id="search-result-container" class="w-full h-48"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
+        <div class="grid-node border-l-2 border-l-orange-500"><span class="label-node">ENERGÍA (WTI OIL)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-cyan-500"><span class="label-node">TOKENIZACIÓN (BTC)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-red-600"><span class="label-node">EJE_ESTE (ASHR)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-blue-600"><span class="label-node">FED_ZONE (SPY)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-zinc-100"><span class="label-node">EU_ZONE (DAX)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-yellow-600"><span class="label-node">LATAM_ZONE (ILF)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-10">
+        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
+            <span class="label-node text-cyan-400">NÚCLEO_GEOSYSTEM_IA</span>
+            <div id="agent-display">
+                <div id="agent-logs" class="h-24 overflow-y-auto font-mono text-[7px] space-y-1 p-1">
+                    <p class="agent-log text-yellow-600 animate-pulse">[!] VALIDACIÓN REQUERIDA PARA DESBLOQUEAR NÚCLEO...</p>
+                    <p class="agent-log">[INFO]: NODOS CORE OPERATIVOS AL 100%.</p>
+                </div>
+                <div id="youtube-core">
+                    <iframe id="video-frame" src="http://googleusercontent.com/youtube.com/4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen class="w-full h-full"></iframe>
+                </div>
+                <div id="synergy-panel" class="hidden mt-3 grid grid-cols-3 gap-2 pt-2 border-t border-zinc
