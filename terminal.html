@@ -8,774 +8,162 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         :root { --neon: #36f4d0; --bg: #020617; }
-        body { 
-            font-family: 'JetBrains Mono', monospace; 
-            background-color: var(--bg); color: var(--neon); 
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg); color: var(--neon);
             background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
             background-size: 100% 4px; margin: 0; padding: 10px;
         }
         .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; margin-bottom: 8px; }
         .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
         .status-pill { padding: 2px 5px; border-radius: 2px; font-size: 6px; border: 1px solid; }
-        .open { color: #34d399; border-color: #34d399; box-shadow: 0 0 8px #34d399; }
-        .closed { color: #f87171; border-color: #f87171; opacity: 0.5; }
+        .open  { color: #34d399; border-color: #34d399; box-shadow: 0 0 8px #34d399; }
+        .closed{ color: #f87171; border-color: #f87171; opacity: 0.5; }
         .btn-synergy { background: black; border: 1px solid rgba(54, 244, 208, 0.4); padding: 10px; text-align: center; font-weight: bold; font-size: 8px; transition: all 0.3s; }
         .btn-synergy:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
         .sync-flash { animation: flash 0.5s ease-out; }
         @keyframes flash { 0% { background-color: #36f4d0; opacity: 0.8; } 100% { background-color: var(--bg); } }
-    </style>
-</head>
-<body class="uppercase text-[9px]">
 
-    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-2 items-center">
-        <div class="flex flex-col">
-            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // OP_V6.0</span>
-            <span class="text-[6px] text-zinc-500 italic">TRANSMISOR DE VERDADES ETERNAS</span>
-        </div>
-        <div id="reloj-v6" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700">00:00:00</div>
-    </nav>
-
-    <div class="grid-node !p-0 border-zinc-800 mb-3 overflow-hidden h-8 flex items-center">
-        <div class="bg-red-900 text-white px-3 h-full flex items-center font-bold text-[7px] animate-pulse">LIVE</div>
-        <div class="flex-1 h-full"><iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0" scrolling="no"></iframe></div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
-        <div class="grid-node border-l-2 border-l-orange-500"><span class="label-node">ENERGÍA (WTI OIL)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-cyan-500"><span class="label-node">TOKENIZACIÓN (BTC)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-red-600"><span class="label-node">EJE_ESTE (ASHR)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-blue-600"><span class="label-node">FED_ZONE (SPY)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-zinc-100"><span class="label-node">EU_ZONE (DAX)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-yellow-600"><span class="label-node">LATAM_ZONE (ILF)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
-            <span class="label-node">INTELIGENCIA_DESPLEGADA</span>
-            <div id="terminal-msg" class="h-8 text-[7px] text-zinc-500 italic mb-2">> SISTEMA LISTO PARA VALIDACIÓN...</div>
-            
-            <div id="portal-sinergia" class="hidden">
-                <div class="border border-cyan-500 bg-black mb-3"><iframe id="yt-player" src="" frameborder="0" allow="autoplay; fullscreen" class="w-full aspect-video"></iframe></div>
-                <div class="grid grid-cols-3 gap-2">
-                    </div>
-            </div>
-        </div>
-
-        <div class="grid-node border-yellow-900 bg-yellow-950/10">
-            <span class="label-node text-yellow-500 italic text-center">VALIDACIÓN_GX</span>
-            <div id="login-form">
-                <input type="text" id="pass-input" placeholder="INGRESE CLAVE GX" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 mb-2 text-[8px] outline-none uppercase">
-                <button onclick="unlockSystem()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] uppercase hover:bg-white active:scale-95 transition shadow-lg">SINCRONIZAR</button>
-           <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GEOSYSTEM INTELLIGENCE — Módulos</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
-
-  :root {
-    --bg: #080c10;
-    --panel: #0d1117;
-    --border: #1a2535;
-    --cyan: #00e5ff;
-    --green: #00ff88;
-    --amber: #ffb300;
-    --red: #ff3d3d;
-    --text: #8899aa;
-    --text-bright: #cce0f0;
-    --glow-cyan: 0 0 12px rgba(0,229,255,0.5);
-    --glow-green: 0 0 12px rgba(0,255,136,0.5);
-    --glow-amber: 0 0 12px rgba(255,179,0,0.5);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    font-family: 'Share Tech Mono', monospace;
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-    padding: 40px 20px;
-  }
-
-  /* SCANLINES */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.08) 2px,
-      rgba(0,0,0,0.08) 4px
-    );
-    pointer-events: none;
-    z-index: 9999;
-  }
-
-  .section-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: var(--cyan);
-    text-transform: uppercase;
-    opacity: 0.7;
-    margin-bottom: 4px;
-  }
-
-  /* BUTTONS */
-  .btn-group {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .btn {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    padding: 14px 28px;
-    border: 1px solid;
-    background: transparent;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.2s;
-    overflow: hidden;
-  }
-
-  .btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .btn:hover::before { opacity: 1; }
-
-  .btn-donaciones {
-    color: var(--amber);
-    border-color: var(--amber);
-  }
-  .btn-donaciones::before { background: rgba(255,179,0,0.08); }
-  .btn-donaciones:hover { box-shadow: var(--glow-amber); color: #fff; }
-
-  .btn-suscripciones {
-    color: var(--cyan);
-    border-color: var(--cyan);
-  }
-  .btn-suscripciones::before { background: rgba(0,229,255,0.08); }
-  .btn-suscripciones:hover { box-shadow: var(--glow-cyan); color: #fff; }
-
-  .btn-colaboraciones {
-    color: var(--green);
-    border-color: var(--green);
-    background: rgba(0,255,136,0.07);
-  }
-  .btn-colaboraciones::before { background: rgba(0,255,136,0.1); }
-  .btn-colaboraciones:hover { box-shadow: var(--glow-green); color: #fff; }
-
-  /* MODAL OVERLAY */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    backdrop-filter: blur(4px);
-  }
-
-  .modal-overlay.active { display: flex; }
-
-  /* MODAL PANEL */
-  .modal {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    width: 100%;
-    max-width: 520px;
-    position: relative;
-    animation: modalIn 0.2s ease;
-  }
-
-  @keyframes modalIn {
-    from { opacity: 0; transform: translateY(-16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .modal-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 3px;
-  }
-
-  .modal-close {
-    background: none;
-    border: none;
-    color: var(--text);
-    font-size: 18px;
-    cursor: pointer;
-    line-height: 1;
-    font-family: 'Share Tech Mono', monospace;
-    padding: 2px 6px;
-  }
-  .modal-close:hover { color: var(--text-bright); }
-
-  .modal-body { padding: 24px 20px; }
-
-  .terminal-line {
-    font-size: 12px;
-    color: var(--text);
-    margin-bottom: 6px;
-    line-height: 1.6;
-  }
-  .terminal-line .prompt { color: var(--cyan); margin-right: 8px; }
-  .terminal-line .val { color: var(--text-bright); }
-
-  /* AMOUNT SELECTOR */
-  .amount-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    margin: 20px 0;
-  }
-
-  .amount-btn {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 14px;
-    padding: 12px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text);
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: center;
-  }
-  .amount-btn:hover, .amount-btn.selected {
-    border-color: var(--amber);
-    color: var(--amber);
-    background: rgba(255,179,0,0.06);
-  }
-
-  /* CUSTOM INPUT */
-  .input-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .input-label {
-    font-size: 12px;
-    color: var(--text);
-    white-space: nowrap;
-  }
-
-  .terminal-input {
-    flex: 1;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 14px;
-    background: #0a0f16;
-    border: 1px solid var(--border);
-    color: var(--text-bright);
-    padding: 10px 12px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .terminal-input:focus { border-color: var(--amber); }
-
-  /* PAYMENT METHODS */
-  .pay-methods {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .pay-option {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: all 0.15s;
-    font-size: 12px;
-  }
-  .pay-option:hover { border-color: var(--amber); background: rgba(255,179,0,0.04); }
-  .pay-option input[type="radio"] { accent-color: var(--amber); }
-  .pay-icon { font-size: 18px; }
-
-  /* SUBSCRIPTION TIERS */
-  .tier-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin: 20px 0;
-  }
-
-  .tier-card {
-    border: 1px solid var(--border);
-    padding: 14px 16px;
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-  }
-  .tier-card:hover { border-color: var(--cyan); background: rgba(0,229,255,0.03); }
-  .tier-card.featured { border-color: rgba(0,229,255,0.4); }
-
-  .tier-badge {
-    position: absolute;
-    top: -1px;
-    right: 12px;
-    background: var(--cyan);
-    color: #000;
-    font-size: 10px;
-    letter-spacing: 2px;
-    padding: 2px 8px;
-    font-family: 'Share Tech Mono', monospace;
-  }
-
-  .tier-name {
-    font-family: 'Orbitron', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--cyan);
-    margin-bottom: 4px;
-  }
-  .tier-price {
-    font-size: 20px;
-    color: var(--text-bright);
-    margin-bottom: 6px;
-  }
-  .tier-price span { font-size: 12px; color: var(--text); }
-  .tier-features { font-size: 11px; color: var(--text); line-height: 1.8; }
-  .tier-features li { list-style: none; }
-  .tier-features li::before { content: '> '; color: var(--cyan); }
-
-  /* COLLAB FORM */
-  .form-group {
-    margin-bottom: 14px;
-  }
-  .form-label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 2px;
-    color: var(--cyan);
-    margin-bottom: 6px;
-    text-transform: uppercase;
-  }
-  .collab-types {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-  .collab-type {
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 1px;
-    background: transparent;
-    color: var(--text);
-    cursor: pointer;
-    transition: all 0.15s;
-    text-transform: uppercase;
-  }
-  .collab-type:hover, .collab-type.selected {
-    border-color: var(--green);
-    color: var(--green);
-    background: rgba(0,255,136,0.05);
-  }
-  .terminal-textarea {
-    width: 100%;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    background: #0a0f16;
-    border: 1px solid var(--border);
-    color: var(--text-bright);
-    padding: 10px 12px;
-    outline: none;
-    resize: vertical;
-    min-height: 80px;
-    transition: border-color 0.15s;
-  }
-  .terminal-textarea:focus { border-color: var(--green); }
-
-  /* ACTION BUTTON */
-  .modal-action {
-    width: 100%;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    padding: 14px;
-    border: 1px solid;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 4px;
-  }
-
-  .action-amber {
-    background: rgba(255,179,0,0.1);
-    border-color: var(--amber);
-    color: var(--amber);
-  }
-  .action-amber:hover { background: rgba(255,179,0,0.2); box-shadow: var(--glow-amber); color: #fff; }
-
-  .action-cyan {
-    background: rgba(0,229,255,0.1);
-    border-color: var(--cyan);
-    color: var(--cyan);
-  }
-  .action-cyan:hover { background: rgba(0,229,255,0.2); box-shadow: var(--glow-cyan); color: #fff; }
-
-  .action-green {
-    background: rgba(0,255,136,0.1);
-    border-color: var(--green);
-    color: var(--green);
-  }
-  .action-green:hover { background: rgba(0,255,136,0.2); box-shadow: var(--glow-green); color: #fff; }
-
-  /* ACCENT LINES */
-  .accent-line { width: 100%; height: 1px; background: var(--border); margin: 16px 0; }
-
-  /* STATUS MSG */
-  .status-msg {
-    display: none;
-    margin-top: 12px;
-    padding: 10px 14px;
-    border: 1px solid;
-    font-size: 12px;
-    line-height: 1.5;
-  }
-  .status-msg.show { display: block; }
-  .status-success { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.05); }
-
-  /* DEMO PANEL */
-  .demo-panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    padding: 20px;
-    width: 100%;
-    max-width: 520px;
-  }
-
-  .demo-section-label {
-    font-size: 10px;
-    letter-spacing: 4px;
-    color: var(--green);
-    margin-bottom: 16px;
-    opacity: 0.8;
-  }
-
-  /* MODAL COLOR ACCENTS */
-  #modal-donaciones .modal-header { border-color: rgba(255,179,0,0.2); }
-  #modal-donaciones .modal-title { color: var(--amber); }
-
-  #modal-suscripciones .modal-header { border-color: rgba(0,229,255,0.2); }
-  #modal-suscripciones .modal-title { color: var(--cyan); }
-
-  #modal-colaboraciones .modal-header { border-color: rgba(0,255,136,0.2); }
-  #modal-colaboraciones .modal-title { color: var(--green); }
-</style>
-</head>
-<body>
-
-<!-- DEMO PANEL (simulando el contexto de la app) -->
-<div class="demo-panel">
-  <div class="demo-section-label">> CENTRO_DE_INTELIGENCIA_IA / MÓDULOS_ACTIVOS</div>
-  <div class="terminal-line"><span class="prompt">></span><span class="val">SISTEMA SINCRONIZADO. CANALES DISPONIBLES.</span></div>
-  <div class="accent-line"></div>
-  <div class="btn-group">
-    <button class="btn btn-donaciones" onclick="openModal('donaciones')">DONACIONES</button>
-    <button class="btn btn-suscripciones" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
-    <button class="btn btn-colaboraciones" onclick="openModal('colaboraciones')">COLABORACIONES</button>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════ -->
-<!-- MODAL: DONACIONES -->
-<!-- ═══════════════════════════════════════ -->
-<div class="modal-overlay" id="modal-donaciones" onclick="closeOnOverlay(event, 'donaciones')">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">[ DONACIONES ]</div>
-      <button class="modal-close" onclick="closeModal('donaciones')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="terminal-line"><span class="prompt">></span> Selecciona monto a transferir al sistema:</div>
-
-      <div class="amount-grid">
-        <button class="amount-btn" onclick="selectAmount(this, '5')">$5</button>
-        <button class="amount-btn" onclick="selectAmount(this, '10')">$10</button>
-        <button class="amount-btn" onclick="selectAmount(this, '25')">$25</button>
-        <button class="amount-btn" onclick="selectAmount(this, '50')">$50</button>
-        <button class="amount-btn" onclick="selectAmount(this, '100')">$100</button>
-        <button class="amount-btn" onclick="selectAmount(this, 'custom')">OTRO</button>
-      </div>
-
-      <div class="input-row" id="custom-amount-row" style="display:none;">
-        <span class="input-label">USD $</span>
-        <input class="terminal-input" type="number" id="custom-amount-input" placeholder="000.00" min="1">
-      </div>
-
-      <div class="accent-line"></div>
-      <div class="terminal-line" style="margin-bottom:10px;"><span class="prompt">></span> Método de transferencia:</div>
-
-      <div class="pay-methods">
-        <label class="pay-option">
-          <input type="radio" name="pay-don" value="paypal" checked>
-          <span class="pay-icon">🅿</span>
-          <span>PayPal — paypal.me/geosystem</span>
-        </label>
-        <label class="pay-option">
-          <input type="radio" name="pay-don" value="crypto">
-          <span class="pay-icon">₿</span>
-          <span>Crypto — BTC / ETH / USDT</span>
-        </label>
-        <label class="pay-option">
-          <input type="radio" name="pay-don" value="transfer">
-          <span class="pay-icon">🏦</span>
-          <span>Transferencia bancaria</span>
-        </label>
-      </div>
-
-      <button class="modal-action action-amber" onclick="processDonacion()">
-        > CONFIRMAR TRANSFERENCIA
-      </button>
-
-      <div class="status-msg status-success" id="don-success">
-        > TRANSACCIÓN REGISTRADA. FONDOS EN TRÁNSITO.<br>
-        > GRACIAS POR APOYAR EL SISTEMA.
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════ -->
-<!-- MODAL: SUSCRIPCIONES -->
-<!-- ═══════════════════════════════════════ -->
-<div class="modal-overlay" id="modal-suscripciones" onclick="closeOnOverlay(event, 'suscripciones')">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">[ SUSCRIPCIONES ]</div>
-      <button class="modal-close" onclick="closeModal('suscripciones')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="terminal-line" style="margin-bottom:16px;"><span class="prompt">></span> Selecciona nivel de acceso al sistema:</div>
-
-      <div class="tier-grid">
-        <div class="tier-card" onclick="selectTier(this)">
-          <div class="tier-name">OBSERVER</div>
-          <div class="tier-price">$0 <span>/ mes</span></div>
-          <ul class="tier-features">
-            <li>Acceso básico al feed</li>
-            <li>Alertas geopolíticas generales</li>
-          </ul>
-        </div>
-        <div class="tier-card featured" onclick="selectTier(this)">
-          <div class="tier-badge">RECOMENDADO</div>
-          <div class="tier-name">ANALYST</div>
-          <div class="tier-price">$9 <span>/ mes</span></div>
-          <ul class="tier-features">
-            <li>Índices en tiempo real</li>
-            <li>Canal del emisario desbloqueado</li>
-            <li>Informes semanales exclusivos</li>
-          </ul>
-        </div>
-        <div class="tier-card" onclick="selectTier(this)">
-          <div class="tier-name">STRATEGIST</div>
-          <div class="tier-price">$29 <span>/ mes</span></div>
-          <ul class="tier-features">
-            <li>Todo ANALYST incluido</li>
-            <li>API access personalizado</li>
-            <li>Briefings clasificados</li>
-            <li>Soporte prioritario directo</li>
-          </ul>
-        </div>
-      </div>
-
-      <button class="modal-action action-cyan" onclick="processSuscripcion()">
-        > ACTIVAR ACCESO
-      </button>
-
-      <div class="status-msg status-success" id="sus-success">
-        > NIVEL DE ACCESO ACTUALIZADO.<br>
-        > BIENVENIDO AL SISTEMA GEOSYSTEM.
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════ -->
-<!-- MODAL: COLABORACIONES -->
-<!-- ═══════════════════════════════════════ -->
-<div class="modal-overlay" id="modal-colaboraciones" onclick="closeOnOverlay(event, 'colaboraciones')">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">[ COLABORACIONES ]</div>
-      <button class="modal-close" onclick="closeModal('colaboraciones')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="terminal-line" style="margin-bottom:16px;"><span class="prompt">></span> Tipo de colaboración:</div>
-
-      <div class="collab-types">
-        <button class="collab-type" onclick="selectCollab(this)">Análisis / Redacción</button>
-        <button class="collab-type" onclick="selectCollab(this)">Desarrollo / Código</button>
-        <button class="collab-type" onclick="selectCollab(this)">Datos / Fuentes</button>
-        <button class="collab-type" onclick="selectCollab(this)">Traducción</button>
-        <button class="collab-type" onclick="selectCollab(this)">Diseño / UX</button>
-        <button class="collab-type" onclick="selectCollab(this)">Otro</button>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">// Identificación</label>
-        <input class="terminal-input" type="text" placeholder="Alias o nombre de contacto" style="width:100%;">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">// Canal de contacto</label>
-        <input class="terminal-input" type="text" placeholder="Email / Telegram / Signal" style="width:100%;">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">// Mensaje</label>
-        <textarea class="terminal-textarea" placeholder="> Describe tu propuesta de colaboración..."></textarea>
-      </div>
-
-      <button class="modal-action action-green" onclick="processColaboracion()">
-        > ENVIAR SOLICITUD
-      </button>
-
-      <div class="status-msg status-success" id="col-success">
-        > SOLICITUD RECIBIDA. ANALIZANDO PERFIL.<br>
-        > RESPUESTA EN 24-48H VÍA CANAL SEGURO.
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  function openModal(id) {
-    document.getElementById('modal-' + id).classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal(id) {
-    document.getElementById('modal-' + id).classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  function closeOnOverlay(e, id) {
-    if (e.target === e.currentTarget) closeModal(id);
-  }
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      ['donaciones','suscripciones','colaboraciones'].forEach(closeModal);
-    }
-  });
-
-  // Amounts
-  function selectAmount(btn, val) {
-    document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-    const row = document.getElementById('custom-amount-row');
-    row.style.display = val === 'custom' ? 'flex' : 'none';
-  }
-
-  // Tiers
-  function selectTier(card) {
-    document.querySelectorAll('.tier-card').forEach(c => c.style.outline = 'none');
-    card.style.outline = '1px solid var(--cyan)';
-  }
-
-  // Collab types
-  function selectCollab(btn) {
-    document.querySelectorAll('.collab-type').forEach(b => b.classList.remove('selected'));
-    btn.classList.add('selected');
-  }
-
-  // Simulate submit
-  function processDonacion() {
-    document.getElementById('don-success').classList.add('show');
-    setTimeout(() => closeModal('donaciones'), 2800);
-  }
-
-  function processSuscripcion() {
-    document.getElementById('sus-success').classList.add('show');
-    setTimeout(() => closeModal('suscripciones'), 2800);
-  }
-
-  function processColaboracion() {
-    document.getElementById('col-success').classList.add('show');
-    setTimeout(() => closeModal('colaboraciones'), 2800);
-  }
-</script>
-</body>
-</html>
-
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // MOTOR DE TIEMPO
-        function clock() {
-            document.getElementById('reloj-v6').innerText = new Date().toLocaleTimeString();
+        /* \u2500\u2500 BOLSAS WIDGET \u2500\u2500 */
+        #bolsas-widget {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
         }
-        setInterval(clock, 1000);
-
-        // SISTEMA DE REDIRECCIÓN AVANZADA
-        function redirigir(tipo) {
-            const destinos = {
-                'donacion': 'https://tusitioweb.com/donar-datos', // Cambia por tu link de captura
-                'suscripcion': 'https://tusitioweb.com/suscribir-datos',
-                'colaboracion': 'https://tusitioweb.com/colaborar-datos'
-            };
-            window.open(destinos[tipo], '_blank');
+        .bolsa-card {
+            border: 1px solid rgba(54,244,208,0.15);
+            background: rgba(2,6,23,0.95);
+            padding: 5px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .bolsa-region {
+            font-size: 6px;
+            letter-spacing: 1px;
+            color: #64748b;
+        }
+        .bolsa-name {
+            font-size: 7px;
+            font-weight: bold;
+            color: var(--neon);
+            letter-spacing: 0.5px;
+        }
+        .bolsa-horario {
+            font-size: 6px;
+            color: #475569;
+            line-height: 1.4;
+        }
+        .bolsa-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 6px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding: 1px 4px;
+            border: 1px solid;
+            width: fit-content;
+        }
+        .bolsa-status.open  { color: #34d399; border-color: #34d399; }
+        .bolsa-status.closed{ color: #f87171; border-color: #f87171; opacity: 0.6; }
+        .bolsa-status.pre   { color: #fbbf24; border-color: #fbbf24; }
+        .dot {
+            width: 5px; height: 5px; border-radius: 50%;
+            display: inline-block;
+        }
+        .dot.open   { background: #34d399; box-shadow: 0 0 4px #34d399; animation: pulse-dot 1.5s infinite; }
+        .dot.closed { background: #f87171; }
+        .dot.pre    { background: #fbbf24; }
+        @keyframes pulse-dot {
+            0%,100% { opacity:1; } 50% { opacity:0.3; }
         }
 
-        // ACTIVACIÓN DE NÚCLEO
-        function unlockSystem() {
-            const key = document.getElementById('pass-input').value.trim().toUpperCase();
-            if(key === "GX-8-7-IMMORTAL") {
-                document.body.classList.add('sync-flash');
-                setTimeout(() => document.body.classList.remove('sync-flash'), 500);
-                
-                document.getElementById('terminal-msg').innerHTML = "<span class='text-cyan-400 font-bold'>> NÚCLEO VIVO. BIENVENIDO EMISARIO.</span>";
-                document.getElementById('yt-player').src = "https://www.youtube.com/embed/TU_ID_AQUI?autoplay=13"; // Tu ID real aquí
-                document.getElementById('portal-sinergia').classList.remove('hidden');
-                document.getElementById('login-form').innerHTML = '<div class="text-cyan-400 text-center py-2 border border-cyan-900 font-bold animate-pulse">SISTEMA SINCRONIZADO</div>';
-            } else {
-                alert("ERROR: CLAVE INCORRECTA");
-            }
+        /* \u2500\u2500 MODALES \u2500\u2500 */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.88); z-index: 1000;
+            align-items: center; justify-content: center;
+            padding: 16px; backdrop-filter: blur(4px);
         }
-    </script>
-</body>
-</html>
-
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: #0d1117; border: 1px solid #1a2535;
+            width: 100%; max-width: 480px;
+            animation: modalIn 0.18s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        @keyframes modalIn { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+        .modal-head {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px; border-bottom: 1px solid #1a2535;
+        }
+        .modal-head-title { font-size: 10px; font-weight: bold; letter-spacing: 3px; text-transform: uppercase; }
+        .modal-x { background:none; border:none; color:#64748b; font-size:16px; cursor:pointer; line-height:1; padding: 2px 5px; }
+        .modal-x:hover { color:#cce0f0; }
+        .modal-body { padding: 18px 14px; }
+        .m-label { font-size: 7px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+        .m-input {
+            width: 100%; font-family: 'JetBrains Mono', monospace; font-size: 9px;
+            background: #080c10; border: 1px solid #1e293b; color: #cce0f0;
+            padding: 8px 10px; outline: none; margin-bottom: 10px;
+        }
+        .m-input:focus { border-color: var(--neon); }
+        .m-textarea {
+            width: 100%; font-family: 'JetBrains Mono', monospace; font-size: 9px;
+            background: #080c10; border: 1px solid #1e293b; color: #cce0f0;
+            padding: 8px 10px; outline: none; resize: vertical; min-height: 70px;
+        }
+        .m-textarea:focus { border-color: #00ff88; }
+        .amount-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin: 10px 0; }
+        .amount-btn {
+            font-family: 'JetBrains Mono', monospace; font-size: 10px;
+            padding: 8px; border: 1px solid #1e293b; background: transparent;
+            color: #64748b; cursor: pointer; transition: all 0.15s; text-align: center;
+        }
+        .amount-btn:hover, .amount-btn.sel { border-color: #ffb300; color: #ffb300; background: rgba(255,179,0,0.06); }
+        .pay-opt {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 10px; border: 1px solid #1e293b; cursor: pointer;
+            font-size: 8px; margin-bottom: 6px; transition: all 0.15s;
+        }
+        .pay-opt:hover { border-color: #ffb300; background: rgba(255,179,0,0.04); }
+        .pay-opt input { accent-color: #ffb300; }
+        .tier-card {
+            border: 1px solid #1e293b; padding: 10px 12px;
+            cursor: pointer; margin-bottom: 7px; transition: all 0.15s; position: relative;
+        }
+        .tier-card:hover { border-color: var(--neon); background: rgba(54,244,208,0.03); }
+        .tier-card.featured { border-color: rgba(54,244,208,0.35); }
+        .tier-badge {
+            position: absolute; top:-1px; right:10px;
+            background: var(--neon); color:#000; font-size:6px; letter-spacing:2px; padding:2px 6px;
+        }
+        .tier-name { font-size:8px; font-weight:bold; letter-spacing:2px; color:var(--neon); margin-bottom:3px; }
+        .tier-price { font-size:16px; color:#cce0f0; margin-bottom:5px; }
+        .tier-price span { font-size:9px; color:#64748b; }
+        .tier-feats { font-size:7px; color:#64748b; line-height:1.8; list-style:none; }
+        .tier-feats li::before { content:'> '; color:var(--neon); }
+        .collab-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px; }
+        .collab-chip {
+            font-family:'JetBrains Mono',monospace; font-size:7px; letter-spacing:1px;
+            padding:7px 10px; border:1px solid #1e293b; background:transparent;
+            color:#64748b; cursor:pointer; transition:all 0.15s; text-transform:uppercase;
+        }
+        .collab-chip:hover, .collab-chip.sel { border-color:#00ff88; color:#00ff88; background:rgba(0,255,136,0.05); }
+        .m-action {
+            width:100%; font-family:'JetBrains Mono',monospace; font-size:8px;
+            letter-spacing:3px; text-transform:uppercase; padding:11px;
+            border:1px solid; cursor:pointer; transition:all 0.2s; margin-top:6px;
+        }
+        .m-amber { background:rgba(255,179,0,0.08); border-color:#ffb300; color:#ffb300; }
+        .m-amber:hover { background:rgba(255,179,0,0.18); box-shadow:0 0 10px rgba(255,179,0,0.4); color:#fff; }
+        .m-cyan  { background:rgba(54,244,208,0.08); border-color:var(--neon); color:var(--neon); }
+        .m-cyan:hover  { background:rgba(54,244,208,0.18); box-shadow:0 0 10px rgba(54,244,208,0.4); color:#fff; }
+        .m-green { background:rgba(0,255,136,0.08); border-color:#00ff88; color:#00ff88; }
+        .m-green:hover { background:rgba(0,255,136,0.18); box-shadow:0 0 10px rgba(0,255,136,0.4); color:#fff; }
+        .m-success {
+            display:none; margin-top:10px; padding:8px 12px;
+            border:1px solid #00ff88; color:#00ff88;
+            background:rgba(0,255,136,0.
