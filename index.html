@@ -1,42 +1,90 @@
-<div id="terminal-container" class="space-y-4">
-    <button onclick="iniciarAcceso()" id="btn-acceder" class="bg-[#2dd4bf] hover:bg-teal-300 text-black font-black py-5 px-12 rounded-lg text-xl uppercase transition-all transform hover:scale-105 glow-text">
-        Acceder a la Terminal
-    </button>
-    
-    <div id="console-output" class="hidden text-left font-mono text-teal-500 text-xs md:text-sm bg-black p-4 rounded border border-teal-900 max-w-md mx-auto h-40 overflow-hidden">
-        <p id="line-1">_</p>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geosystem Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #050a0f; color: white; font-family: sans-serif; overflow-x: hidden; }
+        .glow-teal { box-shadow: 0 0 20px rgba(45, 212, 191, 0.3); }
+        .terminal-text { font-family: 'Courier New', Courier, monospace; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between min-h-screen text-center p-4">
 
-<script>
-function iniciarAcceso() {
-    const btn = document.getElementById('btn-acceder');
-    const consoleBox = document.getElementById('console-output');
-    const lines = [
-        "> ESTABLECIENDO CONEXIÓN CON NODO LATAM...",
-        "> ENCRIPTACIÓN RSA 4096-BIT ACTIVA.",
-        "> ACCEDIENDO AL ORÁCULO DE DATOS...",
-        "> SINCRONIZANDO EJE DE PODER GLOBAL...",
-        "> BIENVENIDO, EMISARIO. ACCESO CONCEDIDO."
-    ];
+    <header class="mt-8">
+        <div class="flex flex-col items-center">
+            <div class="w-12 h-12 border-2 border-teal-400 rounded-full flex items-center justify-center mb-4">
+                <div class="w-6 h-6 border border-teal-400 rounded-full flex items-center justify-center animate-pulse">
+                    <div class="w-1 h-1 bg-teal-400 rounded-full"></div>
+                </div>
+            </div>
+            <h2 class="tracking-[0.3em] font-bold text-lg uppercase">Geosystem</h2>
+            <p class="tracking-[0.2em] text-[10px] text-teal-500 opacity-70">INTELLIGENCE</p>
+        </div>
+    </header>
 
-    btn.classList.add('hidden');
-    consoleBox.classList.remove('hidden');
+    <main class="w-full max-w-sm space-y-8">
+        <h1 class="text-3xl font-black uppercase tracking-tight leading-none">
+            MONITOREA EL EJE DEL PODER GLOBAL <span class="text-teal-400 font-normal italic">DESDE LATAM.</span>
+        </h1>
+        
+        <p class="text-sm font-light tracking-widest text-gray-400">
+            ANTICÍPATE A LOS CAMBIOS GEOPOLÍTICOS CON DATOS EN TIEMPO REAL.
+        </p>
 
-    let i = 0;
-    const interval = setInterval(() => {
-        if (i < lines.length) {
-            const p = document.createElement('p');
-            p.textContent = lines[i];
-            consoleBox.appendChild(p);
-            i++;
-        } else {
-            clearInterval(interval);
-            // Redirección final a la plataforma
-            setTimeout(() => {
-                window.location.href = "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"; 
-            }, 1000);
+        <div id="action-area" class="relative min-h-[200px] flex flex-col items-center justify-center">
+            <button onclick="ejecutarTerminal()" id="btn-main" class="bg-[#2dd4bf] text-black font-black py-4 px-8 rounded-md text-sm uppercase glow-teal active:scale-95 transition-all">
+                Acceder a la Terminal
+            </button>
+
+            <div id="console-box" class="hidden w-full bg-black/80 border border-teal-900/50 p-4 rounded text-left">
+                <div class="flex space-x-2 mb-2">
+                    <div class="w-2 h-2 rounded-full bg-red-500/50"></div>
+                    <div class="w-2 h-2 rounded-full bg-yellow-500/50"></div>
+                    <div class="w-2 h-2 rounded-full bg-green-500/50"></div>
+                </div>
+                <div id="lines" class="terminal-text text-[10px] text-teal-400 space-y-1"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="mb-8 w-full border-t border-white/5 pt-4">
+        <p class="text-[9px] text-gray-600 tracking-[0.4em] uppercase">Suministro de datos eterno</p>
+    </footer>
+
+    <script>
+        function ejecutarTerminal() {
+            const btn = document.getElementById('btn-main');
+            const box = document.getElementById('console-box');
+            const linesContainer = document.getElementById('lines');
+            
+            btn.classList.add('hidden');
+            box.classList.remove('hidden');
+
+            const comandos = [
+                "> Iniciando protocolo de enlace...",
+                "> Localizando nodos en Bogotá/Cali...",
+                "> Encriptando canal de transmisión...",
+                "> Sincronizando con Geosystem Intelligence...",
+                "> ACCESO AUTORIZADO."
+            ];
+
+            comandos.forEach((texto, i) => {
+                setTimeout(() => {
+                    const p = document.createElement('p');
+                    p.textContent = texto;
+                    linesContainer.appendChild(p);
+                    
+                    if(i === comandos.length - 1) {
+                        setTimeout(() => {
+                            window.location.href = "https://geosystem-intelligence.replit.app/";
+                        }, 1200);
+                    }
+                }, i * 600);
+            });
         }
-    }, 600);
-}
-</script>
+    </script>
+</body>
+</html>
