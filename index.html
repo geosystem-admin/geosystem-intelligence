@@ -1,55 +1,42 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geosystem Intelligence</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #050a0f; color: white; font-family: sans-serif; }
-        .glow-text { text-shadow: 0 0 10px rgba(45, 212, 191, 0.5); }
-        .bg-gradient-dark { background: radial-gradient(circle at center, #0a1622 0%, #050a0f 100%); }
-    </style>
-</head>
-<body class="bg-gradient-dark flex flex-col items-center justify-center min-h-screen text-center p-6">
+<div id="terminal-container" class="space-y-4">
+    <button onclick="iniciarAcceso()" id="btn-acceder" class="bg-[#2dd4bf] hover:bg-teal-300 text-black font-black py-5 px-12 rounded-lg text-xl uppercase transition-all transform hover:scale-105 glow-text">
+        Acceder a la Terminal
+    </button>
+    
+    <div id="console-output" class="hidden text-left font-mono text-teal-500 text-xs md:text-sm bg-black p-4 rounded border border-teal-900 max-w-md mx-auto h-40 overflow-hidden">
+        <p id="line-1">_</p>
+    </div>
+</div>
 
-    <header class="mb-12">
-        <div class="flex flex-col items-center space-y-2">
-            <div class="w-16 h-16 border-2 border-teal-400 rounded-full flex items-center justify-center mb-2">
-                <span class="text-teal-400 text-3xl">⦿</span>
-            </div>
-            <h2 class="tracking-[0.3em] font-bold text-xl">GEOSYSTEM</h2>
-            <p class="tracking-[0.2em] text-xs text-gray-400">INTELLIGENCE</p>
-        </div>
-    </header>
+<script>
+function iniciarAcceso() {
+    const btn = document.getElementById('btn-acceder');
+    const consoleBox = document.getElementById('console-output');
+    const lines = [
+        "> ESTABLECIENDO CONEXIÓN CON NODO LATAM...",
+        "> ENCRIPTACIÓN RSA 4096-BIT ACTIVA.",
+        "> ACCEDIENDO AL ORÁCULO DE DATOS...",
+        "> SINCRONIZANDO EJE DE PODER GLOBAL...",
+        "> BIENVENIDO, EMISARIO. ACCESO CONCEDIDO."
+    ];
 
-    <main class="max-w-4xl space-y-8">
-        <h1 class="text-4xl md:text-6xl font-black uppercase leading-tight">
-            Monitorea el eje del <br> poder global <br> desde Latam.
-        </h1>
-        
-        <p class="text-lg md:text-xl font-medium tracking-wide text-gray-300">
-            ANTICÍPATE A LOS CAMBIOS GEOPOLÍTICOS <br> CON DATOS EN TIEMPO REAL.
-        </p>
+    btn.classList.add('hidden');
+    consoleBox.classList.remove('hidden');
 
-        <p class="text-gray-500 text-sm tracking-widest uppercase">
-            +10,000 Nodos de Datos, Mapas de Calor de Riesgo y Dictámenes Técnicos
-        </p>
-
-        <div class="py-6">
-            <p class="text-lg font-bold tracking-widest border-b-2 border-gray-800 pb-4 inline-block">
-                SUSCRÍBETE AL ORÁCULO DE DATOS ETERNOS.
-            </p>
-        </div>
-
-        <button class="bg-[#2dd4bf] hover:bg-teal-300 text-black font-black py-5 px-12 rounded-lg text-xl uppercase transition-all transform hover:scale-105 glow-text">
-            Acceder a la Terminal
-        </button>
-    </main>
-
-    <footer class="mt-20 opacity-20 text-[10px] tracking-[0.5em] uppercase">
-        Esta es la verdad eterna | El éxito
-    </footer>
-
-</body>
-</html>
+    let i = 0;
+    const interval = setInterval(() => {
+        if (i < lines.length) {
+            const p = document.createElement('p');
+            p.textContent = lines[i];
+            consoleBox.appendChild(p);
+            i++;
+        } else {
+            clearInterval(interval);
+            // Redirección final a la plataforma
+            setTimeout(() => {
+                window.location.href = "https://geosystem-intelligence.replit.app/terminal"; 
+            }, 1000);
+        }
+    }, 600);
+}
+</script>
