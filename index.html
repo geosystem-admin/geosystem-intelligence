@@ -42,14 +42,24 @@
             </p>
         </div>
 
-        <button class="bg-[#2dd4bf] hover:bg-teal-300 text-black font-black py-5 px-12 rounded-lg text-xl uppercase transition-all transform hover:scale-105 glow-text">
-            Acceder a la Terminal
-        </button>
-    </main>
+        <button onclick="conectarTerminal()" class="bg-[#2dd4bf] hover:bg-teal-300 text-black font-black py-5 px-12 rounded-sm active:scale-95 transition-all">
+    Acceder a la Terminal
+</button>
 
-    <footer class="mt-20 opacity-20 text-[10px] tracking-[0.5em] uppercase">
-        Esta es la verdad eterna | El éxito
-    </footer>
+
+<script>
+function conectarTerminal() {
+    window.location.href = "terminal.html";
+}
+</script>
+
+</main>
+
+<footer class="mt-20 opacity-20 text-[10px] tracking-[0.5em] uppercase text-center w-full">
+    Esta es la verdad eterna | El éxito
+</footer>
 
 </body>
 </html>
+
+    
