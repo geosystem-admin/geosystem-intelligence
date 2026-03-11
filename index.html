@@ -3,64 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Intelligence Terminal</title>
+    <title>Geosystem Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #000; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        .scanline {
-            width: 100%; height: 2px; background: rgba(54, 244, 208, 0.1);
-            position: fixed; top: 0; left: 0; z-index: 10;
-            animation: scan 4s linear infinite;
-        }
-        @keyframes scan { from { top: 0; } to { top: 100%; } }
+        body { background-color: #050a0f; color: white; font-family: sans-serif; }
+        .glow-text { text-shadow: 0 0 10px rgba(45, 212, 191, 0.5); }
+        .bg-gradient-dark { background: radial-gradient(circle at center, #0a1622 0%, #050a0f 100%); }
     </style>
 </head>
-<body class="text-white min-h-screen flex flex-col items-center justify-center p-6 overflow-hidden">
-    <div class="scanline"></div>
+<body class="bg-gradient-dark flex flex-col items-center justify-center min-h-screen text-center p-6">
 
-    <div class="border border-zinc-800 p-8 md:p-16 max-w-4xl w-full bg-zinc-950/50 backdrop-blur-md relative z-20">
+    <header class="mb-12">
+        <div class="flex flex-col items-center space-y-2">
+            <div class="w-16 h-16 border-2 border-teal-400 rounded-full flex items-center justify-center mb-2">
+                <span class="text-teal-400 text-3xl">⦿</span>
+            </div>
+            <h2 class="tracking-[0.3em] font-bold text-xl">GEOSYSTEM</h2>
+            <p class="tracking-[0.2em] text-xs text-gray-400">INTELLIGENCE</p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl space-y-8">
+        <h1 class="text-4xl md:text-6xl font-black uppercase leading-tight">
+            Monitorea el eje del <br> poder global <br> desde Latam.
+        </h1>
         
-        <header class="mb-12 border-b border-zinc-800 pb-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="text-center md:text-left">
-                <h1 class="text-2xl font-black tracking-widest uppercase text-[#36f4d0]">Geosystem</h1>
-                <p class="text-[10px] tracking-[0.5em] text-zinc-500 uppercase">Global Intelligence Access</p>
-            </div>
-            <div class="mono text-[10px] text-zinc-500 bg-zinc-900 px-3 py-1 rounded">
-                STATUS: ENCRYPTED_ONLINE
-            </div>
-        </header>
+        <p class="text-lg md:text-xl font-medium tracking-wide text-gray-300">
+            ANTICÍPATE A LOS CAMBIOS GEOPOLÍTICOS <br> CON DATOS EN TIEMPO REAL.
+        </p>
 
-        <main class="text-center">
-            <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase leading-none">
-                Monitorea el eje del poder global <span class="text-[#36f4d0]">desde LATAM.</span>
-            </h2>
-            
-            <p class="text-lg md:text-xl text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Anticípate a los cambios geopolíticos con análisis técnicos y datos en tiempo real. La información es el nuevo estándar de valor.
+        <p class="text-gray-500 text-sm tracking-widest uppercase">
+            +10,000 Nodos de Datos, Mapas de Calor de Riesgo y Dictámenes Técnicos
+        </p>
+
+        <div class="py-6">
+            <p class="text-lg font-bold tracking-widest border-b-2 border-gray-800 pb-4 inline-block">
+                SUSCRÍBETE AL ORÁCULO DE DATOS ETERNOS.
             </p>
+        </div>
 
-            <a href=terminal.html"class="inline-block group relative">
-                <div class="absolute -inset-1 bg-[#36f4d0] rounded blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-                <button class="relative bg-[#36f4d0] text-black font-black py-4 px-10 rounded uppercase tracking-tighter text-xl transition-transform transform active:scale-95">
-                    Acceder a la terminal
-                </button>
-            </a>
-        </main>
+        <button class="bg-[#2dd4bf] hover:bg-teal-300 text-black font-black py-5 px-12 rounded-lg text-xl uppercase transition-all transform hover:scale-105 glow-text">
+            Acceder a la Terminal
+        </button>
+    </main>
 
-        <footer class="mt-16 pt-8 border-t border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-[9px] mono text-zinc-600 uppercase tracking-widest">© 2026 GEOSYSTEM_ADMIN • ALL_RIGHTS_RESERVED</p>
-            <div class="flex gap-4 text-zinc-500 text-[9px] mono">
-                <span>NODES: 10k+</span>
-                <span>REGION: LATAM-NORD</span>
-            </div>
-        </footer>
-    </div>
+    <footer class="mt-20 opacity-20 text-[10px] tracking-[0.5em] uppercase">
+        Esta es la verdad eterna | El éxito
+    </footer>
 
-    <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-        <div class="absolute top-10 left-10 w-64 h-64 bg-[#36f4d0] rounded-full blur-[120px]"></div>
-        <div class="absolute bottom-10 right-10 w-64 h-64 bg-blue-600 rounded-full blur-[120px]"></div>
-    </div>
 </body>
 </html>
