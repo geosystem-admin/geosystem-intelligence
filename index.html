@@ -6,60 +6,77 @@
     <title>Geosystem Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #050a0f; color: white; font-family: sans-serif; }
-        .glow-text { text-shadow: 0 0 10px rgba(45, 212, 191, 0.5); }
-        .bg-gradient-dark { background: radial-gradient(circle at center, #0a1622 0%, #050a0f 100%); }
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        *{box-sizing:border-box;margin:0;padding:0;}
+        body{
+            background:radial-gradient(circle at center,#0a1f1a 0%,#050a0f 100%);
+            color:white; font-family:'JetBrains Mono',monospace;
+            min-height:100vh; display:flex; flex-direction:column;
+            align-items:center; justify-content:center;
+            text-align:center; padding:24px 16px;
+        }
+        body::before{
+            content:''; position:fixed; inset:0;
+            background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);
+            pointer-events:none; z-index:0;
+        }
+        .content{position:relative;z-index:1;width:100%;max-width:680px;}
+        .status-badge{
+            display:inline-flex;align-items:center;gap:8px;
+            border:1px solid rgba(45,212,191,0.3);background:rgba(45,212,191,0.06);
+            padding:6px 16px;font-size:10px;letter-spacing:3px;color:#2dd4bf;margin-bottom:40px;
+        }
+        .sdot{width:6px;height:6px;border-radius:50%;background:#2dd4bf;box-shadow:0 0 6px #2dd4bf;animation:blink 1.5s infinite;}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+        .logo-ring{
+            width:64px;height:64px;border:2px solid #2dd4bf;border-radius:50%;
+            display:flex;align-items:center;justify-content:center;
+            margin:0 auto 14px;box-shadow:0 0 20px rgba(45,212,191,0.2);
+        }
+        h1{
+            font-size:clamp(2rem,8vw,4.2rem);font-weight:900;line-height:1.05;
+            text-transform:uppercase;color:#2dd4bf;
+            text-shadow:0 0 40px rgba(45,212,191,0.3);margin-bottom:20px;
+        }
+        h1 span{color:white;}
+        .subtitle{font-size:clamp(10px,2.5vw,13px);letter-spacing:2px;color:#94a3b8;line-height:1.8;margin-bottom:14px;text-transform:uppercase;}
+        .stat-line{font-size:9px;letter-spacing:3px;color:#475569;text-transform:uppercase;margin-bottom:32px;}
+        .divider-text{font-size:10px;font-weight:bold;letter-spacing:3px;color:#2dd4bf;border-bottom:1px solid #1e3a34;padding-bottom:18px;margin-bottom:32px;text-transform:uppercase;}
+        .cta-btn{
+            display:block;background:#2dd4bf;color:#000;
+            font-family:'JetBrains Mono',monospace;font-weight:900;
+            font-size:12px;letter-spacing:3px;text-transform:uppercase;
+            padding:18px 48px;border:none;cursor:pointer;
+            transition:all 0.2s;box-shadow:0 0 30px rgba(45,212,191,0.3);
+            width:100%;max-width:360px;margin:0 auto;
+        }
+        .cta-btn:hover{background:#99f6e4;box-shadow:0 0 50px rgba(45,212,191,0.5);}
+        .cta-btn:active{transform:scale(0.97);}
+        .features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:40px;width:100%;}
+        .fc{border:1px solid rgba(45,212,191,0.12);background:rgba(45,212,191,0.03);padding:14px 8px;}
+        .fi{font-size:18px;margin-bottom:6px;}
+        .ft{font-size:8px;letter-spacing:2px;color:#2dd4bf;text-transform:uppercase;margin-bottom:3px;}
+        .fd{font-size:7px;color:#475569;line-height:1.5;}
+        footer{margin-top:40px;font-size:9px;letter-spacing:4px;color:#1e293b;text-transform:uppercase;}
     </style>
 </head>
-<body class="bg-gradient-dark flex flex-col items-center justify-center min-h-screen text-center p-6">
-
-    <header class="mb-12">
-        <div class="flex flex-col items-center space-y-2">
-            <div class="w-16 h-16 border-2 border-teal-400 rounded-full flex items-center justify-center mb-2">
-                <span class="text-teal-400 text-3xl">⦿</span>
-            </div>
-            <h2 class="tracking-[0.3em] font-bold text-xl">GEOSYSTEM</h2>
-            <p class="tracking-[0.2em] text-xs text-gray-400">INTELLIGENCE</p>
-        </div>
-    </header>
-
-    <main class="max-w-4xl space-y-8">
-        <h1 class="text-4xl md:text-6xl font-black uppercase leading-tight">
-            Monitorea el eje del <br> poder global <br> desde Latam.
-        </h1>
-        
-        <p class="text-lg md:text-xl font-medium tracking-wide text-gray-300">
-            ANTICÍPATE A LOS CAMBIOS GEOPOLÍTICOS <br> CON DATOS EN TIEMPO REAL.
-        </p>
-
-        <p class="text-gray-500 text-sm tracking-widest uppercase">
-            +10,000 Nodos de Datos, Mapas de Calor de Riesgo y Dictámenes Técnicos
-        </p>
-
-        <div class="py-6">
-            <p class="text-lg font-bold tracking-widest border-b-2 border-gray-800 pb-4 inline-block">
-                SUSCRÍBETE AL ORÁCULO DE DATOS ETERNOS.
-            </p>
-        </div>
-
-        <button onclick="conectarTerminal()" class="bg-[#2dd4bf] hover:bg-teal-300 text-black font-black py-5 px-12 rounded-sm active:scale-95 transition-all">
-    Acceder a la Terminal
-</button>
-
-
-<script>
-function conectarTerminal() {
-    window.location.href = "terminal.html";
-}
-</script>
-
-</main>
-
-<footer class="mt-20 opacity-20 text-[10px] tracking-[0.5em] uppercase text-center w-full">
-    Esta es la verdad eterna | El éxito
-</footer>
-
+<body>
+<div class="content">
+    <div class="status-badge"><span class="sdot"></span>STATUS: ENCRYPTED_ONLINE</div>
+    <div class="logo-ring"><span style="color:#2dd4bf;font-size:28px;">⦿</span></div>
+    <p style="letter-spacing:6px;font-size:11px;color:#2dd4bf;font-weight:bold;margin-bottom:4px;">GEOSYSTEM</p>
+    <p style="letter-spacing:4px;font-size:9px;color:#475569;margin-bottom:36px;">GLOBAL INTELLIGENCE ACCESS</p>
+    <h1>Monitorea<br><span>el eje del</span><br>poder global<br>desde <span style="color:#2dd4bf;">Latam.</span></h1>
+    <p class="subtitle">Anticípate a los cambios geopolíticos<br>con análisis técnicos y datos en tiempo real.<br>La información es el nuevo estándar de valor.</p>
+    <p class="stat-line">+10,000 Nodos · Mapas de Riesgo · Dictámenes Técnicos</p>
+    <p class="divider-text">Suscríbete al Oráculo de Datos Eternos</p>
+    <button class="cta-btn" onclick="window.location.href='terminal.html'">▶ ACCEDER A LA TERMINAL</button>
+    <div class="features">
+        <div class="fc"><div class="fi">📡</div><div class="ft">Datos Live</div><div class="fd">Índices globales en tiempo real</div></div>
+        <div class="fc"><div class="fi">🌐</div><div class="ft">Geo-Intel</div><div class="fd">Análisis geopolítico profundo</div></div>
+        <div class="fc"><div class="fi">🔐</div><div class="ft">Acceso GX</div><div class="fd">Canal cifrado del emisario</div></div>
+    </div>
+</div>
+<footer>Esta es la verdad eterna · El éxito · Geosystem Intelligence</footer>
 </body>
 </html>
-
-    
