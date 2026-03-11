@@ -3,39 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Intelligence</title>
+    <title>GEOSYSTEM | Sinergia Operativa v6.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;900&display=swap" rel="stylesheet">
-</head>
-<body class="bg-black text-white min-h-screen flex flex-col items-center justify-center p-6 text-center font-['Inter']">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        :root { --neon: #36f4d0; --bg: #020617; }
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg); color: var(--neon);
+            background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
+            background-size: 100% 4px; margin: 0; padding: 10px;
+        }
+        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; margin-bottom: 8px; }
+        .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
+        .status-pill { padding: 2px 5px; border-radius: 2px; font-size: 6px; border: 1px solid; }
+        .open  { color: #34d399; border-color: #34d399; box-shadow: 0 0 8px #34d399; }
+        .closed{ color: #f87171; border-color: #f87171; opacity: 0.5; }
+        .btn-synergy { background: black; border: 1px solid rgba(54, 244, 208, 0.4); padding: 10px; text-align: center; font-weight: bold; font-size: 8px; transition: all 0.3s; }
+        .btn-synergy:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
+        .sync-flash { animation: flash 0.5s ease-out; }
+        @keyframes flash { 0% { background-color: #36f4d0; opacity: 0.8; } 100% { background-color: var(--bg); } }
 
-    <header class="mb-12">
-        <svg class="w-16 h-16 text-[#36f4d0] mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="12" cy="12" r="10"></circle>
-            <circle cx="12" cy="12" r="4"></circle>
-            <line x1="12" y1="2" x2="12" y2="22"></line>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-        </svg>
-        <h2 class="text-2xl font-bold tracking-[0.2em] uppercase">Geosystem</h2>
-        <p class="text-xs tracking-[0.4em] text-gray-500 uppercase">Intelligence</p>
-    </header>
+        /* \u2500\u2500 BOLSAS WIDGET \u2500\u2500 */
+        #bolsas-widget {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        .bolsa-card {
+            border: 1px solid rgba(54,244,208,0.15);
+            background: rgba(2,6,23,0.95);
+            padding: 5px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .bolsa-region {
+            font-size: 6px;
+            letter-spacing: 1px;
+            color: #64748b;
+        }
+        .bolsa-name {
+            font-size: 7px;
+            font-weight: bold;
+            color: var(--neon);
+            letter-spacing: 0.5px;
+        }
+        .bolsa-horario {
+            font-size: 6px;
+            color: #475569;
+            line-height: 1.4;
+        }
+        .bolsa-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 6px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding: 1px 4px;
+            border: 1px solid;
+            width: fit-content;
+        }
+        .bolsa-status.open  { color: #34d399; border-color: #34d399; }
+        .bolsa-status.closed{ color: #f87171; border-color: #f87171; opacity: 0.6; }
+        .bolsa-status.pre   { color: #fbbf24; border-color: #fbbf24; }
+        .dot {
+            width: 5px; height: 5px; border-radius: 50%;
+            display: inline-block;
+        }
+        .dot.open   { background: #34d399; box-shadow: 0 0 4px #34d399; animation: pulse-dot 1.5s infinite; }
+        .dot.closed { background: #f87171; }
+        .dot.pre    { background: #fbbf24; }
+        @keyframes pulse-dot {
+            0%,100% { opacity:1; } 50% { opacity:0.3; }
+        }
 
-    <main class="max-w-2xl">
-        <h1 class="text-4xl md:text-6xl font-black mb-8 leading-none uppercase">
-            Monitorea el eje del poder global desde LATAM.
-        </h1>
-        <p class="text-xl text-gray-400 mb-12 uppercase tracking-tight">
-            Anticípate a los cambios geopolíticos con datos en tiempo real.
-        </p>
-
-        <a href="terminal.html" class="inline-block bg-[#36f4d0] text-black font-black py-5 px-12 rounded-xl text-2xl hover:bg-white transition-all transform active:scale-95 shadow-[0_0_30px_rgba(54,244,208,0.3)] uppercase">
-            Acceder a la terminal
-        </a>
-    </main>
-
-    <footer class="mt-20 text-[10px] text-gray-600 tracking-[0.5em] uppercase border-t border-zinc-900 pt-8 w-full">
-        Esta es la verdad eterna • El éxito es inevitable
-    </footer>
-
-</body>
-</html>
+        /* \u2500\u2500 MODALES \u2500\u2500 */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.88); z-index: 1000;
+            align-items: center; justify-content: center;
+            padding: 16px; backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: #0d1117; border: 1px solid #1a2535;
+            width: 100%; max-width: 480px;
+            animation: modalIn 0.18s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        @keyframes modalIn { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+        .modal-head {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 14px; border-bottom: 1px solid #1a2535;
+        }
+        .modal-head-title { font-size: 10px; font-weight: bold; letter-spacing: 3px; text-transform: uppercase; }
+        .modal-x { background:none; border:none; color:#64748b; font-size:16px; cursor:pointer; line-height:1; padding: 2px 5px; }
+        .modal-x:hover { color:#cce0f0; }
+        .modal-body { padding: 18px 14px; }
+        .m-label { font-size: 7px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+        .m-input {
+            width: 100%; font-family: 'JetBrains Mono', monospace; font-size: 9px;
+            background: #080c10; border: 1px solid #1e293b; color: #cce0f0;
+            padding: 8px 10px; outline: none; margin-bottom: 10px;
+        }
+        .m-input:focus { border-color: var(--neon); }
+        .m-textarea {
+            width: 100%; font-family: 'JetBrains Mono', monospace; font-size: 9px;
+            background: #080c10; border: 1px solid #1e293b; color: #cce0f0;
+            padding: 8px 10px; outline: none; resize: vertical; min-height: 70px;
+        }
+        .m-textarea:focus { border-color: #00ff88; }
+        .amount-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin: 10px 0; }
+        .amount-btn {
+            font-family: 'JetBrains Mono', monospace; font-size: 10px;
+            padding: 8px; border: 1px solid #1e293b; background: transparent;
+            color: #64748b; cursor: pointer; transition: all 0.15s; text-align: center;
+        }
+        .amount-btn:hover, .amount-btn.sel { border-color: #ffb300; color: #ffb300; background: rgba(255,179,0,0.06); }
+        .pay-opt {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 10px; border: 1px solid #1e293b; cursor: pointer;
+            font-size: 8px; margin-bottom: 6px; transition: all 0.15s;
+        }
+        .pay-opt:hover { border-color: #ffb300; background: rgba(255,179,0,0.04); }
+        .pay-opt input { accent-color: #ffb300; }
+        .tier-card {
+            border: 1px solid #1e293b; padding: 10px 12px;
+            cursor: pointer; margin-bottom: 7px; transition: all 0.15s; position: relative;
+        }
+        .tier-card:hover { border-color: var(--neon); background: rgba(54,244,208,0.03); }
+        .tier-card.featured { border-color: rgba(54,244,208,0.35); }
+        .tier-badge {
+            position: absolute; top:-1px; right:10px;
+            background: var(--neon); color:#000; font-size:6px; letter-spacing:2px; padding:2px 6px;
+        }
+        .tier-name { font-size:8px; font-weight:bold; letter-spacing:2px; color:var(--neon); margin-bottom:3px; }
+        .tier-price { font-size:16px; color:#cce0f0; margin-bottom:5px; }
+        .tier-price span { font-size:9px; color:#64748b; }
+        .tier-feats { font-size:7px; color:#64748b; line-height:1.8; list-style:none; }
+        .tier-feats li::before { content:'> '; color:var(--neon); }
+        .collab-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px; }
+        .collab-chip {
+            font-family:'JetBrains Mono',monospace; font-size:7px; letter-spacing:1px;
+            padding:7px 10px; border:1px solid #1e293b; background:transparent;
+            color:#64748b; cursor:pointer; transition:all 0.15s; text-transform:uppercase;
+        }
+        .collab-chip:hover, .collab-chip.sel { border-color:#00ff88; color:#00ff88; background:rgba(0,255,136,0.05); }
+        .m-action {
+            width:100%; font-family:'JetBrains Mono',monospace; font-size:8px;
+            letter-spacing:3px; text-transform:uppercase; padding:11px;
+            border:1px solid; cursor:pointer; transition:all 0.2s; margin-top:6px;
+        }
+        .m-amber { background:rgba(255,179,0,0.08); border-color:#ffb300; color:#ffb300; }
+        .m-amber:hover { background:rgba(255,179,0,0.18); box-shadow:0 0 10px rgba(255,179,0,0.4); color:#fff; }
+        .m-cyan  { background:rgba(54,244,208,0.08); border-color:var(--neon); color:var(--neon); }
+        .m-cyan:hover  { background:rgba(54,244,208,0.18); box-shadow:0 0 10px rgba(54,244,208,0.4); color:#fff; }
+        .m-green { background:rgba(0,255,136,0.08); border-color:#00ff88; color:#00ff88; }
+        .m-green:hover { background:rgba(0,255,136,0.18); box-shadow:0 0 10px rgba(0,255,136,0.4); color:#fff; }
+        .m-success {
+            display:none; margin-top:10px; padding:8px 12px;
+            border:1px solid #00ff88; color:#00ff88;
+            background:rgba(0,255,136,0.
