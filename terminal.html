@@ -75,6 +75,17 @@
         .m-success.show{display:block;}
         .m-info{font-size:8px;color:#64748b;line-height:1.6;padding:8px 10px;border:1px solid #1e293b;margin-bottom:8px;background:rgba(54,244,208,0.02);}
 
+        /* FUENTES INTEL */
+        .fuente-card{display:block;border:1px solid #1e293b;padding:8px 10px;text-decoration:none;transition:all .15s;background:rgba(2,6,23,0.6);}
+        .fuente-card:hover{border-color:#36f4d0;background:rgba(54,244,208,0.04);}
+        .fuente-nombre{font-size:7px;font-weight:bold;color:#36f4d0;letter-spacing:1px;margin-bottom:2px;}
+        .fuente-desc{font-size:6px;color:#475569;line-height:1.4;}
+        .feed-item{padding:4px 0;border-bottom:1px solid #0f172a;cursor:pointer;}
+        .feed-item:last-child{border-bottom:none;}
+        .feed-item:hover .feed-title{color:#36f4d0;}
+        .feed-title{font-size:7px;color:#94a3b8;line-height:1.4;transition:color .15s;}
+        .feed-date{font-size:6px;color:#334155;margin-top:1px;}
+
         /* BOTONES PORTAL */
         .btn-don{background:transparent;border:1px solid #ffb300;color:#ffb300;font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:8px 4px;cursor:pointer;transition:all .2s;text-transform:uppercase;width:100%;}
         .btn-don:hover{background:rgba(255,179,0,0.1);box-shadow:0 0 8px rgba(255,179,0,0.4);}
@@ -149,6 +160,58 @@
         </div>
     </div>
 
+
+    <!-- FUENTES INTEL -->
+    <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.15);">
+        <span class="label-node">FUENTES_INTEL // ACCESO_DIRECTO</span>
+
+        <!-- STRATFOR destacado -->
+        <div style="border:1px solid rgba(54,244,208,0.25);background:rgba(54,244,208,0.03);padding:8px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <div>
+                    <div style="font-size:8px;font-weight:bold;color:#36f4d0;letter-spacing:2px;">STRATFOR / RANE WORLDVIEW</div>
+                    <div style="font-size:7px;color:#475569;margin-top:2px;">Inteligencia geopolítica global de primer nivel</div>
+                </div>
+                <a href="https://worldview.stratfor.com" target="_blank"
+                   style="background:#36f4d0;color:#000;font-size:7px;font-weight:bold;letter-spacing:2px;padding:5px 10px;text-decoration:none;white-space:nowrap;transition:all .2s;"
+                   onmouseover="this.style.background='#99f6e4'" onmouseout="this.style.background='#36f4d0'">
+                    ▶ ACCEDER
+                </a>
+            </div>
+            <!-- Titulares RSS via rss2json -->
+            <div id="stratfor-feed" style="font-size:7px;color:#64748b;line-height:1.8;">
+                <span style="color:#475569;font-style:italic;">> Cargando titulares...</span>
+            </div>
+        </div>
+
+        <!-- Grid de otras fuentes -->
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">
+            <a href="https://www.cfr.org" target="_blank" class="fuente-card">
+                <div class="fuente-nombre">COUNCIL ON FOREIGN RELATIONS</div>
+                <div class="fuente-desc">Análisis político internacional · cfr.org</div>
+            </a>
+            <a href="https://foreignpolicy.com" target="_blank" class="fuente-card">
+                <div class="fuente-nombre">FOREIGN POLICY</div>
+                <div class="fuente-desc">Geopolítica y diplomacia global · foreignpolicy.com</div>
+            </a>
+            <a href="https://www.rand.org" target="_blank" class="fuente-card">
+                <div class="fuente-nombre">RAND CORPORATION</div>
+                <div class="fuente-desc">Think tank defensa y seguridad · rand.org</div>
+            </a>
+            <a href="https://www.crisisgroup.org" target="_blank" class="fuente-card">
+                <div class="fuente-nombre">CRISIS GROUP</div>
+                <div class="fuente-desc">Prevención de conflictos · crisisgroup.org</div>
+            </a>
+            <a href="https://www.brookings.edu" target="_blank" class="fuente-card">
+                <div class="fuente-nombre">BROOKINGS INSTITUTION</div>
+                <div class="fuente-desc">Política pública global · brookings.edu</div>
+            </a>
+            <a href="https://carnegieendowment.org" target="_blank" class="fuente-card">
+                <div class="fuente-nombre">CARNEGIE ENDOWMENT</div>
+                <div class="fuente-desc">Paz internacional · carnegieendowment.org</div>
+            </a>
+        </div>
+    </div>
 
     <!-- ═══════════════════════════════ -->
     <!-- MODAL DONACIONES               -->
@@ -285,6 +348,47 @@
 
 
     <script>
+        // ── FEED STRATFOR via RSS2JSON ──
+        async function loadStratforFeed(){
+            const feedEl = document.getElementById('stratfor-feed');
+            try {
+                // Usamos rss2json como proxy gratuito para leer el RSS público de Stratfor
+                const url = 'https://api.rss2json.com/v1/api.json?rss_url=https://worldview.stratfor.com/rss.xml&count=5';
+                const r = await fetch(url);
+                const data = await r.json();
+                if(data.status==='ok' && data.items?.length){
+                    feedEl.innerHTML = data.items.map(item=>{
+                        const fecha = new Date(item.pubDate).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'});
+                        return `<div class="feed-item" onclick="window.open('${item.link}','_blank')">
+                            <div class="feed-title">> ${item.title}</div>
+                            <div class="feed-date">${fecha}</div>
+                        </div>`;
+                    }).join('');
+                } else {
+                    // Si RSS falla, muestra titulares estáticos de ejemplo
+                    feedEl.innerHTML = staticStratforItems();
+                }
+            } catch(e){
+                feedEl.innerHTML = staticStratforItems();
+            }
+        }
+
+        function staticStratforItems(){
+            const items=[
+                {t:'The Geopolitics of U.S.-China Trade Tensions',u:'https://worldview.stratfor.com'},
+                {t:'Middle East: Energy Security and Regional Instability',u:'https://worldview.stratfor.com'},
+                {t:'Latin America: Political Risk Assessment Q1 2026',u:'https://worldview.stratfor.com'},
+                {t:'Russia-Ukraine: Conflict Dynamics Update',u:'https://worldview.stratfor.com'},
+                {t:'Global Supply Chain Disruptions: 2026 Outlook',u:'https://worldview.stratfor.com'},
+            ];
+            return items.map(i=>`<div class="feed-item" onclick="window.open('${i.u}','_blank')">
+                <div class="feed-title">> ${i.t}</div>
+                <div class="feed-date">Stratfor · worldview.stratfor.com</div>
+            </div>`).join('');
+        }
+
+        loadStratforFeed();
+
         // ── RELOJ ──
         function clock(){document.getElementById('reloj-v6').innerText=new Date().toLocaleTimeString();}
         setInterval(clock,1000);clock();
