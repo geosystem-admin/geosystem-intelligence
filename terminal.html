@@ -348,43 +348,69 @@
 
 
     <script>
-        // ── FEED STRATFOR via RSS2JSON ──
+        // ── FEED INTEL en vivo (fuentes con RSS público) ──
         async function loadStratforFeed(){
             const feedEl = document.getElementById('stratfor-feed');
-            try {
-                // Usamos rss2json como proxy gratuito para leer el RSS público de Stratfor
-                const url = 'https://api.rss2json.com/v1/api.json?rss_url=https://worldview.stratfor.com/rss.xml&count=5';
-                const r = await fetch(url);
-                const data = await r.json();
-                if(data.status==='ok' && data.items?.length){
-                    feedEl.innerHTML = data.items.map(item=>{
-                        const fecha = new Date(item.pubDate).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'});
-                        return `<div class="feed-item" onclick="window.open('${item.link}','_blank')">
-                            <div class="feed-title">> ${item.title}</div>
-                            <div class="feed-date">${fecha}</div>
-                        </div>`;
-                    }).join('');
-                } else {
-                    // Si RSS falla, muestra titulares estáticos de ejemplo
-                    feedEl.innerHTML = staticStratforItems();
-                }
-            } catch(e){
-                feedEl.innerHTML = staticStratforItems();
-            }
-        }
+            feedEl.innerHTML = '<span style="color:#475569;font-style:italic;">> Conectando con fuentes de inteligencia...</span>';
 
-        function staticStratforItems(){
-            const items=[
-                {t:'The Geopolitics of U.S.-China Trade Tensions',u:'https://worldview.stratfor.com'},
-                {t:'Middle East: Energy Security and Regional Instability',u:'https://worldview.stratfor.com'},
-                {t:'Latin America: Political Risk Assessment Q1 2026',u:'https://worldview.stratfor.com'},
-                {t:'Russia-Ukraine: Conflict Dynamics Update',u:'https://worldview.stratfor.com'},
-                {t:'Global Supply Chain Disruptions: 2026 Outlook',u:'https://worldview.stratfor.com'},
+            // Fuentes con RSS público verificado
+            const SOURCES = [
+                { url: 'https://feeds.bbci.co.uk/news/world/rss.xml',        name: 'BBC WORLD' },
+                { url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml', name: 'NYT WORLD' },
+                { url: 'https://www.theguardian.com/world/rss',              name: 'THE GUARDIAN' },
+                { url: 'https://feeds.reuters.com/reuters/worldNews',        name: 'REUTERS' },
             ];
-            return items.map(i=>`<div class="feed-item" onclick="window.open('${i.u}','_blank')">
-                <div class="feed-title">> ${i.t}</div>
-                <div class="feed-date">Stratfor · worldview.stratfor.com</div>
-            </div>`).join('');
+
+            let allItems = [];
+
+            for(const src of SOURCES){
+                try {
+                    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(src.url)}&count=3`;
+                    const r = await fetch(apiUrl);
+                    const data = await r.json();
+                    if(data.status === 'ok' && data.items?.length){
+                        data.items.forEach(item => {
+                            allItems.push({
+                                title: item.title,
+                                link:  item.link,
+                                date:  item.pubDate,
+                                source: src.name
+                            });
+                        });
+                    }
+                } catch(e){ /* sigue */ }
+            }
+
+            if(allItems.length > 0){
+                allItems.sort((a,b) => new Date(b.date) - new Date(a.date));
+                feedEl.innerHTML = allItems.slice(0, 8).map(item => {
+                    const fecha = item.date
+                        ? new Date(item.date).toLocaleDateString('es-CO',{day:'2-digit',month:'short'})
+                        : '';
+                    const titulo = item.title?.length > 90
+                        ? item.title.substring(0, 90) + '...'
+                        : item.title;
+                    return `<div class="feed-item" onclick="window.open('${item.link}','_blank')">
+                        <div class="feed-title">> ${titulo}</div>
+                        <div class="feed-date">${item.source} · ${fecha}</div>
+                    </div>`;
+                }).join('');
+            } else {
+                // Fallback con links reales distintos
+                feedEl.innerHTML = [
+                    {t:'Global Conflict Tracker — Updated Weekly',          u:'https://www.cfr.org/global-conflict-tracker',       s:'CFR'},
+                    {t:'CrisisWatch: Monthly Conflict Barometer',           u:'https://www.crisisgroup.org/crisiswatch',            s:'CRISIS GROUP'},
+                    {t:'Middle East & North Africa Situation Update',       u:'https://carnegieendowment.org/topics/middle-east',   s:'CARNEGIE'},
+                    {t:'U.S.-China Relations: Economic & Security Outlook', u:'https://www.brookings.edu/topics/china/',            s:'BROOKINGS'},
+                    {t:'Latin America Risk Report 2026',                    u:'https://www.rand.org/topics/latin-america.html',     s:'RAND'},
+                    {t:'Energy Geopolitics: Oil Markets & Sanctions',       u:'https://www.cfr.org/topics/energy',                 s:'CFR'},
+                    {t:'World News Analysis & Intelligence Briefings',      u:'https://worldview.stratfor.com',                    s:'STRATFOR'},
+                    {t:'Foreign Policy: Geopolitics & Diplomacy',           u:'https://foreignpolicy.com/category/analysis/',      s:'FOREIGN POLICY'},
+                ].map(i=>`<div class="feed-item" onclick="window.open('${i.u}','_blank')">
+                    <div class="feed-title">> ${i.t}</div>
+                    <div class="feed-date">${i.s} · Clic para leer</div>
+                </div>`).join('');
+            }
         }
 
         loadStratforFeed();
