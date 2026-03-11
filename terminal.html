@@ -3,146 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Sinergia Operativa v6.1</title>
+    <title>GEOSYSTEM | Sinergia Operativa v6.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700&display=swap');
-        
-        :root { 
-            --neon: #36f4d0; 
-            --bg: #020617; 
-            --panel: #0d1117;
-            --border: #1a2535;
-            --cyan: #00e5ff;
-            --amber: #ffb300;
-            --green: #00ff88;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        :root { --neon: #36f4d0; --bg: #020617; }
         body { 
             font-family: 'JetBrains Mono', monospace; 
             background-color: var(--bg); color: var(--neon); 
             background-image: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.25) 50%);
             background-size: 100% 4px; margin: 0; padding: 10px;
-            text-transform: uppercase; font-size: 9px;
         }
-
-        /* Estructura de Contenedores */
-        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; margin-bottom: 8px; }
+        .grid-node { border: 1px solid rgba(54, 244, 208, 0.2); background: rgba(2, 6, 23, 0.9); padding: 8px; }
         .label-node { font-size: 8px; font-weight: bold; border-bottom: 1px solid rgba(54, 244, 208, 0.3); margin-bottom: 6px; color: var(--neon); display: block; letter-spacing: 1px; }
-
-        /* Modales */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);
-        }
-        .modal-overlay.active { display: flex; }
-        .modal { background: var(--panel); border: 1px solid var(--border); width: 90%; max-width: 500px; padding: 20px; }
-
-        /* Botones de Módulos */
-        .btn-module {
-            padding: 12px; border: 1px solid; cursor: pointer; transition: all 0.3s;
-            background: transparent; font-weight: bold; font-size: 10px; letter-spacing: 2px;
-        }
-        .btn-donaciones { color: var(--amber); border-color: var(--amber); }
-        .btn-donaciones:hover { background: rgba(255,179,0,0.1); box-shadow: 0 0 10px var(--amber); }
-        .btn-suscripciones { color: var(--cyan); border-color: var(--cyan); }
-        .btn-suscripciones:hover { background: rgba(0,229,255,0.1); box-shadow: 0 0 10px var(--cyan); }
-        .btn-colaboraciones { color: var(--green); border-color: var(--green); }
-        .btn-colaboraciones:hover { background: rgba(0,255,136,0.1); box-shadow: 0 0 10px var(--green); }
-
-        .sync-flash { animation: flash 0.5s ease-out; }
-        @keyframes flash { 0% { background-color: var(--neon); opacity: 0.8; } 100% { background-color: var(--bg); } }
+        .btn-synergy { background: black; border: 1px solid rgba(54, 244, 208, 0.4); padding: 8px; text-align: center; font-weight: bold; font-size: 8px; transition: all 0.3s; color: var(--neon); }
+        .btn-synergy:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
     </style>
 </head>
-<body>
+<body class="uppercase text-[9px]">
 
     <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-2 items-center">
         <div class="flex flex-col">
-            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // OP_V6.1</span>
+            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // OP_V6.2</span>
             <span class="text-[6px] text-zinc-500 italic">TRANSMISOR DE VERDADES ETERNAS</span>
         </div>
         <div id="reloj-v6" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700">00:00:00</div>
     </nav>
 
-    <div class="grid-node !p-0 border-zinc-800 mb-3 overflow-hidden h-8 flex items-center">
+    <div class="grid-node !p-0 border-zinc-800 mb-2 overflow-hidden h-8 flex items-center">
         <div class="bg-red-900 text-white px-3 h-full flex items-center font-bold text-[7px] animate-pulse">LIVE</div>
-        <div class="flex-1 h-full">
-            <iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0" scrolling="no"></iframe>
-        </div>
+        <div class="flex-1 h-full"><iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0" scrolling="no"></iframe></div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-2 mb-4">
-        <div class="lg:col-span-1 space-y-2">
-            <div class="grid-node border-l-2 border-l-orange-500"><span class="label-node">ENERGÍA (WTI)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
-            <div class="grid-node border-l-2 border-l-cyan-500"><span class="label-node">BTC/USDT</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
-        </div>
-
-        <div class="lg:col-span-2 grid-node border-cyan-700">
-            <span class="label-node">CENTRO_DE_TRANSMISIÓN</span>
-            <div id="terminal-msg" class="h-6 text-[7px] text-zinc-500 italic">> AGUARDANDO SINCRONIZACIÓN DE NÚCLEO...</div>
-            
-            <div id="portal-sinergia" class="hidden">
-                <div class="border border-cyan-500 bg-black mb-3">
-                    <iframe id="yt-player" src="" frameborder="0" allow="autoplay; fullscreen" class="w-full aspect-video"></iframe>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2">
-                <button class="btn-module btn-donaciones" onclick="openModal('donaciones')">DONACIONES</button>
-                <button class="btn-module btn-suscripciones" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
-                <button class="btn-module btn-colaboraciones" onclick="openModal('colaboraciones')">COLABORACIONES</button>
-            </div>
-        </div>
-
-        <div class="lg:col-span-1 grid-node border-l-2 border-l-red-600">
-            <span class="label-node">INTELIGENCIA_GLOBAL (NEWS)</span>
-            <iframe src="https://s.tradingview.com/embed-widget/timeline/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=400&locale=es" width="100%" height="400" frameborder="0"></iframe>
-        </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+        <div class="grid-node border-l-2 border-l-orange-500"><span class="label-node">ENERGÍA (WTI)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-cyan-500"><span class="label-node">TOKENIZACIÓN (BTC)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-red-600"><span class="label-node">EJE_ESTE (ASHR)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
+        <div class="grid-node border-l-2 border-l-blue-600"><span class="label-node">FED_ZONE (SPY)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-24" frameborder="0"></iframe></div>
     </div>
 
-    <div class="grid-node border-yellow-900 bg-yellow-950/10 max-w-sm mx-auto">
-        <span class="label-node text-yellow-500 italic text-center">VALIDACIÓN_GX</span>
-        <div id="login-form">
-            <input type="text" id="pass-input" placeholder="INGRESE CLAVE GX" class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 mb-2 text-[8px] outline-none uppercase">
-            <button onclick="unlockSystem()" class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] uppercase hover:bg-white transition">SINCRONIZAR NÚCLEO</button>
-        </div>
+    <div class="grid grid-cols-3 gap-2 mb-3">
+        <button class="btn-synergy border-orange-500/50 text-orange-400">DONACIONES</button>
+        <button class="btn-synergy border-cyan-500/50 text-cyan-400">SUSCRIPCIONES</button>
+        <button class="btn-synergy border-green-500/50 text-green-400">COLABORACIONES</button>
     </div>
 
-    <div class="modal-overlay" id="modal-donaciones">
-        <div class="modal text-amber-500 border-amber-500">
-            <h2 class="font-bold mb-4">[ DONACIONES ]</h2>
-            <p class="text-[10px] mb-4">Suministro de capital para la infraestructura.</p>
-            <button class="btn-module border-amber-500 w-full" onclick="closeModal('donaciones')">CERRAR</button>
-        </div>
-    </div>
-    <script>
-        function clock() {
-            document.getElementById('reloj-v6').innerText = new Date().toLocaleTimeString();
-        }
-        setInterval(clock, 1000);
-
-        function openModal(id) {
-            document.getElementById('modal-' + id).classList.add('active');
-        }
-        function closeModal(id) {
-            document.getElementById('modal-' + id).classList.remove('active');
-        }
-
-        function unlockSystem() {
-            const key = document.getElementById('pass-input').value.trim().toUpperCase();
-            if(key === "GX-8-7-IMMORTAL") {
-                document.body.classList.add('sync-flash');
-                setTimeout(() => document.body.classList.remove('sync-flash'), 500);
-                
-                document.getElementById('terminal-msg').innerHTML = "<span class='text-cyan-400 font-bold'>> NÚCLEO VIVO. BIENVENIDO EMISARIO.</span>";
-                // ID de video de ejemplo, cámbialo por el tuyo
-                document.getElementById('yt-player').src = "https://www.youtube.com/embed/LIVE_ID_HERE?autoplay=1"; 
-                document.getElementById('portal-sinergia').classList.remove('hidden');
-                document.getElementById('login-form').innerHTML = '<div class="text-cyan-400 text-center py-2 border border-cyan-900 font-bold animate-pulse">SISTEMA SINCRONIZADO</div>';
-            } else {
-                alert("ERROR: ACCESO DENEGADO");
-            }
-        }
-    </script>
-</body>
-</html>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
+            <span class="label-node">NEXUS_TERMINAL</span>
+            <div id="terminal-msg" class="h-8
