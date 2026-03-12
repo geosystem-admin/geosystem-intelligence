@@ -94,6 +94,64 @@
 
 
 
+
+        /* BUSCADOR */
+        .search-wrap{position:relative;display:flex;align-items:center;gap:0;}
+        .search-input{
+            flex:1;font-family:'JetBrains Mono',monospace;font-size:10px;
+            background:#080c10;border:1px solid rgba(54,244,208,0.3);
+            border-right:none;color:#cce0f0;padding:10px 14px;
+            outline:none;letter-spacing:1px;
+        }
+        .search-input:focus{border-color:#36f4d0;}
+        .search-input::placeholder{color:#334155;font-size:9px;}
+        .search-btn{
+            background:#36f4d0;color:#000;font-family:'JetBrains Mono',monospace;
+            font-size:10px;font-weight:bold;padding:10px 16px;border:none;
+            cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:1px;
+        }
+        .search-btn:hover{background:#99f6e4;}
+        .search-btn:active{transform:scale(0.97);}
+        .search-cats{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
+        .search-cat{
+            font-family:'JetBrains Mono',monospace;font-size:6px;letter-spacing:1px;
+            padding:3px 8px;border:1px solid #1e293b;background:transparent;
+            color:#475569;cursor:pointer;transition:all .15s;text-transform:uppercase;
+        }
+        .search-cat:hover,.search-cat.active{border-color:#36f4d0;color:#36f4d0;background:rgba(54,244,208,0.06);}
+        .search-results{
+            margin-top:8px;display:none;
+            border:1px solid rgba(54,244,208,0.2);background:#080c10;
+            max-height:220px;overflow-y:auto;
+        }
+        .search-results.show{display:block;}
+        .sr-item{
+            display:flex;align-items:center;gap:10px;
+            padding:8px 12px;border-bottom:1px solid #0f172a;
+            cursor:pointer;transition:all .15s;text-decoration:none;
+        }
+        .sr-item:last-child{border-bottom:none;}
+        .sr-item:hover{background:rgba(54,244,208,0.04);}
+        .sr-icon{font-size:12px;flex-shrink:0;}
+        .sr-title{font-size:8px;color:#cce0f0;margin-bottom:2px;}
+        .sr-source{font-size:6px;color:#475569;letter-spacing:1px;}
+        .sr-tag{font-size:6px;color:#36f4d0;border:1px solid rgba(54,244,208,0.2);padding:1px 5px;white-space:nowrap;margin-left:auto;flex-shrink:0;}
+
+
+        /* NEWS TABS */
+        .news-tab{font-family:'JetBrains Mono',monospace;font-size:6px;letter-spacing:1px;padding:6px 8px;border:none;border-right:1px solid #1e293b;background:transparent;color:#475569;cursor:pointer;transition:all .15s;text-transform:uppercase;flex:1;}
+        .news-tab:last-child{border-right:none;}
+        .news-tab:hover{color:#36f4d0;background:rgba(54,244,208,0.04);}
+        .news-tab.active{color:#36f4d0;background:rgba(54,244,208,0.08);border-bottom:2px solid #36f4d0;}
+        .news-item{padding:7px 0;border-bottom:1px solid #0f172a;cursor:pointer;display:block;text-decoration:none;}
+        .news-item:last-child{border-bottom:none;}
+        .news-item:hover .news-title{color:#36f4d0;}
+        .news-title{font-size:8px;color:#94a3b8;line-height:1.5;transition:color .15s;margin-bottom:2px;}
+        .news-meta{display:flex;gap:8px;align-items:center;}
+        .news-source{font-size:6px;color:#36f4d0;letter-spacing:1px;}
+        .news-date{font-size:6px;color:#334155;}
+        .news-region{font-size:6px;letter-spacing:1px;padding:1px 5px;border:1px solid;white-space:nowrap;}
+
         /* MAPA TABS */
         .map-tab{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:6px 12px;border:none;background:transparent;color:#475569;cursor:pointer;border-right:1px solid rgba(248,113,113,0.15);transition:all .15s;text-transform:uppercase;}
         .map-tab:hover{color:#f87171;background:rgba(248,113,113,0.05);}
@@ -176,6 +234,33 @@
         <div class="flex-1 h-full">
             <iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0" scrolling="no"></iframe>
         </div>
+    </div>
+
+
+    <!-- BUSCADOR INTEL -->
+    <div class="grid-node mb-3" style="border-color:rgba(54,244,208,0.25);">
+        <span class="label-node">🔍 BUSCADOR_INTEL // ACCESO_UNIVERSAL</span>
+        <div class="search-wrap">
+            <input class="search-input" id="search-input" type="text"
+                placeholder="🔍  Busca bolsas, geopolítica, portafolios, brokers, criptos..."
+                onkeydown="if(event.key==='Enter') runSearch()"
+                oninput="updateSearchSuggestions(this.value)">
+            <button class="search-btn" onclick="runSearch()">BUSCAR ▶</button>
+        </div>
+
+        <!-- Categorías rápidas -->
+        <div class="search-cats" id="search-cats">
+            <button class="search-cat active" onclick="setCat(this,'all')"          >🌐 TODO</button>
+            <button class="search-cat"         onclick="setCat(this,'bolsas')"       >📈 BOLSAS</button>
+            <button class="search-cat"         onclick="setCat(this,'geopolitica')"  >🌍 GEOPOLÍTICA</button>
+            <button class="search-cat"         onclick="setCat(this,'crypto')"       >₿ CRIPTO</button>
+            <button class="search-cat"         onclick="setCat(this,'portafolios')"  >💼 PORTAFOLIOS</button>
+            <button class="search-cat"         onclick="setCat(this,'brokers')"      >🏦 BROKERS</button>
+            <button class="search-cat"         onclick="setCat(this,'tendencias')"   >🔥 TENDENCIAS</button>
+        </div>
+
+        <!-- Resultados -->
+        <div class="search-results" id="search-results"></div>
     </div>
 
     <!-- ÍNDICES -->
@@ -435,55 +520,25 @@
         </div>
     </div>
 
-    <!-- FUENTES INTEL -->
+    <!-- NOTICIAS REGIONALES -->
     <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.15);">
-        <span class="label-node">FUENTES_INTEL // ACCESO_DIRECTO</span>
-
-        <!-- STRATFOR destacado -->
-        <div style="border:1px solid rgba(54,244,208,0.25);background:rgba(54,244,208,0.03);padding:8px;margin-bottom:8px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-                <div>
-                    <div style="font-size:8px;font-weight:bold;color:#36f4d0;letter-spacing:2px;">STRATFOR / RANE WORLDVIEW</div>
-                    <div style="font-size:7px;color:#475569;margin-top:2px;">Inteligencia geopolítica global de primer nivel</div>
-                </div>
-                <a href="https://worldview.stratfor.com" target="_blank"
-                   style="background:#36f4d0;color:#000;font-size:7px;font-weight:bold;letter-spacing:2px;padding:5px 10px;text-decoration:none;white-space:nowrap;transition:all .2s;"
-                   onmouseover="this.style.background='#99f6e4'" onmouseout="this.style.background='#36f4d0'">
-                    ▶ ACCEDER
-                </a>
-            </div>
-            <!-- Titulares RSS via rss2json -->
-            <div id="stratfor-feed" style="font-size:7px;color:#64748b;line-height:1.8;">
-                <span style="color:#475569;font-style:italic;">> Cargando titulares...</span>
-            </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <span class="label-node" style="margin-bottom:0;">📰 NOTICIAS_INTEL // FEED_REGIONAL</span>
+            <span id="news-ts" style="font-size:6px;color:#334155;letter-spacing:1px;"></span>
         </div>
 
-        <!-- Grid de otras fuentes -->
-        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px;">
-            <a href="https://www.cfr.org" target="_blank" class="fuente-card">
-                <div class="fuente-nombre">COUNCIL ON FOREIGN RELATIONS</div>
-                <div class="fuente-desc">Análisis político internacional · cfr.org</div>
-            </a>
-            <a href="https://foreignpolicy.com" target="_blank" class="fuente-card">
-                <div class="fuente-nombre">FOREIGN POLICY</div>
-                <div class="fuente-desc">Geopolítica y diplomacia global · foreignpolicy.com</div>
-            </a>
-            <a href="https://www.rand.org" target="_blank" class="fuente-card">
-                <div class="fuente-nombre">RAND CORPORATION</div>
-                <div class="fuente-desc">Think tank defensa y seguridad · rand.org</div>
-            </a>
-            <a href="https://www.crisisgroup.org" target="_blank" class="fuente-card">
-                <div class="fuente-nombre">CRISIS GROUP</div>
-                <div class="fuente-desc">Prevención de conflictos · crisisgroup.org</div>
-            </a>
-            <a href="https://www.brookings.edu" target="_blank" class="fuente-card">
-                <div class="fuente-nombre">BROOKINGS INSTITUTION</div>
-                <div class="fuente-desc">Política pública global · brookings.edu</div>
-            </a>
-            <a href="https://carnegieendowment.org" target="_blank" class="fuente-card">
-                <div class="fuente-nombre">CARNEGIE ENDOWMENT</div>
-                <div class="fuente-desc">Paz internacional · carnegieendowment.org</div>
-            </a>
+        <!-- TABS regionales -->
+        <div style="display:flex;gap:0;margin-bottom:10px;border:1px solid #1e293b;overflow:hidden;">
+            <button class="news-tab active" onclick="switchNews('global')"  id="ntab-global" >🌐 GLOBAL</button>
+            <button class="news-tab"        onclick="switchNews('latam')"   id="ntab-latam"  >🌎 LATAM</button>
+            <button class="news-tab"        onclick="switchNews('usa')"     id="ntab-usa"    >🇺🇸 EEUU</button>
+            <button class="news-tab"        onclick="switchNews('europa')"  id="ntab-europa" >🇪🇺 EUROPA</button>
+            <button class="news-tab"        onclick="switchNews('asia')"    id="ntab-asia"   >🌏 ASIA</button>
+        </div>
+
+        <!-- Feed container -->
+        <div id="news-feed" style="min-height:80px;">
+            <span style="font-size:7px;color:#475569;font-style:italic;">> Conectando con fuentes regionales...</span>
         </div>
     </div>
 
@@ -622,72 +677,107 @@
 
 
     <script>
-        // ── FEED INTEL en vivo (fuentes con RSS público) ──
-        async function loadStratforFeed(){
-            const feedEl = document.getElementById('stratfor-feed');
-            feedEl.innerHTML = '<span style="color:#475569;font-style:italic;">> Conectando con fuentes de inteligencia...</span>';
+        // ── NOTICIAS REGIONALES ──
+        const NEWS_FEEDS = {
+            global: [
+                {rss:'https://feeds.bbci.co.uk/news/world/rss.xml',         name:'BBC WORLD',     color:'#36f4d0'},
+                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',name:'NYT WORLD',    color:'#36f4d0'},
+                {rss:'https://www.theguardian.com/world/rss',                name:'THE GUARDIAN',  color:'#36f4d0'},
+            ],
+            latam: [
+                {rss:'https://feeds.bbci.co.uk/mundo/rss.xml',               name:'BBC MUNDO',     color:'#fbbf24'},
+                {rss:'https://www.theguardian.com/world/americas/rss',       name:'GUARDIAN LATAM',color:'#fbbf24'},
+                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml',name:'NYT AMERICAS',color:'#fbbf24'},
+            ],
+            usa: [
+                {rss:'https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml',name:'BBC EEUU',  color:'#60a5fa'},
+                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/US.xml',  name:'NYT USA',       color:'#60a5fa'},
+                {rss:'https://feeds.washingtonpost.com/rss/world',           name:'WASHINGTON POST',color:'#60a5fa'},
+            ],
+            europa: [
+                {rss:'https://feeds.bbci.co.uk/news/world/europe/rss.xml',   name:'BBC EUROPA',    color:'#a78bfa'},
+                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml',name:'NYT EUROPA',  color:'#a78bfa'},
+                {rss:'https://www.theguardian.com/world/europe-news/rss',    name:'GUARDIAN EU',   color:'#a78bfa'},
+            ],
+            asia: [
+                {rss:'https://feeds.bbci.co.uk/news/world/asia/rss.xml',     name:'BBC ASIA',      color:'#f87171'},
+                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/AsiaPacific.xml',name:'NYT ASIA',color:'#f87171'},
+                {rss:'https://www.theguardian.com/world/asia/rss',           name:'GUARDIAN ASIA', color:'#f87171'},
+            ]
+        };
 
-            // Fuentes con RSS público verificado
-            const SOURCES = [
-                { url: 'https://feeds.bbci.co.uk/news/world/rss.xml',        name: 'BBC WORLD' },
-                { url: 'https://rss.nytimes.com/services/xml/rss/nyt/World.xml', name: 'NYT WORLD' },
-                { url: 'https://www.theguardian.com/world/rss',              name: 'THE GUARDIAN' },
-                { url: 'https://feeds.reuters.com/reuters/worldNews',        name: 'REUTERS' },
-            ];
+        let currentNewsRegion = 'global';
 
+        function switchNews(region){
+            document.querySelectorAll('.news-tab').forEach(t=>t.classList.remove('active'));
+            document.getElementById('ntab-'+region).classList.add('active');
+            currentNewsRegion = region;
+            loadNews(region);
+        }
+
+        async function loadNews(region){
+            const feedEl = document.getElementById('news-feed');
+            feedEl.innerHTML = '<span style="font-size:7px;color:#475569;font-style:italic;">> Cargando noticias '+region.toUpperCase()+'...</span>';
+
+            const feeds = NEWS_FEEDS[region] || NEWS_FEEDS.global;
             let allItems = [];
 
-            for(const src of SOURCES){
-                try {
-                    const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(src.url)}&count=3`;
-                    const r = await fetch(apiUrl);
+            for(const feed of feeds){
+                try{
+                    const url = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.rss)}&count=3`;
+                    const r = await fetch(url);
                     const data = await r.json();
-                    if(data.status === 'ok' && data.items?.length){
-                        data.items.forEach(item => {
+                    if(data.status==='ok' && data.items?.length){
+                        data.items.forEach(item=>{
                             allItems.push({
                                 title: item.title,
                                 link:  item.link,
                                 date:  item.pubDate,
-                                source: src.name
+                                source: feed.name,
+                                color: feed.color
                             });
                         });
                     }
-                } catch(e){ /* sigue */ }
+                } catch(e){}
             }
 
             if(allItems.length > 0){
-                allItems.sort((a,b) => new Date(b.date) - new Date(a.date));
-                feedEl.innerHTML = allItems.slice(0, 8).map(item => {
+                allItems.sort((a,b)=>new Date(b.date)-new Date(a.date));
+                feedEl.innerHTML = allItems.slice(0,5).map(item=>{
                     const fecha = item.date
                         ? new Date(item.date).toLocaleDateString('es-CO',{day:'2-digit',month:'short'})
                         : '';
-                    const titulo = item.title?.length > 90
-                        ? item.title.substring(0, 90) + '...'
-                        : item.title;
-                    return `<div class="feed-item" onclick="window.open('${item.link}','_blank')">
-                        <div class="feed-title">> ${titulo}</div>
-                        <div class="feed-date">${item.source} · ${fecha}</div>
-                    </div>`;
+                    const titulo = item.title?.length > 85 ? item.title.substring(0,85)+'...' : item.title;
+                    return `<a href="${item.link}" target="_blank" class="news-item">
+                        <div class="news-title">> ${titulo}</div>
+                        <div class="news-meta">
+                            <span class="news-source" style="color:${item.color};">${item.source}</span>
+                            <span class="news-date">${fecha}</span>
+                        </div>
+                    </a>`;
                 }).join('');
             } else {
-                // Fallback con links reales distintos
-                feedEl.innerHTML = [
-                    {t:'Global Conflict Tracker — Updated Weekly',          u:'https://www.cfr.org/global-conflict-tracker',       s:'CFR'},
-                    {t:'CrisisWatch: Monthly Conflict Barometer',           u:'https://www.crisisgroup.org/crisiswatch',            s:'CRISIS GROUP'},
-                    {t:'Middle East & North Africa Situation Update',       u:'https://carnegieendowment.org/topics/middle-east',   s:'CARNEGIE'},
-                    {t:'U.S.-China Relations: Economic & Security Outlook', u:'https://www.brookings.edu/topics/china/',            s:'BROOKINGS'},
-                    {t:'Latin America Risk Report 2026',                    u:'https://www.rand.org/topics/latin-america.html',     s:'RAND'},
-                    {t:'Energy Geopolitics: Oil Markets & Sanctions',       u:'https://www.cfr.org/topics/energy',                 s:'CFR'},
-                    {t:'World News Analysis & Intelligence Briefings',      u:'https://worldview.stratfor.com',                    s:'STRATFOR'},
-                    {t:'Foreign Policy: Geopolitics & Diplomacy',           u:'https://foreignpolicy.com/category/analysis/',      s:'FOREIGN POLICY'},
-                ].map(i=>`<div class="feed-item" onclick="window.open('${i.u}','_blank')">
-                    <div class="feed-title">> ${i.t}</div>
-                    <div class="feed-date">${i.s} · Clic para leer</div>
-                </div>`).join('');
+                // Fallback por región
+                const fallbacks = {
+                    global: [{t:'Reuters World News',u:'https://www.reuters.com/world/'},{t:'BBC World News',u:'https://www.bbc.com/news/world'}],
+                    latam:  [{t:'BBC Mundo — Últimas noticias',u:'https://www.bbc.com/mundo'},{t:'Reuters América Latina',u:'https://www.reuters.com/world/americas/'}],
+                    usa:    [{t:'NYT — United States',u:'https://www.nytimes.com/section/us'},{t:'Washington Post',u:'https://www.washingtonpost.com'}],
+                    europa: [{t:'BBC Europe News',u:'https://www.bbc.com/news/world/europe'},{t:'The Guardian — Europe',u:'https://www.theguardian.com/world/europe-news'}],
+                    asia:   [{t:'BBC Asia News',u:'https://www.bbc.com/news/world/asia'},{t:'NYT — Asia Pacific',u:'https://www.nytimes.com/section/world/asia'}],
+                };
+                const fb = fallbacks[region]||fallbacks.global;
+                feedEl.innerHTML = fb.map(i=>`<a href="${i.u}" target="_blank" class="news-item">
+                    <div class="news-title">> ${i.t}</div>
+                    <div class="news-meta"><span class="news-source">ACCESO DIRECTO</span></div>
+                </a>`).join('');
             }
+            document.getElementById('news-ts').textContent = 'ULT. ACT: '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
         }
 
-        loadStratforFeed();
+        // Cargar global al inicio
+        loadNews('global');
+        // Auto-refresh cada 10 minutos
+        setInterval(()=>loadNews(currentNewsRegion), 600000);
 
         // ── ASISTENTE IA GX ──
         const API_KEY = 'sk-ant-api03-xQQ-Sg5NpyuhXWskHkuZC3_uU5N16iTOAhKAACUn_6-hZKzKOKofEaOf38n7GAJB3dZXWrLpAkdULQ1WbSk3AA-pQishAAA';
@@ -765,6 +855,110 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
             sendBtn.disabled = false;
             sendBtn.textContent = 'ENVIAR ▶';
             messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        // ── BUSCADOR INTEL ──
+        let searchCat = 'all';
+
+        const SEARCH_SOURCES = {
+            bolsas: [
+                {icon:'📈', title:'TradingView — Gráficos y análisis',         url:'https://www.tradingview.com/chart/?symbol=',         tag:'BOLSAS'},
+                {icon:'📊', title:'Yahoo Finance — Datos de mercado',           url:'https://finance.yahoo.com/search?q=',                tag:'BOLSAS'},
+                {icon:'💹', title:'Investing.com — Mercados globales',          url:'https://www.investing.com/search/?q=',               tag:'BOLSAS'},
+                {icon:'🏛️', title:'MarketWatch — Wall Street',                  url:'https://www.marketwatch.com/search?q=',              tag:'BOLSAS'},
+            ],
+            geopolitica: [
+                {icon:'🌍', title:'Stratfor — Inteligencia geopolítica',        url:'https://worldview.stratfor.com/search#query=',       tag:'GEOPOL'},
+                {icon:'📰', title:'Foreign Policy — Análisis global',           url:'https://foreignpolicy.com/?s=',                      tag:'GEOPOL'},
+                {icon:'🔍', title:'CFR — Council on Foreign Relations',         url:'https://www.cfr.org/search?search_query=',           tag:'GEOPOL'},
+                {icon:'⚡', title:'Crisis Group — Conflictos activos',          url:'https://www.crisisgroup.org/search?search=',         tag:'GEOPOL'},
+                {icon:'📡', title:'GDELT — Eventos en tiempo real',             url:'https://api.gdeltproject.org/api/v2/doc/doc?query=', tag:'GEOPOL'},
+            ],
+            crypto: [
+                {icon:'₿',  title:'CoinGecko — Precios y datos cripto',        url:'https://www.coingecko.com/en/search?query=',         tag:'CRIPTO'},
+                {icon:'📊', title:'CoinMarketCap — Rankings cripto',            url:'https://coinmarketcap.com/search/?q=',               tag:'CRIPTO'},
+                {icon:'🔥', title:'TradingView Cripto',                         url:'https://www.tradingview.com/chart/?symbol=BINANCE%3A', tag:'CRIPTO'},
+                {icon:'📰', title:'CryptoSlate — Noticias cripto',             url:'https://cryptoslate.com/search/?q=',                 tag:'CRIPTO'},
+            ],
+            portafolios: [
+                {icon:'💼', title:'ETF.com — Búsqueda de ETFs',                url:'https://www.etf.com/etfanalytics/etf-finder?q=',    tag:'ETF'},
+                {icon:'📈', title:'Portfolio Visualizer — Análisis',           url:'https://www.portfoliovisualizer.com',                tag:'PORTAF'},
+                {icon:'🏦', title:'Morningstar — Calificación de fondos',      url:'https://www.morningstar.com/search?query=',          tag:'FONDOS'},
+                {icon:'📊', title:'ETFDB — Base de datos ETFs',                url:'https://etfdb.com/etfs/#etfdb-data|?q=',             tag:'ETF'},
+            ],
+            brokers: [
+                {icon:'🏦', title:'Interactive Brokers — Broker global',       url:'https://www.interactivebrokers.com',                 tag:'BROKER'},
+                {icon:'💰', title:'Charles Schwab — Para LATAM',               url:'https://international.schwab.com',                   tag:'BROKER'},
+                {icon:'📱', title:'eToro — Broker social',                     url:'https://www.etoro.com/search/?q=',                  tag:'BROKER'},
+                {icon:'🇨🇴', title:'Tyba Colombia — Inversión local',          url:'https://tyba.com.co',                               tag:'LATAM'},
+                {icon:'🌎', title:'Nubank — Fintech LATAM',                    url:'https://nubank.com.br',                             tag:'LATAM'},
+            ],
+            tendencias: [
+                {icon:'🔥', title:'Google Trends — Tendencias globales',       url:'https://trends.google.com/trends/explore?q=',       tag:'TREND'},
+                {icon:'📰', title:'Reuters — Noticias financieras',            url:'https://www.reuters.com/search/news?blob=',          tag:'NEWS'},
+                {icon:'📡', title:'Bloomberg — Mercados y economía',           url:'https://www.bloomberg.com/search?query=',            tag:'NEWS'},
+                {icon:'🌐', title:'BBC Business — Economía global',            url:'https://www.bbc.com/search?q=',                     tag:'NEWS'},
+            ]
+        };
+
+        // Todas las fuentes juntas
+        const ALL_SOURCES = Object.values(SEARCH_SOURCES).flat();
+
+        function setCat(btn, cat){
+            document.querySelectorAll('.search-cat').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            searchCat = cat;
+            const q = document.getElementById('search-input').value.trim();
+            if(q) runSearch();
+        }
+
+        function runSearch(){
+            const q = document.getElementById('search-input').value.trim();
+            const resultsEl = document.getElementById('search-results');
+
+            if(!q){
+                // Sin query — muestra fuentes de la categoría
+                showDefaultSources(resultsEl);
+                return;
+            }
+
+            const sources = searchCat === 'all' ? ALL_SOURCES : (SEARCH_SOURCES[searchCat] || ALL_SOURCES);
+            const encoded = encodeURIComponent(q);
+
+            resultsEl.innerHTML = sources.map(s => {
+                const url = s.url.includes('?') || s.url.endsWith('=')
+                    ? s.url + encoded
+                    : s.url;
+                return `<a href="${url}" target="_blank" class="sr-item">
+                    <span class="sr-icon">${s.icon}</span>
+                    <div style="flex:1;min-width:0;">
+                        <div class="sr-title">${s.title}</div>
+                        <div class="sr-source">> Buscar: "${q}"</div>
+                    </div>
+                    <span class="sr-tag">${s.tag}</span>
+                </a>`;
+            }).join('');
+
+            resultsEl.classList.add('show');
+        }
+
+        function showDefaultSources(resultsEl){
+            const sources = searchCat === 'all' ? ALL_SOURCES.slice(0,8) : (SEARCH_SOURCES[searchCat] || ALL_SOURCES.slice(0,8));
+            resultsEl.innerHTML = sources.map(s =>
+                `<a href="${s.url}" target="_blank" class="sr-item">
+                    <span class="sr-icon">${s.icon}</span>
+                    <div style="flex:1;min-width:0;">
+                        <div class="sr-title">${s.title}</div>
+                        <div class="sr-source">> Acceso directo</div>
+                    </div>
+                    <span class="sr-tag">${s.tag}</span>
+                </a>`
+            ).join('');
+            resultsEl.classList.add('show');
+        }
+
+        function updateSearchSuggestions(val){
+            if(!val) document.getElementById('search-results').classList.remove('show');
         }
 
         // ── MAPA TABS ──
