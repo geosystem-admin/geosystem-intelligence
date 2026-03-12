@@ -282,7 +282,7 @@
                 <div class="border border-cyan-500 bg-black mb-3" style="position:relative;">
                     <!-- Thumbnail con botón play -->
                     <div id="yt-thumb" style="position:relative;cursor:pointer;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;" onclick="playVideo()">
-                        <img src="https://img.youtube.com/vi/JGToOtVf0f8/maxresdefault.jpg" style="width:100%;height:100%;object-fit:cover;opacity:0.7;" onerror="this.src='https://img.youtube.com/vi/JGToOtVf0f8/hqdefault.jpg'">
+                        <img src="https://img.youtube.com/vi/8Nx9Zrj1rXs/maxresdefault.jpg" style="width:100%;height:100%;object-fit:cover;opacity:0.7;" onerror="this.src='https://img.youtube.com/vi/8Nx9Zrj1rXs/hqdefault.jpg'">
                         <div style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px;">
                             <div style="width:64px;height:64px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(255,0,0,0.5);">
                                 <div style="width:0;height:0;border-style:solid;border-width:12px 0 12px 22px;border-color:transparent transparent transparent #fff;margin-left:4px;"></div>
@@ -366,9 +366,9 @@
                 </div>
                 <!-- Thumbnail con play — disponible para todos -->
                 <div class="tx-thumb" id="tx1-container">
-                    <img src="https://img.youtube.com/vi/JGToOtVf0f8/maxresdefault.jpg"
-                         onerror="this.src='https://img.youtube.com/vi/JGToOtVf0f8/hqdefault.jpg'">
-                    <div class="tx-play-overlay" id="tx1-overlay" onclick="playTx('tx1','JGToOtVf0f8')">
+                    <img src="https://img.youtube.com/vi/8Nx9Zrj1rXs/maxresdefault.jpg"
+                         onerror="this.src='https://img.youtube.com/vi/8Nx9Zrj1rXs/hqdefault.jpg'">
+                    <div class="tx-play-overlay" id="tx1-overlay" onclick="playTx('tx1','8Nx9Zrj1rXs')">
                         <div class="tx-play-btn"><div class="tx-play-arrow"></div></div>
                         <div style="font-size:7px;letter-spacing:2px;color:#36f4d0;">▶ VER TRANSMISIÓN</div>
                     </div>
@@ -399,8 +399,8 @@
                 </div>
                 <!-- Thumbnail bloqueada con cuenta regresiva -->
                 <div class="tx-thumb" style="cursor:default;">
-                    <img src="https://img.youtube.com/vi/JGToOtVf0f8/maxresdefault.jpg" style="filter:blur(4px);opacity:0.3;"
-                         onerror="this.src='https://img.youtube.com/vi/JGToOtVf0f8/hqdefault.jpg'">
+                    <img src="https://img.youtube.com/vi/8Nx9Zrj1rXs/maxresdefault.jpg" style="filter:blur(4px);opacity:0.3;"
+                         onerror="this.src='https://img.youtube.com/vi/8Nx9Zrj1rXs/hqdefault.jpg'">
                     <div class="tx-lock-overlay">
                         <div style="text-align:center;">
                             <div style="font-size:7px;letter-spacing:2px;color:#fbbf24;margin-bottom:6px;">PRÓXIMO LANZAMIENTO</div>
@@ -1026,7 +1026,7 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
         function playVideo(){
             const thumb = document.getElementById('yt-thumb');
             const player = document.getElementById('yt-player');
-            const videoId = window._ytVideoId || 'JGToOtVf0f8';
+            const videoId = window._ytVideoId || '8Nx9Zrj1rXs';
             thumb.style.display = 'none';
             player.style.display = 'block';
             player.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&modestbranding=1';
@@ -1077,7 +1077,7 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
                 document.body.classList.add('sync-flash');
                 setTimeout(()=>document.body.classList.remove('sync-flash'),500);
                 document.getElementById('terminal-msg').innerHTML="<span style='color:#36f4d0;font-weight:bold'>> NÚCLEO VIVO. BIENVENIDO EMISARIO.</span>";
-                window._ytVideoId = 'JGToOtVf0f8'; // video listo para reproducir al tocar play
+                window._ytVideoId = '8Nx9Zrj1rXs'; // video listo para reproducir al tocar play
                 document.getElementById('portal-sinergia').classList.remove('hidden');
                 document.getElementById('login-form').innerHTML='<div style="color:#36f4d0;text-align:center;padding:8px;border:1px solid #164e63;font-weight:bold;font-size:8px;">SISTEMA SINCRONIZADO</div>';
             }else{alert('ERROR: CLAVE INCORRECTA');}
