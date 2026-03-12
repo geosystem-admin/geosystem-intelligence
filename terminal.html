@@ -154,8 +154,19 @@
             <span class="label-node">CENTRO_DE_INTELIGENCIA_IA</span>
             <div id="terminal-msg" class="h-8 text-[7px] text-zinc-500 italic mb-2">> SISTEMA LISTO PARA VALIDACIÓN...</div>
             <div id="portal-sinergia" class="hidden">
-                <div class="border border-cyan-500 bg-black mb-3">
-                    <iframe id="yt-player" src="" frameborder="0" allow="autoplay; fullscreen" class="w-full aspect-video"></iframe>
+                <div class="border border-cyan-500 bg-black mb-3" style="position:relative;">
+                    <!-- Thumbnail con botón play -->
+                    <div id="yt-thumb" style="position:relative;cursor:pointer;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;" onclick="playVideo()">
+                        <img src="https://img.youtube.com/vi/JGToOtVf0f8/maxresdefault.jpg" style="width:100%;height:100%;object-fit:cover;opacity:0.7;" onerror="this.src='https://img.youtube.com/vi/JGToOtVf0f8/hqdefault.jpg'">
+                        <div style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px;">
+                            <div style="width:64px;height:64px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(255,0,0,0.5);">
+                                <div style="width:0;height:0;border-style:solid;border-width:12px 0 12px 22px;border-color:transparent transparent transparent #fff;margin-left:4px;"></div>
+                            </div>
+                            <div style="font-size:8px;letter-spacing:2px;color:#36f4d0;text-shadow:0 0 10px #36f4d0;">▶ REPRODUCIR TRANSMISIÓN</div>
+                        </div>
+                    </div>
+                    <!-- Iframe oculto hasta que se toque play -->
+                    <iframe id="yt-player" src="" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen style="display:none;width:100%;aspect-ratio:16/9;"></iframe>
                 </div>
                 <div class="grid grid-cols-3 gap-2 mb-3">
                     <button class="btn-don" onclick="openModal('donaciones')">DONACIONES</button>
@@ -574,6 +585,16 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
+        // ── VIDEO PLAYER ──
+        function playVideo(){
+            const thumb = document.getElementById('yt-thumb');
+            const player = document.getElementById('yt-player');
+            const videoId = window._ytVideoId || 'JGToOtVf0f8';
+            thumb.style.display = 'none';
+            player.style.display = 'block';
+            player.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&modestbranding=1';
+        }
+
         // ── RELOJ ──
         function clock(){document.getElementById('reloj-v6').innerText=new Date().toLocaleTimeString();}
         setInterval(clock,1000);clock();
@@ -619,7 +640,7 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
                 document.body.classList.add('sync-flash');
                 setTimeout(()=>document.body.classList.remove('sync-flash'),500);
                 document.getElementById('terminal-msg').innerHTML="<span style='color:#36f4d0;font-weight:bold'>> NÚCLEO VIVO. BIENVENIDO EMISARIO.</span>";
-                document.getElementById('yt-player').src='https://www.youtube.com/embed/TU_ID_AQUI?autoplay=1';
+                window._ytVideoId = 'JGToOtVf0f8'; // video listo para reproducir al tocar play
                 document.getElementById('portal-sinergia').classList.remove('hidden');
                 document.getElementById('login-form').innerHTML='<div style="color:#36f4d0;text-align:center;padding:8px;border:1px solid #164e63;font-weight:bold;font-size:8px;">SISTEMA SINCRONIZADO</div>';
             }else{alert('ERROR: CLAVE INCORRECTA');}
