@@ -93,6 +93,15 @@
         .c-desc{font-size:6px;color:#475569;line-height:1.4;}
 
 
+
+        /* MAPA TABS */
+        .map-tab{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:6px 12px;border:none;background:transparent;color:#475569;cursor:pointer;border-right:1px solid rgba(248,113,113,0.15);transition:all .15s;text-transform:uppercase;}
+        .map-tab:hover{color:#f87171;background:rgba(248,113,113,0.05);}
+        .map-tab.active{color:#f87171;background:rgba(248,113,113,0.08);border-bottom:2px solid #f87171;}
+        .map-fallback-btn{display:none;padding:16px;text-align:center;}
+        .map-ext-btn{display:inline-block;border:1px solid #f87171;color:#f87171;font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:8px 16px;text-decoration:none;transition:all .2s;}
+        .map-ext-btn:hover{background:rgba(248,113,113,0.1);}
+
         /* TRANSMISIONES */
         .tx-card{border:1px solid rgba(54,244,208,0.15);background:rgba(2,6,23,0.95);margin-bottom:10px;overflow:hidden;transition:all .2s;}
         .tx-card:hover{border-color:rgba(54,244,208,0.4);}
@@ -360,13 +369,51 @@
         <div style="font-size:7px;color:#64748b;margin-bottom:8px;letter-spacing:1px;">
             > Rastreador global de conflictos · International Crisis Group · +70 conflictos monitoreados
         </div>
-        <div style="position:relative;width:100%;border:1px solid rgba(248,113,113,0.2);background:#000;overflow:hidden;">
-            <iframe
-                src="https://www.crisisgroup.org/crisiswatch/map-and-trends"
-                style="width:100%;height:420px;border:none;display:block;"
-                loading="lazy"
-                title="CrisisWatch Global Conflict Map">
-            </iframe>
+        <!-- MAPA INTERACTIVO — múltiples fuentes -->
+        <div style="border:1px solid rgba(248,113,113,0.2);background:#000;overflow:hidden;">
+
+            <!-- TABS de fuentes -->
+            <div style="display:flex;border-bottom:1px solid rgba(248,113,113,0.2);">
+                <button class="map-tab active" onclick="switchMap('acled')" id="tab-acled">ACLED</button>
+                <button class="map-tab" onclick="switchMap('liveuamap')" id="tab-liveuamap">LIVEUAMAP</button>
+                <button class="map-tab" onclick="switchMap('gdelt')" id="tab-gdelt">GDELT</button>
+            </div>
+
+            <!-- ACLED — Armed Conflict -->
+            <div id="map-acled" class="map-frame active-frame">
+                <iframe src="https://acleddata.com/dashboard/#/dashboard"
+                    style="width:100%;height:400px;border:none;"
+                    loading="lazy">
+                </iframe>
+                <div class="map-fallback-btn">
+                    <div style="font-size:7px;color:#f87171;margin-bottom:8px;">🌍 ACLED — Datos de conflictos armados globales</div>
+                    <a href="https://acleddata.com/dashboard/#/dashboard" target="_blank" class="map-ext-btn">ABRIR MAPA ACLED ↗</a>
+                </div>
+            </div>
+
+            <!-- LIVEUAMAP -->
+            <div id="map-liveuamap" class="map-frame" style="display:none;">
+                <iframe src="https://liveuamap.com/"
+                    style="width:100%;height:400px;border:none;"
+                    loading="lazy">
+                </iframe>
+                <div class="map-fallback-btn">
+                    <div style="font-size:7px;color:#f87171;margin-bottom:8px;">🔴 LIVEUAMAP — Conflictos en tiempo real</div>
+                    <a href="https://liveuamap.com" target="_blank" class="map-ext-btn">ABRIR LIVEUAMAP ↗</a>
+                </div>
+            </div>
+
+            <!-- GDELT GEO -->
+            <div id="map-gdelt" class="map-frame" style="display:none;">
+                <iframe src="https://api.gdeltproject.org/api/v2/geo/geo?query=conflict%20war%20crisis&mode=pointdata&format=html&TIMESPAN=720&MAXPOINTS=250&SOURCESCALE=25"
+                    style="width:100%;height:400px;border:none;"
+                    loading="lazy">
+                </iframe>
+                <div class="map-fallback-btn">
+                    <div style="font-size:7px;color:#f87171;margin-bottom:8px;">📡 GDELT — Eventos geopolíticos globales (últimas 72hrs)</div>
+                    <a href="https://www.gdeltproject.org" target="_blank" class="map-ext-btn">ABRIR GDELT ↗</a>
+                </div>
+            </div>
         </div>
         <div style="margin-top:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:4px;">
             <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/colombia" target="_blank" class="conflicto-card">
@@ -719,6 +766,35 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
             sendBtn.textContent = 'ENVIAR ▶';
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
+
+        // ── MAPA TABS ──
+        function switchMap(id){
+            ['acled','liveuamap','gdelt'].forEach(m=>{
+                document.getElementById('map-'+m).style.display = m===id?'block':'none';
+                const tab = document.getElementById('tab-'+m);
+                tab.classList.toggle('active', m===id);
+            });
+        }
+
+        // Mostrar fallback si iframe no carga
+        document.querySelectorAll('.map-frame iframe').forEach(iframe=>{
+            iframe.addEventListener('error', ()=>{
+                iframe.style.display='none';
+                iframe.nextElementSibling.style.display='block';
+            });
+            // Timeout fallback para iframes bloqueados
+            setTimeout(()=>{
+                try{
+                    if(!iframe.contentDocument && iframe.style.display!=='none'){
+                        iframe.style.display='none';
+                        if(iframe.nextElementSibling) iframe.nextElementSibling.style.display='block';
+                    }
+                }catch(e){
+                    iframe.style.display='none';
+                    if(iframe.nextElementSibling) iframe.nextElementSibling.style.display='block';
+                }
+            }, 4000);
+        });
 
         // ── TRANSMISIONES ──
         function playTx(id, videoId){
