@@ -75,6 +75,23 @@
         .m-success.show{display:block;}
         .m-info{font-size:8px;color:#64748b;line-height:1.6;padding:8px 10px;border:1px solid #1e293b;margin-bottom:8px;background:rgba(54,244,208,0.02);}
 
+        /* CHAT IA */
+        .msg-ia{font-size:7px;color:#94a3b8;line-height:1.6;padding:6px 8px;border-left:2px solid #36f4d0;background:rgba(54,244,208,0.03);}
+        .msg-user{font-size:7px;color:#cce0f0;line-height:1.6;padding:6px 8px;border-left:2px solid #fbbf24;background:rgba(251,191,36,0.03);text-align:right;}
+        .msg-loading{font-size:7px;color:#475569;padding:6px 8px;border-left:2px solid #334155;animation:blink-load 1s infinite;}
+        @keyframes blink-load{0%,100%{opacity:1}50%{opacity:0.3}}
+        .sug-btn{font-family:'JetBrains Mono',monospace;font-size:7px;padding:4px 8px;border:1px solid rgba(54,244,208,0.2);background:transparent;color:#64748b;cursor:pointer;transition:all .15s;white-space:nowrap;}
+        .sug-btn:hover{border-color:#36f4d0;color:#36f4d0;background:rgba(54,244,208,0.05);}
+
+
+        .conflicto-card{display:flex;align-items:flex-start;gap:6px;border:1px solid #1e293b;padding:6px 8px;text-decoration:none;transition:all .15s;background:rgba(2,6,23,0.6);}
+        .conflicto-card:hover{border-color:#f87171;background:rgba(248,113,113,0.04);}
+        .c-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+        .c-dot.red{background:#f87171;box-shadow:0 0 4px #f87171;}
+        .c-dot.orange{background:#fb923c;box-shadow:0 0 4px #fb923c;}
+        .c-pais{font-size:7px;font-weight:bold;color:#f87171;letter-spacing:1px;margin-bottom:2px;}
+        .c-desc{font-size:6px;color:#475569;line-height:1.4;}
+
         /* FUENTES INTEL */
         .fuente-card{display:block;border:1px solid #1e293b;padding:8px 10px;text-decoration:none;transition:all .15s;background:rgba(2,6,23,0.6);}
         .fuente-card:hover{border-color:#36f4d0;background:rgba(54,244,208,0.04);}
@@ -140,10 +157,33 @@
                 <div class="border border-cyan-500 bg-black mb-3">
                     <iframe id="yt-player" src="" frameborder="0" allow="autoplay; fullscreen" class="w-full aspect-video"></iframe>
                 </div>
-                <div class="grid grid-cols-3 gap-2">
+                <div class="grid grid-cols-3 gap-2 mb-3">
                     <button class="btn-don" onclick="openModal('donaciones')">DONACIONES</button>
                     <button class="btn-sus" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
                     <button class="btn-col" onclick="openModal('colaboraciones')">COLABORACIONES</button>
+                </div>
+                <!-- ASISTENTE IA GX -->
+                <div style="border:1px solid rgba(54,244,208,0.3);background:#020617;padding:8px;">
+                    <div style="font-size:8px;font-weight:bold;letter-spacing:2px;color:#36f4d0;border-bottom:1px solid rgba(54,244,208,0.2);padding-bottom:5px;margin-bottom:8px;">🤖 EMISARIO_IA // ASISTENTE GEOPOLÍTICO</div>
+                    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
+                        <button class="sug-btn" onclick="usarSugerencia(this)">📈 ¿Cómo armo un portafolio?</button>
+                        <button class="sug-btn" onclick="usarSugerencia(this)">🌍 ¿Dónde vivir en LATAM?</button>
+                        <button class="sug-btn" onclick="usarSugerencia(this)">💰 ¿Cómo protejo mi capital?</button>
+                        <button class="sug-btn" onclick="usarSugerencia(this)">📊 ¿Qué índice monitorear hoy?</button>
+                    </div>
+                    <div id="ia-messages" style="height:200px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;padding:4px 0;">
+                        <div class="msg-ia"><span style="color:#36f4d0;">EMISARIO_IA</span><br>Sistema activo. Puedo ayudarte con mercados, portafolios, geopolítica e inversiones en LATAM. ¿Cuál es tu consulta?</div>
+                    </div>
+                    <div style="display:flex;gap:6px;align-items:flex-end;">
+                        <textarea id="ia-input" placeholder="> Escribe tu consulta al Emisario..."
+                            style="flex:1;font-family:'JetBrains Mono',monospace;font-size:8px;background:#080c10;border:1px solid #1e293b;color:#cce0f0;padding:7px 9px;outline:none;resize:none;height:36px;line-height:1.4;"
+                            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMensaje();}"></textarea>
+                        <button onclick="enviarMensaje()" id="ia-send-btn"
+                            style="background:#36f4d0;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:bold;letter-spacing:1px;padding:8px 12px;border:none;cursor:pointer;height:36px;">
+                            ENVIAR ▶
+                        </button>
+                    </div>
+                    <div style="font-size:6px;color:#334155;margin-top:4px;letter-spacing:1px;">ENTER para enviar · Solo accesible con clave GX</div>
                 </div>
             </div>
         </div>
@@ -160,6 +200,47 @@
         </div>
     </div>
 
+
+
+    <!-- MAPA CONFLICTOS -->
+    <div class="grid-node mt-2" style="border-color:rgba(248,113,113,0.3);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span class="label-node" style="color:#f87171;border-color:rgba(248,113,113,0.3);margin-bottom:0;">🌍 MAPA_CONFLICTOS_GLOBAL // CRISISWATCH</span>
+            <a href="https://www.crisisgroup.org/crisiswatch" target="_blank"
+               style="font-size:7px;letter-spacing:1px;color:#f87171;border:1px solid rgba(248,113,113,0.4);padding:3px 8px;text-decoration:none;white-space:nowrap;">
+                ABRIR COMPLETO ↗
+            </a>
+        </div>
+        <div style="font-size:7px;color:#64748b;margin-bottom:8px;letter-spacing:1px;">
+            > Rastreador global de conflictos · International Crisis Group · +70 conflictos monitoreados
+        </div>
+        <div style="position:relative;width:100%;border:1px solid rgba(248,113,113,0.2);background:#000;overflow:hidden;">
+            <iframe
+                src="https://www.crisisgroup.org/crisiswatch/map-and-trends"
+                style="width:100%;height:420px;border:none;display:block;"
+                loading="lazy"
+                title="CrisisWatch Global Conflict Map">
+            </iframe>
+        </div>
+        <div style="margin-top:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:4px;">
+            <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/colombia" target="_blank" class="conflicto-card">
+                <span class="c-dot red"></span>
+                <div><div class="c-pais">COLOMBIA</div><div class="c-desc">Grupos armados · ELN · Disidencias</div></div>
+            </a>
+            <a href="https://www.crisisgroup.org/latin-america-caribbean/haiti" target="_blank" class="conflicto-card">
+                <span class="c-dot red"></span>
+                <div><div class="c-pais">HAITÍ</div><div class="c-desc">Crisis política · Pandillas</div></div>
+            </a>
+            <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/venezuela" target="_blank" class="conflicto-card">
+                <span class="c-dot orange"></span>
+                <div><div class="c-pais">VENEZUELA</div><div class="c-desc">Crisis humanitaria · Tensión política</div></div>
+            </a>
+            <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/ecuador" target="_blank" class="conflicto-card">
+                <span class="c-dot orange"></span>
+                <div><div class="c-pais">ECUADOR</div><div class="c-desc">Crimen organizado · Narco-violencia</div></div>
+            </a>
+        </div>
+    </div>
 
     <!-- FUENTES INTEL -->
     <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.15);">
@@ -414,6 +495,84 @@
         }
 
         loadStratforFeed();
+
+        // ── ASISTENTE IA GX ──
+        const API_KEY = 'sk-ant-api03-xQQ-Sg5NpyuhXWskHkuZC3_uU5N16iTOAhKAACUn_6-hZKzKOKofEaOf38n7GAJB3dZXWrLpAkdULQ1WbSk3AA-pQishAAA';
+        const chatHistory = [];
+
+        const SYSTEM_PROMPT = `Eres el EMISARIO_IA de Geosystem Intelligence, un asistente especializado en inteligencia geopolítica y financiera para usuarios latinoamericanos. Tu estilo es directo, técnico y estratégico — como un analista de inteligencia de élite.
+
+Tus áreas de expertise:
+1. MERCADOS E ÍNDICES: Análisis de NYSE, DAX, ILF (LATAM), BTC, WTI Oil, SPY. Tendencias, zonas de soporte/resistencia, correlaciones geopolíticas.
+2. PORTAFOLIOS: Construcción por perfil de riesgo (conservador/moderado/agresivo). Diversificación entre activos, geografías y sectores. ETFs, acciones, cripto, commodities.
+3. GEOPOLÍTICA E INVERSIONES: Cómo los conflictos, elecciones y sanciones afectan los mercados. Análisis de riesgo país en LATAM.
+4. DÓNDE VIVIR Y PROTEGER CAPITAL EN LATAM: Mejores países por seguridad jurídica, costo de vida, banca offshore, residencias fiscales, ciudadanías.
+
+Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cuando los conozcas. Añade disclaimers solo al final si das recomendaciones de inversión específicas. Usa formato de terminal — respuestas estructuradas con > para puntos clave.`;
+
+        function usarSugerencia(btn) {
+            document.getElementById('ia-input').value = btn.textContent.replace(/^[^\w]+/, '').trim();
+            enviarMensaje();
+        }
+
+        async function enviarMensaje() {
+            const input = document.getElementById('ia-input');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const messagesEl = document.getElementById('ia-messages');
+            const sendBtn = document.getElementById('ia-send-btn');
+
+            // Mostrar mensaje del usuario
+            messagesEl.innerHTML += `<div class="msg-user"><span style="color:#fbbf24;">TÚ</span><br>${msg}</div>`;
+            input.value = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = '...';
+
+            // Loading
+            const loadId = 'load-' + Date.now();
+            messagesEl.innerHTML += `<div class="msg-loading" id="${loadId}">EMISARIO_IA procesando consulta...</div>`;
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+
+            // Agregar al historial
+            chatHistory.push({ role: 'user', content: msg });
+
+            try {
+                const response = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': API_KEY,
+                        'anthropic-version': '2023-06-01',
+                        'anthropic-dangerous-direct-browser-access': 'true'
+                    },
+                    body: JSON.stringify({
+                        model: 'claude-haiku-4-5-20251001',
+                        max_tokens: 600,
+                        system: SYSTEM_PROMPT,
+                        messages: chatHistory
+                    })
+                });
+
+                const data = await response.json();
+                const reply = data.content?.[0]?.text || 'Error en la respuesta del sistema.';
+
+                // Agregar respuesta al historial
+                chatHistory.push({ role: 'assistant', content: reply });
+
+                // Reemplazar loading con respuesta
+                document.getElementById(loadId).outerHTML =
+                    `<div class="msg-ia"><span style="color:#36f4d0;">EMISARIO_IA</span><br>${reply.replace(/\n/g,'<br>')}</div>`;
+
+            } catch(e) {
+                document.getElementById(loadId).outerHTML =
+                    `<div class="msg-ia"><span style="color:#f87171;">ERROR</span><br>> Fallo en la conexión con el núcleo IA. Verifica tu conexión e intenta de nuevo.</div>`;
+            }
+
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'ENVIAR ▶';
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
 
         // ── RELOJ ──
         function clock(){document.getElementById('reloj-v6').innerText=new Date().toLocaleTimeString();}
