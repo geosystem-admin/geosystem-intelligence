@@ -92,6 +92,37 @@
         .c-pais{font-size:7px;font-weight:bold;color:#f87171;letter-spacing:1px;margin-bottom:2px;}
         .c-desc{font-size:6px;color:#475569;line-height:1.4;}
 
+
+        /* TRANSMISIONES */
+        .tx-card{border:1px solid rgba(54,244,208,0.15);background:rgba(2,6,23,0.95);margin-bottom:10px;overflow:hidden;transition:all .2s;}
+        .tx-card:hover{border-color:rgba(54,244,208,0.4);}
+        .tx-header{padding:10px 12px;border-bottom:1px solid rgba(54,244,208,0.1);display:flex;justify-content:space-between;align-items:center;}
+        .tx-part{font-size:7px;letter-spacing:3px;color:#36f4d0;font-weight:bold;}
+        .tx-status-live{font-size:6px;letter-spacing:2px;color:#f87171;border:1px solid #f87171;padding:2px 6px;animation:pulse-red 1.5s infinite;}
+        .tx-status-soon{font-size:6px;letter-spacing:2px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 6px;}
+        .tx-status-locked{font-size:6px;letter-spacing:2px;color:#475569;border:1px solid #475569;padding:2px 6px;}
+        @keyframes pulse-red{0%,100%{opacity:1}50%{opacity:0.4}}
+        .tx-body{padding:12px;}
+        .tx-title{font-size:13px;font-weight:bold;color:#fff;line-height:1.3;margin-bottom:6px;letter-spacing:0.5px;}
+        .tx-excerpt{font-size:7px;color:#94a3b8;line-height:1.9;margin-bottom:10px;font-style:italic;}
+        .tx-excerpt span{color:#36f4d0;}
+        .tx-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;cursor:pointer;margin-bottom:10px;}
+        .tx-thumb img{width:100%;height:100%;object-fit:cover;opacity:0.6;transition:opacity .3s;}
+        .tx-thumb:hover img{opacity:0.8;}
+        .tx-lock-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(0,0,0,0.5);}
+        .tx-lock-icon{font-size:24px;}
+        .tx-lock-text{font-size:7px;letter-spacing:2px;color:#64748b;text-align:center;}
+        .tx-unlock-btn{font-size:7px;letter-spacing:2px;padding:6px 14px;border:1px solid #36f4d0;color:#36f4d0;background:rgba(54,244,208,0.08);cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .2s;}
+        .tx-unlock-btn:hover{background:rgba(54,244,208,0.2);}
+        .tx-play-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+        .tx-play-btn{width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(255,0,0,0.5);}
+        .tx-play-arrow{width:0;height:0;border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent #fff;margin-left:3px;}
+        .tx-countdown{font-size:9px;letter-spacing:1px;color:#fbbf24;font-weight:bold;}
+        .tx-countdown-label{font-size:6px;letter-spacing:2px;color:#64748b;}
+        .tx-meta{display:flex;justify-content:space-between;align-items:center;}
+        .tx-date{font-size:6px;letter-spacing:1px;color:#334155;}
+        .tx-tag{font-size:6px;letter-spacing:1px;color:#36f4d0;border:1px solid rgba(54,244,208,0.2);padding:2px 6px;}
+
         /* FUENTES INTEL */
         .fuente-card{display:block;border:1px solid #1e293b;padding:8px 10px;text-decoration:none;transition:all .15s;background:rgba(2,6,23,0.6);}
         .fuente-card:hover{border-color:#36f4d0;background:rgba(54,244,208,0.04);}
@@ -212,6 +243,110 @@
     </div>
 
 
+
+
+    <!-- TRANSMISIONES CLASIFICADAS -->
+    <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.25);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span class="label-node" style="margin-bottom:0;">📡 TRANSMISIONES_CLASIFICADAS // MANIFIESTO_GEOSYSTEM</span>
+            <span style="font-size:6px;letter-spacing:2px;color:#475569;white-space:nowrap;">IMMORTAL EMITTER</span>
+        </div>
+        <div style="font-size:7px;color:#475569;margin-bottom:14px;letter-spacing:1px;border-left:2px solid #36f4d0;padding-left:8px;font-style:italic;">
+            > Adelantos clasificados del Manifiesto. Acceso completo con clave GX.
+        </div>
+
+        <!-- TRANSMISIÓN 1 — LIVE (ya publicada) -->
+        <div class="tx-card">
+            <div class="tx-header">
+                <span class="tx-part">PARTE 01 // EL TABLERO REAL</span>
+                <span class="tx-status-live">● EN VIVO</span>
+            </div>
+            <div class="tx-body">
+                <div class="tx-title">"Lo que el Sistema Ocultó"</div>
+                <div class="tx-excerpt">
+                    <span>> FRAGMENTO CLASIFICADO:</span><br>
+                    "Existe un tablero que mueve el mundo. Cada vez que sube el petróleo, tu gasolina sube.
+                    Cada vez que el DAX cae, los fondos de pensiones latinoamericanos sangran...
+                    Esto ocurre todos los días mientras el algoritmo te mantiene ocupado con contenido
+                    diseñado para que <span>nunca lo veas.</span>"
+                </div>
+                <!-- Thumbnail con play — disponible para todos -->
+                <div class="tx-thumb" id="tx1-container">
+                    <img src="https://img.youtube.com/vi/JGToOtVf0f8/maxresdefault.jpg"
+                         onerror="this.src='https://img.youtube.com/vi/JGToOtVf0f8/hqdefault.jpg'">
+                    <div class="tx-play-overlay" id="tx1-overlay" onclick="playTx('tx1','JGToOtVf0f8')">
+                        <div class="tx-play-btn"><div class="tx-play-arrow"></div></div>
+                        <div style="font-size:7px;letter-spacing:2px;color:#36f4d0;">▶ VER TRANSMISIÓN</div>
+                    </div>
+                    <iframe id="tx1-iframe" src="" frameborder="0" allow="autoplay;fullscreen" allowfullscreen
+                        style="display:none;position:absolute;inset:0;width:100%;height:100%;"></iframe>
+                </div>
+                <div class="tx-meta">
+                    <span class="tx-date">TRANSMISIÓN ACTIVA · GEOSYSTEM V6.0</span>
+                    <span class="tx-tag">GEOPOLÍTICA</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANSMISIÓN 2 — PRÓXIMA con cuenta regresiva -->
+        <div class="tx-card">
+            <div class="tx-header">
+                <span class="tx-part">PARTE 02 // EL PORTAFOLIO DEL EMISARIO</span>
+                <span class="tx-status-soon">⏳ PRÓXIMAMENTE</span>
+            </div>
+            <div class="tx-body">
+                <div class="tx-title">"Construye Riqueza Desde LATAM"</div>
+                <div class="tx-excerpt">
+                    <span>> FRAGMENTO CLASIFICADO:</span><br>
+                    "Desde pequeño te enseñaron una sola forma de manejar el dinero: trabaja, ahorra en el banco,
+                    y confía en que el sistema cuide tu futuro. Pero nadie te dijo que un CDT en Colombia
+                    rinde menos que la inflación real... El sistema no te lo enseñó porque
+                    <span>un cliente ignorante es un cliente cautivo.</span>"
+                </div>
+                <!-- Thumbnail bloqueada con cuenta regresiva -->
+                <div class="tx-thumb" style="cursor:default;">
+                    <img src="https://img.youtube.com/vi/JGToOtVf0f8/maxresdefault.jpg" style="filter:blur(4px);opacity:0.3;"
+                         onerror="this.src='https://img.youtube.com/vi/JGToOtVf0f8/hqdefault.jpg'">
+                    <div class="tx-lock-overlay">
+                        <div style="text-align:center;">
+                            <div style="font-size:7px;letter-spacing:2px;color:#fbbf24;margin-bottom:6px;">PRÓXIMO LANZAMIENTO</div>
+                            <div id="countdown-tx2" class="tx-countdown">00:00:00:00</div>
+                            <div class="tx-countdown-label">DÍAS · HRS · MIN · SEG</div>
+                        </div>
+                        <button class="tx-unlock-btn" onclick="openModal('suscripciones')">
+                            🔔 ACTIVAR NOTIFICACIÓN · CLAVE GX
+                        </button>
+                    </div>
+                </div>
+                <div class="tx-meta">
+                    <span class="tx-date">LANZAMIENTO ESTIMADO · PRONTO</span>
+                    <span class="tx-tag">INVERSIONES</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANSMISIÓN 3 — BLOQUEADA -->
+        <div class="tx-card" style="opacity:0.7;">
+            <div class="tx-header">
+                <span class="tx-part">PARTE 03 // GEOPOLÍTICA Y TU DINERO</span>
+                <span class="tx-status-locked">🔒 CLASIFICADO</span>
+            </div>
+            <div class="tx-body">
+                <div class="tx-title" style="color:#475569;">"El Mapa del Poder que Nadie Te Enseñó"</div>
+                <div class="tx-excerpt" style="color:#334155;">
+                    <span style="color:#475569;">> ACCESO RESTRINGIDO:</span><br>
+                    "████████ ██ ████ ██████ ██ ███████████ ████ ██ ████████████
+                    ████████████ ██ ████ ██████ ████ ██████████ ████████████████
+                    ██ ████████████ ██ ████████ <span style="color:#36f4d0;">CLAVE GX REQUERIDA</span> ████████████████"
+                </div>
+                <div class="tx-meta">
+                    <span class="tx-date">FECHA · CLASIFICADA</span>
+                    <span class="tx-tag" style="color:#334155;border-color:#1e293b;">ESTRATEGIA</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
     <!-- MAPA CONFLICTOS -->
     <div class="grid-node mt-2" style="border-color:rgba(248,113,113,0.3);">
@@ -584,6 +719,38 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
             sendBtn.textContent = 'ENVIAR ▶';
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
+
+        // ── TRANSMISIONES ──
+        function playTx(id, videoId){
+            document.getElementById(id+'-overlay').style.display='none';
+            const iframe = document.getElementById(id+'-iframe');
+            iframe.style.display='block';
+            iframe.src='https://www.youtube.com/embed/'+videoId+'?autoplay=1&rel=0&modestbranding=1';
+        }
+
+        // Cuenta regresiva para Parte 02
+        function updateCountdown(){
+            // Fecha objetivo — cambia esto cuando tengas fecha real
+            const target = new Date();
+            target.setDate(target.getDate() + 7); // 7 días desde hoy
+            target.setHours(20, 0, 0, 0);
+
+            const now = new Date();
+            const diff = target - now;
+            if(diff <= 0){
+                document.getElementById('countdown-tx2').textContent = '¡HOY!';
+                return;
+            }
+            const days  = Math.floor(diff / (1000*60*60*24));
+            const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+            const mins  = Math.floor((diff % (1000*60*60)) / (1000*60));
+            const secs  = Math.floor((diff % (1000*60)) / 1000);
+            const pad = n => String(n).padStart(2,'0');
+            document.getElementById('countdown-tx2').textContent =
+                pad(days)+':'+pad(hours)+':'+pad(mins)+':'+pad(secs);
+        }
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
 
         // ── VIDEO PLAYER ──
         function playVideo(){
