@@ -1,1492 +1,789 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GEOSYSTEM | Terminal v6.0</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-        :root{--neon:#36f4d0;--bg:#020617;}
-        body{font-family:'JetBrains Mono',monospace;background-color:var(--bg);color:var(--neon);background-image:linear-gradient(rgba(18,16,16,0) 50%,rgba(0,0,0,0.25) 50%);background-size:100% 4px;margin:0;padding:10px;}
-        .grid-node{border:1px solid rgba(54,244,208,0.2);background:rgba(2,6,23,0.9);padding:8px;margin-bottom:8px;}
-        .label-node{font-size:8px;font-weight:bold;border-bottom:1px solid rgba(54,244,208,0.3);margin-bottom:6px;color:var(--neon);display:block;letter-spacing:1px;}
-        .sync-flash{animation:flash 0.5s ease-out;}
-        @keyframes flash{0%{background-color:#36f4d0;opacity:0.8}100%{background-color:var(--bg)}}
-
-        /* BOLSAS */
-        #bolsas-widget{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;}
-        .bolsa-card{border:1px solid rgba(54,244,208,0.12);background:rgba(2,6,23,0.95);padding:5px 6px;display:flex;flex-direction:column;gap:3px;}
-        .bolsa-region{font-size:6px;letter-spacing:1px;color:#64748b;}
-        .bolsa-name{font-size:7px;font-weight:bold;letter-spacing:0.5px;}
-        .bolsa-hora{font-size:6px;color:#475569;line-height:1.4;}
-        .bolsa-status{display:inline-flex;align-items:center;gap:3px;font-size:6px;font-weight:bold;letter-spacing:1px;padding:1px 4px;border:1px solid;width:fit-content;}
-        .bolsa-status.open{color:#34d399;border-color:#34d399;}
-        .bolsa-status.closed{color:#f87171;border-color:#f87171;opacity:0.6;}
-        .bolsa-status.pre{color:#fbbf24;border-color:#fbbf24;}
-        .dot{width:5px;height:5px;border-radius:50%;display:inline-block;}
-        .dot.open{background:#34d399;box-shadow:0 0 4px #34d399;animation:pdot 1.5s infinite;}
-        .dot.closed{background:#f87171;}
-        .dot.pre{background:#fbbf24;}
-        @keyframes pdot{0%,100%{opacity:1}50%{opacity:0.3}}
-
-        /* MODALES */
-        .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;align-items:center;justify-content:center;padding:12px;backdrop-filter:blur(4px);}
-        .modal-overlay.active{display:flex;}
-        .modal-box{background:#0d1117;border:1px solid #1a2535;width:100%;max-width:440px;animation:mIn .18s ease;font-family:'JetBrains Mono',monospace;max-height:92vh;overflow-y:auto;}
-        @keyframes mIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-        .modal-head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #1a2535;position:sticky;top:0;background:#0d1117;z-index:1;}
-        .modal-head-title{font-size:10px;font-weight:bold;letter-spacing:3px;text-transform:uppercase;}
-        .modal-x{background:none;border:none;color:#64748b;font-size:16px;cursor:pointer;padding:2px 6px;}
-        .modal-x:hover{color:#cce0f0;}
-        .modal-body{padding:14px;}
-        .m-label{font-size:7px;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;display:block;}
-        .m-input{width:100%;font-family:'JetBrains Mono',monospace;font-size:9px;background:#080c10;border:1px solid #1e293b;color:#cce0f0;padding:8px 10px;outline:none;margin-bottom:10px;box-sizing:border-box;}
-        .m-input:focus{border-color:var(--neon);}
-        .m-textarea{width:100%;font-family:'JetBrains Mono',monospace;font-size:9px;background:#080c10;border:1px solid #1e293b;color:#cce0f0;padding:8px 10px;outline:none;resize:vertical;min-height:65px;box-sizing:border-box;}
-        .m-textarea:focus{border-color:#00ff88;}
-        .m-divider{height:1px;background:#1e293b;margin:10px 0;}
-        .amount-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:8px 0;}
-        .amount-btn{font-family:'JetBrains Mono',monospace;font-size:10px;padding:8px;border:1px solid #1e293b;background:transparent;color:#64748b;cursor:pointer;transition:all .15s;}
-        .amount-btn:hover,.amount-btn.sel{border-color:#ffb300;color:#ffb300;background:rgba(255,179,0,0.06);}
-        .pay-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid #1e293b;cursor:pointer;font-size:8px;margin-bottom:5px;transition:all .15s;}
-        .pay-opt:hover{border-color:#ffb300;background:rgba(255,179,0,0.04);}
-        .pay-opt input{accent-color:#ffb300;}
-        .tier-card{border:1px solid #1e293b;padding:10px 12px;cursor:pointer;margin-bottom:6px;transition:all .15s;position:relative;}
-        .tier-card:hover{border-color:var(--neon);background:rgba(54,244,208,0.03);}
-        .tier-card.featured{border-color:rgba(54,244,208,0.35);}
-        .tier-badge{position:absolute;top:-1px;right:10px;background:var(--neon);color:#000;font-size:6px;letter-spacing:2px;padding:2px 6px;}
-        .tier-name{font-size:8px;font-weight:bold;letter-spacing:2px;color:var(--neon);margin-bottom:3px;}
-        .tier-price{font-size:15px;color:#cce0f0;margin-bottom:4px;}
-        .tier-price span{font-size:9px;color:#64748b;}
-        .tier-feats{font-size:7px;color:#64748b;line-height:1.8;list-style:none;padding:0;}
-        .tier-feats li::before{content:'> ';color:var(--neon);}
-        .collab-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px;}
-        .collab-chip{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:1px;padding:7px 8px;border:1px solid #1e293b;background:transparent;color:#64748b;cursor:pointer;transition:all .15s;text-transform:uppercase;}
-        .collab-chip:hover,.collab-chip.sel{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,0.05);}
-        .m-action{width:100%;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:3px;text-transform:uppercase;padding:11px;border:1px solid;cursor:pointer;transition:all .2s;margin-top:8px;}
-        .m-amber{background:rgba(255,179,0,0.08);border-color:#ffb300;color:#ffb300;}
-        .m-amber:hover{background:rgba(255,179,0,0.18);box-shadow:0 0 10px rgba(255,179,0,0.4);color:#fff;}
-        .m-cyan{background:rgba(54,244,208,0.08);border-color:var(--neon);color:var(--neon);}
-        .m-cyan:hover{background:rgba(54,244,208,0.18);box-shadow:0 0 10px rgba(54,244,208,0.4);color:#fff;}
-        .m-green{background:rgba(0,255,136,0.08);border-color:#00ff88;color:#00ff88;}
-        .m-green:hover{background:rgba(0,255,136,0.18);box-shadow:0 0 10px rgba(0,255,136,0.4);color:#fff;}
-        .m-success{display:none;margin-top:10px;padding:8px 12px;border:1px solid #00ff88;color:#00ff88;background:rgba(0,255,136,0.05);font-size:8px;line-height:1.6;}
-        .m-success.show{display:block;}
-        .m-info{font-size:8px;color:#64748b;line-height:1.6;padding:8px 10px;border:1px solid #1e293b;margin-bottom:8px;background:rgba(54,244,208,0.02);}
-
-        /* CHAT IA */
-        .msg-ia{font-size:7px;color:#94a3b8;line-height:1.6;padding:6px 8px;border-left:2px solid #36f4d0;background:rgba(54,244,208,0.03);}
-        .msg-user{font-size:7px;color:#cce0f0;line-height:1.6;padding:6px 8px;border-left:2px solid #fbbf24;background:rgba(251,191,36,0.03);text-align:right;}
-        .msg-loading{font-size:7px;color:#475569;padding:6px 8px;border-left:2px solid #334155;animation:blink-load 1s infinite;}
-        @keyframes blink-load{0%,100%{opacity:1}50%{opacity:0.3}}
-        .sug-btn{font-family:'JetBrains Mono',monospace;font-size:7px;padding:4px 8px;border:1px solid rgba(54,244,208,0.2);background:transparent;color:#64748b;cursor:pointer;transition:all .15s;white-space:nowrap;}
-        .sug-btn:hover{border-color:#36f4d0;color:#36f4d0;background:rgba(54,244,208,0.05);}
-
-
-
-        /* EPISODIOS GX */
-        .gx-ep{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #1e293b;cursor:pointer;transition:all .15s;}
-        .gx-ep-current{border-color:rgba(251,191,36,0.5);background:rgba(251,191,36,0.05);}
-        .gx-ep-done{border-color:#1e293b;background:rgba(54,244,208,0.02);cursor:pointer;}
-        .gx-ep-done:hover{border-color:rgba(54,244,208,0.3);}
-        .gx-ep-locked{opacity:0.4;cursor:not-allowed;}
-        .gx-ep-num{font-size:7px;font-weight:bold;color:#fbbf24;letter-spacing:1px;white-space:nowrap;min-width:52px;font-family:'JetBrains Mono',monospace;}
-        .gx-ep-done .gx-ep-num{color:#36f4d0;}
-        .gx-ep-locked .gx-ep-num{color:#334155;}
-        .gx-ep-title{font-size:7px;color:#94a3b8;flex:1;font-family:'JetBrains Mono',monospace;}
-        .gx-ep-status{font-size:6px;letter-spacing:1px;padding:1px 6px;border:1px solid;white-space:nowrap;font-family:'JetBrains Mono',monospace;}
-        .status-live{color:#fbbf24;border-color:#fbbf24;}
-        .status-done{color:#36f4d0;border-color:rgba(54,244,208,0.3);}
-        .status-locked{color:#334155;border-color:#1e293b;}
-
-        /* EPISODIOS GX END */
-        .conflicto-card{display:flex;align-items:flex-start;gap:6px;border:1px solid #1e293b;padding:6px 8px;text-decoration:none;transition:all .15s;background:rgba(2,6,23,0.6);}
-
-        /* EPISODIOS GX */
-        .gx-ep{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #1e293b;cursor:pointer;transition:all .15s;}
-        .gx-ep-current{border-color:rgba(251,191,36,0.5);background:rgba(251,191,36,0.05);}
-        .gx-ep-done{border-color:#1e293b;background:rgba(54,244,208,0.02);cursor:pointer;}
-        .gx-ep-done:hover{border-color:rgba(54,244,208,0.3);}
-        .gx-ep-locked{opacity:0.4;cursor:not-allowed;}
-        .gx-ep-num{font-size:7px;font-weight:bold;color:#fbbf24;letter-spacing:1px;white-space:nowrap;min-width:52px;font-family:'JetBrains Mono',monospace;}
-        .gx-ep-done .gx-ep-num{color:#36f4d0;}
-        .gx-ep-locked .gx-ep-num{color:#334155;}
-        .gx-ep-title{font-size:7px;color:#94a3b8;flex:1;font-family:'JetBrains Mono',monospace;}
-        .gx-ep-status{font-size:6px;letter-spacing:1px;padding:1px 6px;border:1px solid;white-space:nowrap;font-family:'JetBrains Mono',monospace;}
-        .status-live{color:#fbbf24;border-color:#fbbf24;}
-        .status-done{color:#36f4d0;border-color:rgba(54,244,208,0.3);}
-        .status-locked{color:#334155;border-color:#1e293b;}
-
-        /* EPISODIOS GX END */
-        .conflicto-card:hover{border-color:#f87171;background:rgba(248,113,113,0.04);}
-        .c-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:2px;}
-        .c-dot.red{background:#f87171;box-shadow:0 0 4px #f87171;}
-        .c-dot.orange{background:#fb923c;box-shadow:0 0 4px #fb923c;}
-        .c-pais{font-size:7px;font-weight:bold;color:#f87171;letter-spacing:1px;margin-bottom:2px;}
-        .c-desc{font-size:6px;color:#475569;line-height:1.4;}
-
-
-
-
-        /* BUSCADOR */
-        .search-wrap{position:relative;display:flex;align-items:center;gap:0;}
-        .search-input{
-            flex:1;font-family:'JetBrains Mono',monospace;font-size:10px;
-            background:#080c10;border:1px solid rgba(54,244,208,0.3);
-            border-right:none;color:#cce0f0;padding:10px 14px;
-            outline:none;letter-spacing:1px;
-        }
-        .search-input:focus{border-color:#36f4d0;}
-        .search-input::placeholder{color:#334155;font-size:9px;}
-        .search-btn{
-            background:#36f4d0;color:#000;font-family:'JetBrains Mono',monospace;
-            font-size:10px;font-weight:bold;padding:10px 16px;border:none;
-            cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:1px;
-        }
-        .search-btn:hover{background:#99f6e4;}
-        .search-btn:active{transform:scale(0.97);}
-        .search-cats{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;}
-        .search-cat{
-            font-family:'JetBrains Mono',monospace;font-size:6px;letter-spacing:1px;
-            padding:3px 8px;border:1px solid #1e293b;background:transparent;
-            color:#475569;cursor:pointer;transition:all .15s;text-transform:uppercase;
-        }
-        .search-cat:hover,.search-cat.active{border-color:#36f4d0;color:#36f4d0;background:rgba(54,244,208,0.06);}
-        .search-results{
-            margin-top:8px;display:none;
-            border:1px solid rgba(54,244,208,0.2);background:#080c10;
-            max-height:220px;overflow-y:auto;
-        }
-        .search-results.show{display:block;}
-        .sr-item{
-            display:flex;align-items:center;gap:10px;
-            padding:8px 12px;border-bottom:1px solid #0f172a;
-            cursor:pointer;transition:all .15s;text-decoration:none;
-        }
-        .sr-item:last-child{border-bottom:none;}
-        .sr-item:hover{background:rgba(54,244,208,0.04);}
-        .sr-icon{font-size:12px;flex-shrink:0;}
-        .sr-title{font-size:8px;color:#cce0f0;margin-bottom:2px;}
-        .sr-source{font-size:6px;color:#475569;letter-spacing:1px;}
-        .sr-tag{font-size:6px;color:#36f4d0;border:1px solid rgba(54,244,208,0.2);padding:1px 5px;white-space:nowrap;margin-left:auto;flex-shrink:0;}
-
-
-        /* NEWS TABS */
-        .news-tab{font-family:'JetBrains Mono',monospace;font-size:6px;letter-spacing:1px;padding:6px 8px;border:none;border-right:1px solid #1e293b;background:transparent;color:#475569;cursor:pointer;transition:all .15s;text-transform:uppercase;flex:1;}
-        .news-tab:last-child{border-right:none;}
-        .news-tab:hover{color:#36f4d0;background:rgba(54,244,208,0.04);}
-        .news-tab.active{color:#36f4d0;background:rgba(54,244,208,0.08);border-bottom:2px solid #36f4d0;}
-        .news-item{padding:7px 0;border-bottom:1px solid #0f172a;cursor:pointer;display:block;text-decoration:none;}
-        .news-item:last-child{border-bottom:none;}
-        .news-item:hover .news-title{color:#36f4d0;}
-        .news-title{font-size:8px;color:#94a3b8;line-height:1.5;transition:color .15s;margin-bottom:2px;}
-        .news-meta{display:flex;gap:8px;align-items:center;}
-        .news-source{font-size:6px;color:#36f4d0;letter-spacing:1px;}
-        .news-date{font-size:6px;color:#334155;}
-        .news-region{font-size:6px;letter-spacing:1px;padding:1px 5px;border:1px solid;white-space:nowrap;}
-
-        /* MAPA TABS */
-        .map-tab{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:6px 12px;border:none;background:transparent;color:#475569;cursor:pointer;border-right:1px solid rgba(248,113,113,0.15);transition:all .15s;text-transform:uppercase;}
-        .map-tab:hover{color:#f87171;background:rgba(248,113,113,0.05);}
-        .map-tab.active{color:#f87171;background:rgba(248,113,113,0.08);border-bottom:2px solid #f87171;}
-        .map-fallback-btn{display:none;padding:16px;text-align:center;}
-        .map-ext-btn{display:inline-block;border:1px solid #f87171;color:#f87171;font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:8px 16px;text-decoration:none;transition:all .2s;}
-        .map-ext-btn:hover{background:rgba(248,113,113,0.1);}
-
-        /* TRANSMISIONES */
-        .tx-card{border:1px solid rgba(54,244,208,0.15);background:rgba(2,6,23,0.95);margin-bottom:10px;overflow:hidden;transition:all .2s;}
-        .tx-card:hover{border-color:rgba(54,244,208,0.4);}
-        .tx-header{padding:10px 12px;border-bottom:1px solid rgba(54,244,208,0.1);display:flex;justify-content:space-between;align-items:center;}
-        .tx-part{font-size:7px;letter-spacing:3px;color:#36f4d0;font-weight:bold;}
-        .tx-status-live{font-size:6px;letter-spacing:2px;color:#f87171;border:1px solid #f87171;padding:2px 6px;animation:pulse-red 1.5s infinite;}
-        .tx-status-soon{font-size:6px;letter-spacing:2px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 6px;}
-        .tx-status-locked{font-size:6px;letter-spacing:2px;color:#475569;border:1px solid #475569;padding:2px 6px;}
-        @keyframes pulse-red{0%,100%{opacity:1}50%{opacity:0.4}}
-        @keyframes pulse-amber{0%,100%{opacity:1;box-shadow:0 0 4px rgba(251,191,36,0.4)}50%{opacity:0.7;box-shadow:0 0 12px rgba(251,191,36,0.8)}}
-        .tx-body{padding:12px;}
-        .tx-title{font-size:13px;font-weight:bold;color:#fff;line-height:1.3;margin-bottom:6px;letter-spacing:0.5px;}
-        .tx-excerpt{font-size:7px;color:#94a3b8;line-height:1.9;margin-bottom:10px;font-style:italic;}
-        .tx-excerpt span{color:#36f4d0;}
-        .tx-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;cursor:pointer;margin-bottom:10px;}
-        .tx-thumb img{width:100%;height:100%;object-fit:cover;opacity:0.6;transition:opacity .3s;}
-        .tx-thumb:hover img{opacity:0.8;}
-        .tx-lock-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(0,0,0,0.5);}
-        .tx-lock-icon{font-size:24px;}
-        .tx-lock-text{font-size:7px;letter-spacing:2px;color:#64748b;text-align:center;}
-        .tx-unlock-btn{font-size:7px;letter-spacing:2px;padding:6px 14px;border:1px solid #36f4d0;color:#36f4d0;background:rgba(54,244,208,0.08);cursor:pointer;font-family:'JetBrains Mono',monospace;transition:all .2s;}
-        .tx-unlock-btn:hover{background:rgba(54,244,208,0.2);}
-        .tx-play-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
-        .tx-play-btn{width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(255,0,0,0.5);}
-        .tx-play-arrow{width:0;height:0;border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent #fff;margin-left:3px;}
-        .tx-countdown{font-size:9px;letter-spacing:1px;color:#fbbf24;font-weight:bold;}
-        .tx-countdown-label{font-size:6px;letter-spacing:2px;color:#64748b;}
-        .tx-meta{display:flex;justify-content:space-between;align-items:center;}
-        .tx-date{font-size:6px;letter-spacing:1px;color:#334155;}
-        .tx-tag{font-size:6px;letter-spacing:1px;color:#36f4d0;border:1px solid rgba(54,244,208,0.2);padding:2px 6px;}
-
-        /* FUENTES INTEL */
-        .fuente-card{display:block;border:1px solid #1e293b;padding:8px 10px;text-decoration:none;transition:all .15s;background:rgba(2,6,23,0.6);}
-        .fuente-card:hover{border-color:#36f4d0;background:rgba(54,244,208,0.04);}
-        .fuente-nombre{font-size:7px;font-weight:bold;color:#36f4d0;letter-spacing:1px;margin-bottom:2px;}
-        .fuente-desc{font-size:6px;color:#475569;line-height:1.4;}
-        .feed-item{padding:4px 0;border-bottom:1px solid #0f172a;cursor:pointer;}
-        .feed-item:last-child{border-bottom:none;}
-        .feed-item:hover .feed-title{color:#36f4d0;}
-        .feed-title{font-size:7px;color:#94a3b8;line-height:1.4;transition:color .15s;}
-        .feed-date{font-size:6px;color:#334155;margin-top:1px;}
-
-        /* BOTONES PORTAL */
-        .btn-don{background:transparent;border:1px solid #ffb300;color:#ffb300;font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:8px 4px;cursor:pointer;transition:all .2s;text-transform:uppercase;width:100%;}
-        .btn-don:hover{background:rgba(255,179,0,0.1);box-shadow:0 0 8px rgba(255,179,0,0.4);}
-        .btn-sus{background:transparent;border:1px solid var(--neon);color:var(--neon);font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:8px 4px;cursor:pointer;transition:all .2s;text-transform:uppercase;width:100%;}
-        .btn-sus:hover{background:rgba(54,244,208,0.1);box-shadow:0 0 8px rgba(54,244,208,0.4);}
-        .btn-col{background:rgba(0,255,136,0.07);border:1px solid #00ff88;color:#00ff88;font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:8px 4px;cursor:pointer;transition:all .2s;text-transform:uppercase;width:100%;}
-        .btn-col:hover{background:rgba(0,255,136,0.15);box-shadow:0 0 8px rgba(0,255,136,0.4);}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GEOSYSTEM · TERMINAL v6.0</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--neon:#36f4d0;--bg:#020617;--card:#080c18;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:#cce0f0;font-family:'JetBrains Mono',monospace;font-size:11px;padding:8px;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.15) 2px,rgba(0,0,0,.15) 4px);pointer-events:none;z-index:9999;}
+.nav{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(54,244,208,.2);padding:6px 0 8px;margin-bottom:10px;}
+.nav-brand{font-size:13px;font-weight:900;letter-spacing:4px;color:var(--neon);text-shadow:0 0 12px var(--neon);}
+.nav-tag{font-size:6px;letter-spacing:2px;color:#475569;}
+.gn{border:1px solid rgba(54,244,208,.18);background:rgba(8,12,24,.95);padding:10px;margin-bottom:8px;}
+.lbl{font-size:7px;letter-spacing:3px;color:var(--neon);border-bottom:1px solid rgba(54,244,208,.15);padding-bottom:5px;margin-bottom:8px;display:block;}
+/* BOLSAS */
+.bolsas-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+@media(min-width:640px){.bolsas-grid{grid-template-columns:repeat(4,1fr);}}
+.bc{border:1px solid #1e293b;padding:8px;background:#000;}
+.bc-region{font-size:6px;letter-spacing:2px;margin-bottom:2px;}
+.bc-name{font-size:8px;font-weight:700;margin-bottom:4px;}
+.bc-hora{font-size:6px;color:#475569;margin-bottom:5px;line-height:1.5;}
+.bc-status{font-size:7px;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:4px;}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block;}
+.open{color:#4ade80;}.dot.open{background:#4ade80;box-shadow:0 0 6px #4ade80;animation:blink 1s infinite;}
+.closed{color:#475569;}.dot.closed{background:#475569;}
+.pre{color:#fbbf24;}.dot.pre{background:#fbbf24;box-shadow:0 0 6px #fbbf24;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+/* INDICES */
+.idx-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:8px;}
+@media(min-width:640px){.idx-grid{grid-template-columns:repeat(3,1fr);}}
+/* TRANSMISIONES */
+.tx-card{border:1px solid rgba(54,244,208,.15);background:rgba(2,6,23,.95);margin-bottom:10px;overflow:hidden;}
+.tx-hd{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-bottom:1px solid #1e293b;}
+.tx-ttl{font-size:8px;letter-spacing:2px;color:var(--neon);font-weight:700;}
+.badge-live{font-size:6px;letter-spacing:1px;color:#4ade80;border:1px solid #4ade80;padding:2px 6px;animation:blink 1s infinite;}
+.badge-soon{font-size:6px;letter-spacing:1px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 6px;}
+.badge-lock{font-size:6px;letter-spacing:1px;color:#ef4444;border:1px solid #ef4444;padding:2px 6px;}
+.tx-body{padding:10px;}
+.tx-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden;cursor:pointer;margin-bottom:8px;}
+.tx-thumb img{width:100%;height:100%;object-fit:cover;opacity:.65;}
+.tx-play{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.tx-pbtn{width:52px;height:52px;background:rgba(255,0,0,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(255,0,0,.5);}
+.tx-pbtn div{width:0;height:0;border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent #fff;margin-left:3px;}
+.tx-plbl{font-size:7px;letter-spacing:2px;color:var(--neon);}
+/* MAPA */
+.map-tabs{display:flex;gap:0;margin-bottom:10px;border:1px solid #1e293b;overflow:hidden;}
+.map-tab{flex:1;padding:7px 4px;font-size:7px;letter-spacing:1px;background:transparent;border:none;color:#475569;cursor:pointer;font-family:'JetBrains Mono',monospace;text-transform:uppercase;transition:.2s;}
+.map-tab.active{background:rgba(248,113,113,.1);color:#f87171;border-bottom:2px solid #f87171;}
+.map-panel{display:none;}.map-panel.active{display:block;}
+.map-frame{width:100%;height:340px;border:none;background:#000;}
+/* NOTICIAS */
+.ntabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;}
+.ntab{padding:4px 10px;font-size:7px;letter-spacing:1px;background:transparent;border:1px solid #1e293b;color:#475569;cursor:pointer;font-family:'JetBrains Mono',monospace;text-transform:uppercase;transition:.2s;}
+.ntab.active{border-color:var(--neon);color:var(--neon);}
+.ni{border-bottom:1px solid #0f172a;padding:8px 0;}
+.ni:last-child{border-bottom:none;}
+.ni-src{font-size:6px;letter-spacing:1px;color:#475569;margin-bottom:3px;}
+.ni-ttl{font-size:8px;color:#94a3b8;line-height:1.5;}
+.ni-ttl a{color:#94a3b8;text-decoration:none;}.ni-ttl a:hover{color:var(--neon);}
+.ni-date{font-size:6px;color:#334155;margin-top:3px;}
+/* BUSCADOR */
+.scats{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+.scat{padding:4px 8px;font-size:7px;letter-spacing:1px;background:transparent;border:1px solid #1e293b;color:#475569;cursor:pointer;font-family:'JetBrains Mono',monospace;text-transform:uppercase;transition:.2s;}
+.scat.active{border-color:var(--neon);color:var(--neon);}
+.s-box{display:flex;gap:6px;margin-bottom:8px;}
+.s-inp{flex:1;background:#000;border:1px solid #1e293b;color:var(--neon);padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;outline:none;}
+.s-btn{background:var(--neon);color:#000;border:none;padding:8px 14px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:900;cursor:pointer;letter-spacing:1px;}
+.s-res{display:none;}.s-res.show{display:block;}
+.s-item{padding:6px 0;border-bottom:1px solid #0f172a;font-size:8px;color:#94a3b8;cursor:pointer;}
+.s-item:hover{color:var(--neon);}
+/* BOTONES APOYO */
+.btn-don{background:transparent;border:1px solid #ffb300;color:#ffb300;font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:10px 4px;cursor:pointer;text-transform:uppercase;width:100%;transition:.2s;}
+.btn-don:hover{background:rgba(255,179,0,.1);}
+.btn-sus{background:transparent;border:1px solid var(--neon);color:var(--neon);font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:10px 4px;cursor:pointer;text-transform:uppercase;width:100%;transition:.2s;}
+.btn-sus:hover{background:rgba(54,244,208,.1);}
+.btn-col{background:transparent;border:1px solid #00ff88;color:#00ff88;font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:2px;padding:10px 4px;cursor:pointer;text-transform:uppercase;width:100%;transition:.2s;}
+.btn-col:hover{background:rgba(0,255,136,.1);}
+/* EPISODIOS GX */
+.gx-ep{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid #1e293b;cursor:pointer;transition:.15s;margin-bottom:4px;}
+.gx-ep.cur{border-color:rgba(251,191,36,.5);background:rgba(251,191,36,.04);}
+.gx-ep.done:hover{border-color:rgba(54,244,208,.3);}
+.gx-ep.lck{opacity:.35;cursor:not-allowed;}
+.gx-ep-n{font-size:7px;font-weight:700;color:#fbbf24;letter-spacing:1px;min-width:52px;white-space:nowrap;}
+.gx-ep.done .gx-ep-n{color:var(--neon);}
+.gx-ep.lck .gx-ep-n{color:#334155;}
+.gx-ep-t{font-size:7px;color:#94a3b8;flex:1;}
+.gx-tag{font-size:6px;letter-spacing:1px;padding:1px 5px;border:1px solid;white-space:nowrap;}
+.t-live{color:#fbbf24;border-color:#fbbf24;}
+.t-done{color:var(--neon);border-color:rgba(54,244,208,.3);}
+.t-lck{color:#334155;border-color:#1e293b;}
+/* IA */
+.sug{background:transparent;border:1px solid #1e293b;color:#64748b;padding:5px 8px;font-family:'JetBrains Mono',monospace;font-size:7px;cursor:pointer;transition:.2s;}
+.sug:hover{border-color:var(--neon);color:var(--neon);}
+.mu{align-self:flex-end;background:rgba(54,244,208,.08);border:1px solid rgba(54,244,208,.2);padding:7px 10px;font-size:8px;max-width:85%;line-height:1.5;}
+.ma{align-self:flex-start;background:rgba(8,12,24,.8);border:1px solid #1e293b;padding:7px 10px;font-size:8px;max-width:85%;line-height:1.5;color:#94a3b8;}
+/* MODALES */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:center;justify-content:center;padding:12px;backdrop-filter:blur(4px);}
+.modal-overlay.active{display:flex;}
+.modal-box{background:#080c18;border:1px solid #1e293b;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;}
+.mhd{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid #1e293b;}
+.mhd-ttl{font-size:10px;letter-spacing:3px;font-weight:900;}
+.mx{background:transparent;border:1px solid #334155;color:#64748b;width:24px;height:24px;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10px;}
+.mx:hover{border-color:#f87171;color:#f87171;}
+.mbody{padding:14px;}
+.mlbl{font-size:6px;letter-spacing:2px;color:#475569;display:block;margin-bottom:4px;margin-top:10px;}
+.minp{width:100%;background:#000;border:1px solid #1e293b;color:#cce0f0;padding:9px 10px;font-family:'JetBrains Mono',monospace;font-size:8px;outline:none;}
+.minp:focus{border-color:var(--neon);}
+.mtxt{width:100%;background:#000;border:1px solid #1e293b;color:#cce0f0;padding:9px 10px;font-family:'JetBrains Mono',monospace;font-size:8px;outline:none;resize:vertical;min-height:80px;}
+.mact{width:100%;margin-top:12px;padding:11px;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border:1px solid;transition:.2s;}
+.m-amb{background:rgba(251,191,36,.1);border-color:#fbbf24;color:#fbbf24;}
+.m-cyn{background:rgba(54,244,208,.1);border-color:var(--neon);color:var(--neon);}
+.m-grn{background:rgba(0,255,136,.08);border-color:#00ff88;color:#00ff88;}
+.m-ok{display:none;margin-top:10px;padding:10px;border:1px solid #166534;background:rgba(22,101,52,.1);font-size:7px;color:#4ade80;line-height:1.8;letter-spacing:1px;}
+.m-ok.show{display:block;}
+.m-info{font-size:7px;color:#475569;margin-top:8px;padding:8px;border:1px solid #1e293b;line-height:1.7;}
+.amts{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;}
+.amt{background:#000;border:1px solid #1e293b;color:#94a3b8;padding:8px 4px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;text-align:center;transition:.2s;}
+.amt.sel,.amt:hover{border-color:#fbbf24;color:#fbbf24;}
+.tc{border:1px solid #1e293b;padding:10px;margin-bottom:8px;cursor:pointer;transition:.2s;position:relative;}
+.tc:hover{border-color:rgba(54,244,208,.3);}
+.tc.sel{outline:1px solid var(--neon);}
+.tc-bdg{position:absolute;top:0;right:0;font-size:5px;letter-spacing:1px;background:var(--neon);color:#000;padding:2px 6px;font-weight:900;}
+.tc-name{font-size:10px;font-weight:900;letter-spacing:2px;color:#e2e8f0;margin-bottom:4px;}
+.tc-price{font-size:14px;font-weight:900;color:var(--neon);margin-bottom:6px;}
+.tc-price span{font-size:8px;color:#475569;}
+.tc-feats{list-style:none;font-size:7px;color:#64748b;line-height:2;}
+.tc-feats li::before{content:'> ';color:var(--neon);}
+.cchips{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;}
+.cchip{background:transparent;border:1px solid #1e293b;color:#475569;padding:7px 4px;font-family:'JetBrains Mono',monospace;font-size:7px;cursor:pointer;transition:.2s;}
+.cchip.sel,.cchip:hover{border-color:var(--neon);color:var(--neon);}
+/* COUNTDOWN */
+.cd{display:flex;gap:8px;margin:10px 0;}
+.cd-u{text-align:center;border:1px solid rgba(251,191,36,.3);padding:8px 12px;background:rgba(251,191,36,.04);}
+.cd-n{font-size:20px;font-weight:900;color:#fbbf24;line-height:1;}
+.cd-l{font-size:6px;color:#475569;letter-spacing:1px;}
+/* FLASH */
+@keyframes flash{0%{background:#020617}50%{background:rgba(54,244,208,.15)}100%{background:#020617}}
+.flashing{animation:flash .5s;}
+@keyframes pAmber{0%,100%{box-shadow:0 0 4px rgba(251,191,36,.3)}50%{box-shadow:0 0 12px rgba(251,191,36,.8)}}
+.pa{animation:pAmber 2s infinite;}
+</style>
 </head>
-<body class="uppercase text-[9px]">
+<body>
 
-    <!-- NAV -->
-    <nav class="flex justify-between border-b border-zinc-800 pb-2 mb-2 items-center">
-        <div class="flex flex-col">
-            <span class="tracking-tighter font-bold text-cyan-400">GEOSYSTEM // OP_V6.0</span>
-            <span class="text-[6px] text-zinc-500 italic">TRANSMISOR DE VERDADES ETERNAS</span>
-        </div>
-        <div id="reloj-v6" class="font-bold text-[11px] bg-zinc-900 px-3 py-1 rounded border border-zinc-700">00:00:00</div>
-    </nav>
+<!-- NAV -->
+<div class="nav">
+  <div>
+    <div class="nav-brand">GEOSYSTEM</div>
+    <div class="nav-tag">TERMINAL v6.0 · IMMORTAL EMITTER</div>
+  </div>
+  <div style="text-align:right">
+    <div id="reloj" style="font-size:12px;font-weight:900;color:var(--neon);"></div>
+    <div class="nav-tag">BOGOTÁ · COL</div>
+  </div>
+</div>
 
-    <!-- BOLSAS -->
-    <div class="grid-node mb-2 !py-2">
-        <span class="label-node">ESTADO_BOLSAS // SESIONES_ACTIVAS</span>
-        <div id="bolsas-widget"></div>
-        <div id="bolsas-ts" class="text-[6px] text-zinc-600 text-right mt-1"></div>
+<!-- 1. BOLSAS -->
+<div class="gn">
+  <span class="lbl">ESTADO_BOLSAS // SESIONES_ACTIVAS</span>
+  <div class="bolsas-grid" id="bolsas-widget"></div>
+  <div style="font-size:6px;color:#1e293b;margin-top:6px;letter-spacing:1px;" id="bolsas-ts"></div>
+</div>
+
+<!-- 2. TICKER -->
+<div style="border:1px solid #1e293b;overflow:hidden;height:36px;margin-bottom:8px;">
+  <iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=36&locale=es" width="100%" height="36" frameborder="0" scrolling="no"></iframe>
+</div>
+
+<!-- 3. ÍNDICES -->
+<div class="idx-grid">
+  <div class="gn" style="border-left:2px solid #f97316;padding:8px;"><span class="lbl">ENERGÍA (WTI)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" frameborder="0" style="width:100%;height:112px;"></iframe></div>
+  <div class="gn" style="border-left:2px solid var(--neon);padding:8px;"><span class="lbl">CRIPTO (BTC)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" frameborder="0" style="width:100%;height:112px;"></iframe></div>
+  <div class="gn" style="border-left:2px solid #ef4444;padding:8px;"><span class="lbl">EJE_ESTE (ASHR)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" frameborder="0" style="width:100%;height:112px;"></iframe></div>
+  <div class="gn" style="border-left:2px solid #3b82f6;padding:8px;"><span class="lbl">FED_ZONE (SPY)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" frameborder="0" style="width:100%;height:112px;"></iframe></div>
+  <div class="gn" style="border-left:2px solid #e2e8f0;padding:8px;"><span class="lbl">EU_ZONE (DAX)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" frameborder="0" style="width:100%;height:112px;"></iframe></div>
+  <div class="gn" style="border-left:2px solid #fbbf24;padding:8px;"><span class="lbl">LATAM (ILF)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" frameborder="0" style="width:100%;height:112px;"></iframe></div>
+</div>
+
+<!-- 4. TRANSMISIONES -->
+<div class="gn" style="border-color:rgba(54,244,208,.2);">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+    <span class="lbl" style="margin-bottom:0;">📡 TRANSMISIONES_CLASIFICADAS // MANIFIESTO_GEOSYSTEM</span>
+    <span style="font-size:6px;letter-spacing:2px;color:#334155;">IMMORTAL EMITTER</span>
+  </div>
+  <div style="font-size:7px;color:#475569;margin-bottom:12px;border-left:2px solid rgba(54,244,208,.2);padding-left:8px;font-style:italic;">
+    > Adelantos clasificados del Manifiesto. Acceso completo con clave GX.
+  </div>
+
+  <!-- PARTE 01 -->
+  <div class="tx-card">
+    <div class="tx-hd"><div class="tx-ttl">PARTE 01 // EL TABLERO REAL</div><div class="badge-live">● EN VIVO</div></div>
+    <div class="tx-body">
+      <div style="font-size:11px;font-weight:900;color:#e2e8f0;margin-bottom:6px;">"Lo que el Sistema Ocultó"</div>
+      <div style="font-size:7px;color:#fbbf24;margin-bottom:6px;font-style:italic;">> FRAGMENTO CLASIFICADO:</div>
+      <div style="font-size:8px;color:#64748b;line-height:1.8;margin-bottom:10px;font-style:italic;">"Existe un tablero que mueve el mundo. Cada vez que sube el petróleo, tu gasolina sube. Cada vez que el DAX cae, los fondos de pensiones latinoamericanos sangran... Esto ocurre todos los días mientras el algoritmo te mantiene ocupado con contenido diseñado para que <span style="color:var(--neon);">nunca lo veas.</span>"</div>
+      <div class="tx-thumb" id="tx1-thumb" onclick="playTx()">
+        <img src="https://img.youtube.com/vi/8Nx9Zrj1rXs/maxresdefault.jpg" onerror="this.src='https://img.youtube.com/vi/8Nx9Zrj1rXs/hqdefault.jpg'">
+        <div class="tx-play"><div class="tx-pbtn"><div></div></div><div class="tx-plbl">▶ VER TRANSMISIÓN</div></div>
+      </div>
+      <iframe id="tx1-player" src="" frameborder="0" allow="autoplay;fullscreen;encrypted-media" allowfullscreen style="display:none;width:100%;aspect-ratio:16/9;"></iframe>
+      <div style="display:flex;justify-content:space-between;font-size:6px;color:#334155;letter-spacing:1px;margin-top:6px;">
+        <span>TRANSMISIÓN ACTIVA · GEOSYSTEM V6.0</span>
+        <span style="color:var(--neon);border:1px solid rgba(54,244,208,.2);padding:1px 6px;">GEOPOLÍTICA</span>
+      </div>
     </div>
+  </div>
 
-    <!-- TICKER -->
-    <div class="grid-node !p-0 border-zinc-800 mb-3 overflow-hidden h-8 flex items-center">
-        <div class="bg-red-900 text-white px-3 h-full flex items-center font-bold text-[7px] animate-pulse">LIVE</div>
-        <div class="flex-1 h-full">
-            <iframe src="https://s.tradingview.com/embed-widget/ticker-tape/?colorTheme=dark&isTransparent=true&displayMode=regular&width=100%25&height=32&locale=es" width="100%" height="32" frameborder="0" scrolling="no"></iframe>
-        </div>
+  <!-- PARTE 02 -->
+  <div class="tx-card" style="border-color:rgba(251,191,36,.2);">
+    <div class="tx-hd"><div class="tx-ttl" style="color:#fbbf24;">PARTE 02 // LA ARQUITECTURA DEL PODER</div><div class="badge-soon">⏳ PRÓXIMAMENTE</div></div>
+    <div class="tx-body">
+      <div style="font-size:11px;font-weight:900;color:#e2e8f0;margin-bottom:8px;">"Quién Mueve los Hilos"</div>
+      <div class="cd" id="cd02"></div>
+      <div style="font-size:7px;color:#475569;margin-bottom:10px;line-height:1.7;">> La segunda entrega del Manifiesto está en producción. Será notificada exclusivamente a suscriptores GX.</div>
+      <button class="btn-sus" onclick="openModal('suscripciones')" style="font-size:7px;padding:8px;">🔑 SUSCRIBIRSE PARA ACCESO ANTICIPADO</button>
     </div>
+  </div>
 
-
-    <!-- ÍNDICES -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
-        <div class="grid-node border-l-2 border-l-orange-500"><span class="label-node">ENERGÍA (WTI OIL)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-cyan-500"><span class="label-node">TOKENIZACIÓN (BTC)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=BINANCE%3ABTCUSDT&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-red-600"><span class="label-node">EJE_ESTE (ASHR)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AASHR&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-blue-600"><span class="label-node">FED_ZONE (SPY)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3ASPY&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-zinc-100"><span class="label-node">EU_ZONE (DAX)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
-        <div class="grid-node border-l-2 border-l-yellow-600"><span class="label-node">LATAM_ZONE (ILF)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
+  <!-- PARTE 03 -->
+  <div class="tx-card" style="border-color:rgba(239,68,68,.2);">
+    <div class="tx-hd"><div class="tx-ttl" style="color:#ef4444;">PARTE 03 // ████████████</div><div class="badge-lock">🔒 CLAVE GX</div></div>
+    <div class="tx-body">
+      <div style="font-size:8px;color:#334155;line-height:2;filter:blur(3px);user-select:none;">████████ ██████ ████ ███ ██████████ ████████ ████ ████████</div>
+      <div style="font-size:7px;color:#ef4444;margin-top:8px;letter-spacing:1px;">> ACCESO DENEGADO · REQUIERE CLAVE GX ACTIVA</div>
     </div>
+  </div>
+</div>
 
-    <!-- TRANSMISIONES CLASIFICADAS -->
-    <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.25);">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-            <span class="label-node" style="margin-bottom:0;">📡 TRANSMISIONES_CLASIFICADAS // MANIFIESTO_GEOSYSTEM</span>
-            <span style="font-size:6px;letter-spacing:2px;color:#475569;white-space:nowrap;">IMMORTAL EMITTER</span>
-        </div>
-        <div style="font-size:7px;color:#475569;margin-bottom:14px;letter-spacing:1px;border-left:2px solid #36f4d0;padding-left:8px;font-style:italic;">
-            > Adelantos clasificados del Manifiesto. Acceso completo con clave GX.
-        </div>
+<!-- 5. MAPA -->
+<div class="gn" style="border-color:rgba(248,113,113,.25);">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+    <span class="lbl" style="color:#f87171;margin-bottom:0;">🌍 MAPA_CONFLICTOS_GLOBAL // CRISISWATCH</span>
+    <a href="https://www.crisisgroup.org/crisiswatch" target="_blank" style="font-size:6px;color:#f87171;border:1px solid #f87171;padding:3px 8px;text-decoration:none;letter-spacing:1px;">ABRIR COMPLETO ↗</a>
+  </div>
+  <div style="font-size:7px;color:#475569;margin-bottom:10px;">Rastreador global · International Crisis Group · +70 conflictos monitoreados</div>
+  <div class="map-tabs">
+    <button class="map-tab active" onclick="switchMap('acled')" id="tab-acled">ACLED</button>
+    <button class="map-tab" onclick="switchMap('liveuamap')" id="tab-liveuamap">LIVEUAMAP</button>
+    <button class="map-tab" onclick="switchMap('gdelt')" id="tab-gdelt">GDELT</button>
+  </div>
+  <div class="map-panel active" id="panel-acled">
+    <iframe class="map-frame" src="https://acleddata.com/dashboard/#/dashboard"></iframe>
+    <a href="https://acleddata.com/dashboard/#/dashboard" target="_blank" style="display:inline-block;margin-top:8px;font-size:7px;color:#f87171;border:1px solid #f87171;padding:4px 12px;text-decoration:none;">ABRIR ACLED ↗</a>
+  </div>
+  <div class="map-panel" id="panel-liveuamap">
+    <iframe class="map-frame" src="https://liveuamap.com/"></iframe>
+    <a href="https://liveuamap.com/" target="_blank" style="display:inline-block;margin-top:8px;font-size:7px;color:#f87171;border:1px solid #f87171;padding:4px 12px;text-decoration:none;">ABRIR LIVEUAMAP ↗</a>
+  </div>
+  <div class="map-panel" id="panel-gdelt">
+    <iframe class="map-frame" src="https://gdeltproject.org/gdelt-2.0-television-api.html"></iframe>
+    <a href="https://www.gdeltproject.org/" target="_blank" style="display:inline-block;margin-top:8px;font-size:7px;color:#f87171;border:1px solid #f87171;padding:4px 12px;text-decoration:none;">ABRIR GDELT ↗</a>
+  </div>
+</div>
 
-        <!-- TRANSMISIÓN 1 — LIVE (ya publicada) -->
-        <div class="tx-card">
-            <div class="tx-header">
-                <span class="tx-part">PARTE 01 // EL TABLERO REAL</span>
-                <span class="tx-status-live">● EN VIVO</span>
-            </div>
-            <div class="tx-body">
-                <div class="tx-title">"Lo que el Sistema Ocultó"</div>
-                <div class="tx-excerpt">
-                    <span>> FRAGMENTO CLASIFICADO:</span><br>
-                    "Existe un tablero que mueve el mundo. Cada vez que sube el petróleo, tu gasolina sube.
-                    Cada vez que el DAX cae, los fondos de pensiones latinoamericanos sangran...
-                    Esto ocurre todos los días mientras el algoritmo te mantiene ocupado con contenido
-                    diseñado para que <span>nunca lo veas.</span>"
-                </div>
-                <!-- Thumbnail con play — disponible para todos -->
-                <div class="tx-thumb" id="tx1-container">
-                    <img src="https://img.youtube.com/vi/8Nx9Zrj1rXs/maxresdefault.jpg"
-                         onerror="this.src='https://img.youtube.com/vi/8Nx9Zrj1rXs/hqdefault.jpg'">
-                    <div class="tx-play-overlay" id="tx1-overlay" onclick="playTx('tx1','8Nx9Zrj1rXs')">
-                        <div class="tx-play-btn"><div class="tx-play-arrow"></div></div>
-                        <div style="font-size:7px;letter-spacing:2px;color:#36f4d0;">▶ VER TRANSMISIÓN</div>
-                    </div>
-                    <iframe id="tx1-iframe" src="" frameborder="0" allow="autoplay;fullscreen" allowfullscreen
-                        style="display:none;position:absolute;inset:0;width:100%;height:100%;"></iframe>
-                </div>
-                <div class="tx-meta">
-                    <span class="tx-date">TRANSMISIÓN ACTIVA · GEOSYSTEM V6.0</span>
-                    <span class="tx-tag">GEOPOLÍTICA</span>
-                </div>
-            </div>
-        </div>
+<!-- 6. NOTICIAS -->
+<div class="gn" style="border-color:rgba(54,244,208,.12);">
+  <span class="lbl">📰 NOTICIAS_INTEL // FEED_REGIONAL</span>
+  <div class="ntabs">
+    <button class="ntab active" onclick="loadNews('global',this)">🌐 GLOBAL</button>
+    <button class="ntab" onclick="loadNews('latam',this)">🌎 LATAM</button>
+    <button class="ntab" onclick="loadNews('eeuu',this)">🇺🇸 EEUU</button>
+    <button class="ntab" onclick="loadNews('europa',this)">🇪🇺 EUROPA</button>
+    <button class="ntab" onclick="loadNews('asia',this)">🌏 ASIA</button>
+  </div>
+  <div id="news-box" style="min-height:120px;"><div style="font-size:7px;color:#334155;padding:10px 0;">Cargando noticias...</div></div>
+  <div style="font-size:6px;color:#1e293b;margin-top:6px;" id="news-ts"></div>
+</div>
 
-        <!-- TRANSMISIÓN 2 — PRÓXIMA con cuenta regresiva -->
-        <div class="tx-card">
-            <div class="tx-header">
-                <span class="tx-part">PARTE 02 // EL PORTAFOLIO DEL EMISARIO</span>
-                <span class="tx-status-soon">⏳ PRÓXIMAMENTE</span>
-            </div>
-            <div class="tx-body">
-                <div class="tx-title">"Construye Riqueza Desde LATAM"</div>
-                <div class="tx-excerpt">
-                    <span>> FRAGMENTO CLASIFICADO:</span><br>
-                    "Desde pequeño te enseñaron una sola forma de manejar el dinero: trabaja, ahorra en el banco,
-                    y confía en que el sistema cuide tu futuro. Pero nadie te dijo que un CDT en Colombia
-                    rinde menos que la inflación real... El sistema no te lo enseñó porque
-                    <span>un cliente ignorante es un cliente cautivo.</span>"
-                </div>
-                <!-- Thumbnail bloqueada con cuenta regresiva -->
-                <div class="tx-thumb" style="cursor:default;">
-                    <img src="https://img.youtube.com/vi/8Nx9Zrj1rXs/maxresdefault.jpg" style="filter:blur(4px);opacity:0.3;"
-                         onerror="this.src='https://img.youtube.com/vi/8Nx9Zrj1rXs/hqdefault.jpg'">
-                    <div class="tx-lock-overlay">
-                        <div style="text-align:center;">
-                            <div style="font-size:7px;letter-spacing:2px;color:#fbbf24;margin-bottom:6px;">PRÓXIMO LANZAMIENTO</div>
-                            <div id="countdown-tx2" class="tx-countdown">00:00:00:00</div>
-                            <div class="tx-countdown-label">DÍAS · HRS · MIN · SEG</div>
-                        </div>
-                        <button class="tx-unlock-btn" onclick="openModal('suscripciones')">
-                            🔔 ACTIVAR NOTIFICACIÓN · CLAVE GX
-                        </button>
-                    </div>
-                </div>
-                <div class="tx-meta">
-                    <span class="tx-date">LANZAMIENTO ESTIMADO · PRONTO</span>
-                    <span class="tx-tag">INVERSIONES</span>
-                </div>
-            </div>
-        </div>
+<!-- 7. BUSCADOR -->
+<div class="gn" style="border-color:rgba(54,244,208,.2);">
+  <span class="lbl">🔍 BUSCADOR_INTEL // FUENTES VERIFICADAS</span>
+  <div class="scats">
+    <button class="scat active" onclick="setCat(this,'todo')">🌐 TODO</button>
+    <button class="scat" onclick="setCat(this,'bolsas')">📈 BOLSAS</button>
+    <button class="scat" onclick="setCat(this,'geo')">🌍 GEOPOLÍTICA</button>
+    <button class="scat" onclick="setCat(this,'cripto')">₿ CRIPTO</button>
+    <button class="scat" onclick="setCat(this,'portafolios')">💼 PORTAFOLIOS</button>
+    <button class="scat" onclick="setCat(this,'brokers')">🏦 BROKERS</button>
+    <button class="scat" onclick="setCat(this,'tendencias')">🔥 TENDENCIAS</button>
+  </div>
+  <div class="s-box">
+    <input class="s-inp" id="sq" type="text" placeholder="> Término de búsqueda..." onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="s-btn" onclick="doSearch()">BUSCAR ▶</button>
+  </div>
+  <div class="s-res" id="s-res"></div>
+</div>
 
-        <!-- TRANSMISIÓN 3 — BLOQUEADA -->
-        <div class="tx-card" style="opacity:0.7;">
-            <div class="tx-header">
-                <span class="tx-part">PARTE 03 // GEOPOLÍTICA Y TU DINERO</span>
-                <span class="tx-status-locked">🔒 CLASIFICADO</span>
-            </div>
-            <div class="tx-body">
-                <div class="tx-title" style="color:#475569;">"El Mapa del Poder que Nadie Te Enseñó"</div>
-                <div class="tx-excerpt" style="color:#334155;">
-                    <span style="color:#475569;">> ACCESO RESTRINGIDO:</span><br>
-                    "████████ ██ ████ ██████ ██ ███████████ ████ ██ ████████████
-                    ████████████ ██ ████ ██████ ████ ██████████ ████████████████
-                    ██ ████████████ ██ ████████ <span style="color:#36f4d0;">CLAVE GX REQUERIDA</span> ████████████████"
-                </div>
-                <div class="tx-meta">
-                    <span class="tx-date">FECHA · CLASIFICADA</span>
-                    <span class="tx-tag" style="color:#334155;border-color:#1e293b;">ESTRATEGIA</span>
-                </div>
-            </div>
-        </div>
+<!-- 8. APOYO -->
+<div class="gn" style="border-color:rgba(54,244,208,.2);">
+  <span class="lbl">💎 APOYA_GEOSYSTEM // ACCESO_LIBRE</span>
+  <div style="font-size:7px;color:#475569;margin-bottom:12px;line-height:1.8;">> Si el contenido te aporta valor, apoya el proyecto o suscríbete para acceder al material exclusivo GX.</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+    <button class="btn-don" onclick="openModal('donaciones')">DONACIONES</button>
+    <button class="btn-sus" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
+    <button class="btn-col" onclick="openModal('colaboraciones')">COLABORACIONES</button>
+  </div>
+</div>
 
+<!-- 9. VALIDACIÓN GX -->
+<div class="gn" style="border-color:rgba(251,191,36,.3);background:rgba(120,53,15,.04);">
+  <span class="lbl" style="color:#fbbf24;border-color:rgba(251,191,36,.2);">🔑 VALIDACIÓN_GX // ZONA EXCLUSIVA SUSCRIPTORES</span>
+  <div id="gx-form">
+    <div style="display:flex;gap:6px;align-items:stretch;margin-bottom:6px;">
+      <input type="text" id="pass-input" placeholder="GX-YYYY-MM-DD-NOMBRE"
+        style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;background:#000;border:1px solid #78350f;color:#fbbf24;padding:10px 12px;outline:none;text-transform:uppercase;letter-spacing:1px;"
+        onkeydown="if(event.key==='Enter')unlockGX()">
+      <button onclick="unlockGX()"
+        style="background:#fbbf24;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:900;letter-spacing:2px;padding:10px 16px;border:none;cursor:pointer;">
+        SINCRONIZAR ▶
+      </button>
     </div>
+    <div style="font-size:6px;color:#334155;letter-spacing:1px;">> ¿Sin clave? Suscríbete arriba · Recibirás tu clave GX por WhatsApp en menos de 24h.</div>
+  </div>
 
-    <!-- MAPA CONFLICTOS -->
-    <div class="grid-node mt-2" style="border-color:rgba(248,113,113,0.3);">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <span class="label-node" style="color:#f87171;border-color:rgba(248,113,113,0.3);margin-bottom:0;">🌍 MAPA_CONFLICTOS_GLOBAL // CRISISWATCH</span>
-            <a href="https://www.crisisgroup.org/crisiswatch" target="_blank"
-               style="font-size:7px;letter-spacing:1px;color:#f87171;border:1px solid rgba(248,113,113,0.4);padding:3px 8px;text-decoration:none;white-space:nowrap;">
-                ABRIR COMPLETO ↗
-            </a>
-        </div>
-        <div style="font-size:7px;color:#64748b;margin-bottom:8px;letter-spacing:1px;">
-            > Rastreador global de conflictos · International Crisis Group · +70 conflictos monitoreados
-        </div>
-        <!-- MAPA INTERACTIVO — múltiples fuentes -->
-        <div style="border:1px solid rgba(248,113,113,0.2);background:#000;overflow:hidden;">
-
-            <!-- TABS de fuentes -->
-            <div style="display:flex;border-bottom:1px solid rgba(248,113,113,0.2);">
-                <button class="map-tab active" onclick="switchMap('acled')" id="tab-acled">ACLED</button>
-                <button class="map-tab" onclick="switchMap('liveuamap')" id="tab-liveuamap">LIVEUAMAP</button>
-                <button class="map-tab" onclick="switchMap('gdelt')" id="tab-gdelt">GDELT</button>
-            </div>
-
-            <!-- ACLED — Armed Conflict -->
-            <div id="map-acled" class="map-frame active-frame">
-                <iframe src="https://acleddata.com/dashboard/#/dashboard"
-                    style="width:100%;height:400px;border:none;"
-                    loading="lazy">
-                </iframe>
-                <div class="map-fallback-btn">
-                    <div style="font-size:7px;color:#f87171;margin-bottom:8px;">🌍 ACLED — Datos de conflictos armados globales</div>
-                    <a href="https://acleddata.com/dashboard/#/dashboard" target="_blank" class="map-ext-btn">ABRIR MAPA ACLED ↗</a>
-                </div>
-            </div>
-
-            <!-- LIVEUAMAP -->
-            <div id="map-liveuamap" class="map-frame" style="display:none;">
-                <iframe src="https://liveuamap.com/"
-                    style="width:100%;height:400px;border:none;"
-                    loading="lazy">
-                </iframe>
-                <div class="map-fallback-btn">
-                    <div style="font-size:7px;color:#f87171;margin-bottom:8px;">🔴 LIVEUAMAP — Conflictos en tiempo real</div>
-                    <a href="https://liveuamap.com" target="_blank" class="map-ext-btn">ABRIR LIVEUAMAP ↗</a>
-                </div>
-            </div>
-
-            <!-- GDELT GEO -->
-            <div id="map-gdelt" class="map-frame" style="display:none;">
-                <iframe src="https://api.gdeltproject.org/api/v2/geo/geo?query=conflict%20war%20crisis&mode=pointdata&format=html&TIMESPAN=720&MAXPOINTS=250&SOURCESCALE=25"
-                    style="width:100%;height:400px;border:none;"
-                    loading="lazy">
-                </iframe>
-                <div class="map-fallback-btn">
-                    <div style="font-size:7px;color:#f87171;margin-bottom:8px;">📡 GDELT — Eventos geopolíticos globales (últimas 72hrs)</div>
-                    <a href="https://www.gdeltproject.org" target="_blank" class="map-ext-btn">ABRIR GDELT ↗</a>
-                </div>
-            </div>
-        </div>
-        <div style="margin-top:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:4px;">
-            <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/colombia" target="_blank" class="conflicto-card">
-                <span class="c-dot red"></span>
-                <div><div class="c-pais">COLOMBIA</div><div class="c-desc">Grupos armados · ELN · Disidencias</div></div>
-            </a>
-            <a href="https://www.crisisgroup.org/latin-america-caribbean/haiti" target="_blank" class="conflicto-card">
-                <span class="c-dot red"></span>
-                <div><div class="c-pais">HAITÍ</div><div class="c-desc">Crisis política · Pandillas</div></div>
-            </a>
-            <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/venezuela" target="_blank" class="conflicto-card">
-                <span class="c-dot orange"></span>
-                <div><div class="c-pais">VENEZUELA</div><div class="c-desc">Crisis humanitaria · Tensión política</div></div>
-            </a>
-            <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/ecuador" target="_blank" class="conflicto-card">
-                <span class="c-dot orange"></span>
-                <div><div class="c-pais">ECUADOR</div><div class="c-desc">Crimen organizado · Narco-violencia</div></div>
-            </a>
-        </div>
+  <div id="gx-portal" style="display:none;">
+    <div id="gx-welcome" style="font-size:8px;color:#fbbf24;font-weight:700;letter-spacing:1px;margin-bottom:12px;padding:8px;border:1px solid rgba(251,191,36,.2);background:rgba(251,191,36,.04);"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;" class="pa">
+      <div style="font-size:6px;letter-spacing:2px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 8px;">🔑 ACCESO_GX // TRANSMISIÓN CLASIFICADA</div>
+      <div id="gx-badge" style="font-size:6px;color:#94a3b8;letter-spacing:1px;"></div>
     </div>
-
-    <!-- NOTICIAS REGIONALES -->
-    <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.15);">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <span class="label-node" style="margin-bottom:0;">📰 NOTICIAS_INTEL // FEED_REGIONAL</span>
-            <span id="news-ts" style="font-size:6px;color:#334155;letter-spacing:1px;"></span>
+    <!-- PLAYER GX -->
+    <div style="border:1px solid #fbbf24;box-shadow:0 0 12px rgba(251,191,36,.12);margin-bottom:10px;">
+      <div id="gx-thumb" style="position:relative;cursor:pointer;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;" onclick="playGX()">
+        <img id="gx-img" src="" style="width:100%;height:100%;object-fit:cover;opacity:.7;position:absolute;inset:0;">
+        <div style="position:absolute;inset:0;background:rgba(0,0,0,.3);"></div>
+        <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:1;">
+          <div style="width:64px;height:64px;background:rgba(251,191,36,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(251,191,36,.6);">
+            <div style="width:0;height:0;border-style:solid;border-width:12px 0 12px 22px;border-color:transparent transparent transparent #000;margin-left:4px;"></div>
+          </div>
+          <div style="font-size:8px;letter-spacing:2px;color:#fbbf24;text-shadow:0 0 10px #fbbf24;">▶ TRANSMISIÓN EXCLUSIVA GX</div>
         </div>
-
-        <!-- TABS regionales -->
-        <div style="display:flex;gap:0;margin-bottom:10px;border:1px solid #1e293b;overflow:hidden;">
-            <button class="news-tab active" onclick="switchNews('global')"  id="ntab-global" >🌐 GLOBAL</button>
-            <button class="news-tab"        onclick="switchNews('latam')"   id="ntab-latam"  >🌎 LATAM</button>
-            <button class="news-tab"        onclick="switchNews('usa')"     id="ntab-usa"    >🇺🇸 EEUU</button>
-            <button class="news-tab"        onclick="switchNews('europa')"  id="ntab-europa" >🇪🇺 EUROPA</button>
-            <button class="news-tab"        onclick="switchNews('asia')"    id="ntab-asia"   >🌏 ASIA</button>
-        </div>
-
-        <!-- Feed container -->
-        <div id="news-feed" style="min-height:80px;">
-            <span style="font-size:7px;color:#475569;font-style:italic;">> Conectando con fuentes regionales...</span>
-        </div>
+      </div>
+      <iframe id="gx-player" src="" frameborder="0" allow="autoplay;fullscreen;encrypted-media" allowfullscreen style="display:none;width:100%;aspect-ratio:16/9;"></iframe>
     </div>
-
-    <!-- BUSCADOR INTEL -->
-    <div class="grid-node mb-3" style="border-color:rgba(54,244,208,0.25);">
-        <span class="label-node">🔍 BUSCADOR_INTEL // ACCESO_UNIVERSAL</span>
-        <div class="search-wrap">
-            <input class="search-input" id="search-input" type="text"
-                placeholder="🔍  Busca bolsas, geopolítica, portafolios, brokers, criptos..."
-                onkeydown="if(event.key==='Enter') runSearch()"
-                oninput="updateSearchSuggestions(this.value)">
-            <button class="search-btn" onclick="runSearch()">BUSCAR ▶</button>
-        </div>
-
-        <!-- Categorías rápidas -->
-        <div class="search-cats" id="search-cats">
-            <button class="search-cat active" onclick="setCat(this,'all')"          >🌐 TODO</button>
-            <button class="search-cat"         onclick="setCat(this,'bolsas')"       >📈 BOLSAS</button>
-            <button class="search-cat"         onclick="setCat(this,'geopolitica')"  >🌍 GEOPOLÍTICA</button>
-            <button class="search-cat"         onclick="setCat(this,'crypto')"       >₿ CRIPTO</button>
-            <button class="search-cat"         onclick="setCat(this,'portafolios')"  >💼 PORTAFOLIOS</button>
-            <button class="search-cat"         onclick="setCat(this,'brokers')"      >🏦 BROKERS</button>
-            <button class="search-cat"         onclick="setCat(this,'tendencias')"   >🔥 TENDENCIAS</button>
-        </div>
-
-        <!-- Resultados -->
-        <div class="search-results" id="search-results"></div>
+    <!-- EPISODIOS -->
+    <div style="margin-bottom:12px;">
+      <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:6px;">📋 TUS EPISODIOS GX</div>
+      <div id="gx-eps"></div>
     </div>
-
-    <!-- APOYO PÚBLICO — botones siempre visibles -->
-    <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.2);">
-        <span class="label-node">APOYA_GEOSYSTEM // ACCESO_LIBRE</span>
-        <div style="font-size:7px;color:#475569;margin-bottom:10px;letter-spacing:1px;">
-            > Si el contenido te aporta valor, apoya el proyecto o suscríbete para acceder al material exclusivo GX.
-        </div>
-        <div class="grid grid-cols-3 gap-2">
-            <button class="btn-don" onclick="openModal('donaciones')">DONACIONES</button>
-            <button class="btn-sus" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
-            <button class="btn-col" onclick="openModal('colaboraciones')">COLABORACIONES</button>
-        </div>
+    <!-- EMISARIO IA -->
+    <div style="border:1px solid rgba(54,244,208,.25);background:#020617;padding:10px;">
+      <div style="font-size:8px;font-weight:700;letter-spacing:2px;color:var(--neon);border-bottom:1px solid rgba(54,244,208,.15);padding-bottom:6px;margin-bottom:10px;">🤖 EMISARIO_IA // ASISTENTE GEOPOLÍTICO</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
+        <button class="sug" onclick="usarSug(this)">📈 ¿Cómo armo un portafolio?</button>
+        <button class="sug" onclick="usarSug(this)">🌍 ¿Dónde vivir en LATAM?</button>
+        <button class="sug" onclick="usarSug(this)">💰 ¿Cómo protejo mi capital?</button>
+        <button class="sug" onclick="usarSug(this)">📊 ¿Qué índice monitorear hoy?</button>
+      </div>
+      <div id="ia-msgs" style="height:200px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;padding:4px 0;">
+        <div class="ma"><span style="color:var(--neon);">EMISARIO_IA</span><br>Sistema activo. Puedo ayudarte con mercados, portafolios, geopolítica e inversiones en LATAM. ¿Cuál es tu consulta?</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:flex-end;">
+        <textarea id="ia-inp" placeholder="> Escribe tu consulta al Emisario..."
+          style="flex:1;font-family:'JetBrains Mono',monospace;font-size:8px;background:#080c10;border:1px solid #1e293b;color:#cce0f0;padding:7px 9px;outline:none;resize:none;height:36px;line-height:1.4;"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarIA();}"></textarea>
+        <button onclick="enviarIA()" id="ia-btn"
+          style="background:var(--neon);color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:1px;padding:8px 12px;border:none;cursor:pointer;height:36px;">
+          ENVIAR ▶
+        </button>
+      </div>
+      <div style="font-size:6px;color:#334155;margin-top:4px;letter-spacing:1px;">ENTER para enviar · Solo accesible con clave GX</div>
     </div>
+  </div>
+</div>
 
-    <!-- VALIDACIÓN GX — siempre visible -->
-    <div class="grid-node mt-2" style="border-color:rgba(251,191,36,0.3);background:rgba(120,53,15,0.05);">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-            <span style="font-size:8px;letter-spacing:2px;color:#fbbf24;font-weight:bold;">🔑 VALIDACIÓN_GX</span>
-            <span style="font-size:6px;color:#334155;letter-spacing:1px;">// ZONA EXCLUSIVA SUSCRIPTORES</span>
-        </div>
 
-        <!-- Formulario clave — se oculta al sincronizar -->
-        <div id="login-form">
-            <div style="display:flex;gap:6px;align-items:stretch;">
-                <input type="text" id="pass-input" placeholder="GX-YYYY-MM-DD-NOMBRE"
-                    style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;background:#000;border:1px solid #78350f;color:#fbbf24;padding:10px 12px;outline:none;text-transform:uppercase;letter-spacing:1px;"
-                    onkeydown="if(event.key==='Enter')unlockSystem()">
-                <button onclick="unlockSystem()"
-                    style="background:#fbbf24;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:900;letter-spacing:2px;padding:10px 16px;border:none;cursor:pointer;white-space:nowrap;"
-                    onmouseover="this.style.background='#fde68a'" onmouseout="this.style.background='#fbbf24'">
-                    SINCRONIZAR ▶
-                </button>
-            </div>
-            <div style="font-size:6px;color:#334155;margin-top:5px;letter-spacing:1px;">
-                > ¿Sin clave? Suscríbete arriba · Recibirás tu clave GX por WhatsApp en menos de 24h.
-            </div>
-        </div>
-
-        <!-- Contenido GX — aparece al sincronizar -->
-        <div id="portal-sinergia" style="display:none;">
-
-            <!-- Mensaje bienvenida -->
-            <div id="terminal-msg" style="font-size:7px;color:#fbbf24;margin-bottom:10px;font-weight:bold;letter-spacing:1px;"></div>
-
-            <!-- BADGE -->
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
-                <div style="font-size:6px;letter-spacing:2px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 8px;animation:pulse-amber 2s infinite;">🔑 ACCESO_GX // TRANSMISIÓN CLASIFICADA</div>
-                <div id="gx-ep-badge" style="font-size:6px;color:#94a3b8;letter-spacing:1px;">EP01 · CARGANDO...</div>
-            </div>
-
-            <!-- PLAYER GX -->
-            <div class="border bg-black mb-3" style="position:relative;border-color:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,0.15);">
-                <div id="yt-thumb" style="position:relative;cursor:pointer;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;" onclick="playVideo()">
-                    <img id="gx-thumb-img" src="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;"
-                         onerror="this.src='https://img.youtube.com/vi/9TWFmVYAP2E/hqdefault.jpg'">
-                    <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3);"></div>
-                    <div style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px;">
-                        <div style="width:64px;height:64px;background:rgba(251,191,36,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(251,191,36,0.6);">
-                            <div style="width:0;height:0;border-style:solid;border-width:12px 0 12px 22px;border-color:transparent transparent transparent #000;margin-left:4px;"></div>
-                        </div>
-                        <div style="font-size:8px;letter-spacing:2px;color:#fbbf24;text-shadow:0 0 10px #fbbf24;">▶ TRANSMISIÓN EXCLUSIVA GX</div>
-                    </div>
-                </div>
-                <iframe id="yt-player" src="" frameborder="0" allow="autoplay;fullscreen;encrypted-media" allowfullscreen
-                    style="display:none;width:100%;aspect-ratio:16/9;"></iframe>
-            </div>
-
-            <!-- EPISODIOS -->
-            <div style="margin-bottom:10px;">
-                <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:6px;">📋 TUS EPISODIOS GX</div>
-                <div id="gx-episodios" style="display:flex;flex-direction:column;gap:4px;"></div>
-            </div>
-
-            <!-- EMISARIO IA -->
-            <div style="border:1px solid rgba(54,244,208,0.3);background:#020617;padding:8px;margin-top:8px;">
-                <div style="font-size:8px;font-weight:bold;letter-spacing:2px;color:#36f4d0;border-bottom:1px solid rgba(54,244,208,0.2);padding-bottom:5px;margin-bottom:8px;">🤖 EMISARIO_IA // ASISTENTE GEOPOLÍTICO</div>
-                <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
-                    <button class="sug-btn" onclick="usarSugerencia(this)">📈 ¿Cómo armo un portafolio?</button>
-                    <button class="sug-btn" onclick="usarSugerencia(this)">🌍 ¿Dónde vivir en LATAM?</button>
-                    <button class="sug-btn" onclick="usarSugerencia(this)">💰 ¿Cómo protejo mi capital?</button>
-                    <button class="sug-btn" onclick="usarSugerencia(this)">📊 ¿Qué índice monitorear hoy?</button>
-                </div>
-                <div id="ia-messages" style="height:200px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;padding:4px 0;">
-                    <div class="msg-ia"><span style="color:#36f4d0;">EMISARIO_IA</span><br>Sistema activo. Puedo ayudarte con mercados, portafolios, geopolítica e inversiones en LATAM. ¿Cuál es tu consulta?</div>
-                </div>
-                <div style="display:flex;gap:6px;align-items:flex-end;">
-                    <textarea id="ia-input" placeholder="> Escribe tu consulta al Emisario..."
-                        style="flex:1;font-family:'JetBrains Mono',monospace;font-size:8px;background:#080c10;border:1px solid #1e293b;color:#cce0f0;padding:7px 9px;outline:none;resize:none;height:36px;line-height:1.4;"
-                        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMensaje();}"></textarea>
-                    <button onclick="enviarMensaje()" id="ia-send-btn"
-                        style="background:#36f4d0;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:bold;letter-spacing:1px;padding:8px 12px;border:none;cursor:pointer;height:36px;">
-                        ENVIAR ▶
-                    </button>
-                </div>
-                <div style="font-size:6px;color:#334155;margin-top:4px;letter-spacing:1px;">ENTER para enviar · Solo accesible con clave GX</div>
-            </div>
-        </div>
+<!-- MODAL DONACIONES -->
+<div class="modal-overlay" id="modal-donaciones" onclick="if(event.target===this)closeModal('donaciones')">
+  <div class="modal-box">
+    <div class="mhd"><div class="mhd-ttl" style="color:#fbbf24;">[ DONACIONES ]</div><button class="mx" onclick="closeModal('donaciones')">✕</button></div>
+    <div class="mbody">
+      <div style="font-size:8px;color:#64748b;margin-bottom:10px;">> Selecciona monto:</div>
+      <div class="amts">
+        <button class="amt" onclick="selAmt(this,'5')">$5</button>
+        <button class="amt" onclick="selAmt(this,'10')">$10</button>
+        <button class="amt" onclick="selAmt(this,'25')">$25</button>
+        <button class="amt" onclick="selAmt(this,'50')">$50</button>
+        <button class="amt" onclick="selAmt(this,'100')">$100</button>
+        <button class="amt" onclick="selAmt(this,'custom')">OTRO</button>
+      </div>
+      <div id="don-custom-row" style="display:none;margin-bottom:8px;">
+        <input class="minp" type="number" id="don-custom" placeholder="Ingresa monto en USD">
+      </div>
+      <div class="mlbl">// Mensaje opcional</div>
+      <input class="minp" type="text" id="don-msg" placeholder="Tu mensaje de apoyo...">
+      <div class="m-info">PayPal: paypal.me/geosystemIntelligen · Nequi: 3217889102</div>
+      <button class="mact m-amb" onclick="processDon()">ENVIAR DONACIÓN ▶</button>
+      <div class="m-ok" id="don-ok">> DONACIÓN PROCESADA · GRACIAS POR APOYAR GEOSYSTEM.</div>
     </div>
+  </div>
+</div>
 
-
-
-
-
-        <!-- ═══════════════════════════════ -->
-    <!-- MODAL DONACIONES               -->
-    <!-- ═══════════════════════════════ -->
-    <div class="modal-overlay" id="modal-donaciones" onclick="closeOnOverlay(event,'donaciones')">
-        <div class="modal-box">
-            <div class="modal-head">
-                <div class="modal-head-title" style="color:#ffb300;">[ DONACIONES ]</div>
-                <button class="modal-x" onclick="closeModal('donaciones')">✕</button>
-            </div>
-            <div class="modal-body">
-                <div style="font-size:8px;color:#64748b;margin-bottom:8px;">> Selecciona monto:</div>
-                <div class="amount-grid">
-                    <button class="amount-btn" onclick="selAmt(this,'5')">$5</button>
-                    <button class="amount-btn" onclick="selAmt(this,'10')">$10</button>
-                    <button class="amount-btn" onclick="selAmt(this,'25')">$25</button>
-                    <button class="amount-btn" onclick="selAmt(this,'50')">$50</button>
-                    <button class="amount-btn" onclick="selAmt(this,'100')">$100</button>
-                    <button class="amount-btn" onclick="selAmt(this,'custom')">OTRO</button>
-                </div>
-                <div id="custom-amt-row" style="display:none;align-items:center;gap:8px;margin-bottom:10px;">
-                    <span style="font-size:8px;color:#64748b;white-space:nowrap;">USD $</span>
-                    <input class="m-input" type="number" id="custom-amt" placeholder="000.00" min="1" style="margin-bottom:0;">
-                </div>
-                <div class="m-divider"></div>
-                <div style="font-size:8px;color:#64748b;margin-bottom:8px;">> Método de pago:</div>
-
-                <label class="pay-opt">
-                    <input type="radio" name="pay-don" value="paypal" checked>
-                    <span>🅿 PayPal — paypal.me/geosystemIntelligen</span>
-                </label>
-                <label class="pay-opt">
-                    <input type="radio" name="pay-don" value="nequi">
-                    <span>🇨🇴 Nequi — 321 788 9102</span>
-                </label>
-
-                <button class="m-action m-amber" onclick="processDonacion()">
-                    > CONFIRMAR Y PROCEDER AL PAGO
-                </button>
-                <div class="m-success" id="don-ok">
-                    > REDIRIGIENDO AL PORTAL DE PAGO...<br>
-                    > GRACIAS POR APOYAR EL SISTEMA.
-                </div>
-            </div>
+<!-- MODAL SUSCRIPCIONES -->
+<div class="modal-overlay" id="modal-suscripciones" onclick="if(event.target===this)closeModal('suscripciones')">
+  <div class="modal-box">
+    <div class="mhd"><div class="mhd-ttl" style="color:var(--neon);">[ SUSCRIPCIONES ]</div><button class="mx" onclick="closeModal('suscripciones')">✕</button></div>
+    <div class="mbody">
+      <div id="sus-p1">
+        <div style="font-size:8px;color:#64748b;margin-bottom:10px;">> Elige tu plan:</div>
+        <div class="tc" id="tc-observer" onclick="selTier('observer')">
+          <div class="tc-name">OBSERVER</div><div class="tc-price">$0 <span>/ mes</span></div>
+          <ul class="tc-feats"><li>Acceso básico al feed</li><li>Indicadores y noticias</li></ul>
         </div>
-    </div>
-
-    <!-- ═══════════════════════════════ -->
-    <!-- MODAL SUSCRIPCIONES            -->
-    <!-- ═══════════════════════════════ -->
-    <div class="modal-overlay" id="modal-suscripciones" onclick="closeOnOverlay(event,'suscripciones')">
-        <div class="modal-box">
-            <div class="modal-head">
-                <div class="modal-head-title" style="color:#36f4d0;">[ SUSCRIPCIONES ]</div>
-                <button class="modal-x" onclick="closeModal('suscripciones')">✕</button>
-            </div>
-            <div class="modal-body">
-
-                <!-- PASO 1: SELECCIONAR PLAN -->
-                <div id="sus-paso1">
-                    <div style="font-size:8px;color:#64748b;margin-bottom:10px;">> Paso 1: Selecciona tu nivel de acceso:</div>
-                    <div class="tier-card" onclick="selTier(this,'observer')">
-                        <div class="tier-name">OBSERVER</div>
-                        <div class="tier-price">$0 <span>/ mes</span></div>
-                        <ul class="tier-feats"><li>Acceso básico al feed</li><li>Indicadores y noticias</li></ul>
-                    </div>
-                    <div class="tier-card featured" onclick="selTier(this,'analyst')">
-                        <div class="tier-badge">RECOMENDADO</div>
-                        <div class="tier-name">ANALYST</div>
-                        <div class="tier-price">$9 <span>/ mes</span></div>
-                        <ul class="tier-feats"><li>EMISARIO_IA desbloqueado</li><li>Episodios GX exclusivos</li><li>Clave GX personal</li></ul>
-                    </div>
-                    <div class="tier-card" onclick="selTier(this,'strategist')">
-                        <div class="tier-name">STRATEGIST</div>
-                        <div class="tier-price">$29 <span>/ mes</span></div>
-                        <ul class="tier-feats"><li>Todo ANALYST incluido</li><li>Contacto directo con el Emisario</li><li>Estrategia personalizada</li></ul>
-                    </div>
-                    <div class="m-info" id="sus-info" style="display:none;">
-                        > Serás redirigido a PayPal para completar el pago.
-                    </div>
-                    <button class="m-action m-cyan" onclick="susPaso2()" id="sus-btn-paso2" style="display:none;">
-                        > CONTINUAR CON REGISTRO ▶
-                    </button>
-                </div>
-
-                <!-- PASO 2: FORMULARIO DE REGISTRO -->
-                <div id="sus-paso2" style="display:none;">
-                    <div style="font-size:8px;color:#36f4d0;margin-bottom:10px;letter-spacing:1px;">> Paso 2: Completa tu registro para recibir la CLAVE GX</div>
-
-                    <span class="m-label" style="color:#36f4d0;">// Tu nombre completo</span>
-                    <input class="m-input" type="text" id="sus-nombre" placeholder="Nombre completo">
-
-                    <span class="m-label" style="color:#36f4d0;">// Tu WhatsApp (con código de país)</span>
-                    <input class="m-input" type="tel" id="sus-whatsapp" placeholder="+57 321 000 0000">
-
-                    <span class="m-label" style="color:#36f4d0;">// Tu email</span>
-                    <input class="m-input" type="email" id="sus-email" placeholder="tu@email.com">
-
-                    <span class="m-label" style="color:#36f4d0;">// País de residencia</span>
-                    <input class="m-input" type="text" id="sus-pais" placeholder="Colombia / Venezuela / México...">
-
-                    <div style="border:1px solid rgba(54,244,208,0.2);background:rgba(54,244,208,0.03);padding:8px;margin:10px 0;font-size:7px;color:#475569;line-height:1.7;">
-                        > Después de registrarte serás redirigido a PayPal para completar el pago.<br>
-                        > Una vez confirmado el pago, recibirás tu CLAVE GX en menos de 24 horas por WhatsApp.
-                    </div>
-
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;">
-                        <button class="m-action" style="margin-top:0;border-color:#334155;color:#475569;background:transparent;font-size:7px;" onclick="susVolver()">
-                            ← VOLVER
-                        </button>
-                        <button class="m-action m-cyan" style="margin-top:0;" onclick="processSus()">
-                            > PAGAR Y REGISTRAR ▶
-                        </button>
-                    </div>
-                </div>
-
-                <!-- PASO 3: CONFIRMACIÓN -->
-                <div class="m-success" id="sus-ok">
-                    > REGISTRO RECIBIDO.<br>
-                    > REDIRIGIENDO A PAYPAL...<br>
-                    > RECIBIRÁS TU CLAVE GX EN MENOS DE 24H POR WHATSAPP.
-                </div>
-            </div>
+        <div class="tc sel" id="tc-analyst" onclick="selTier('analyst')">
+          <div class="tc-bdg">RECOMENDADO</div>
+          <div class="tc-name">ANALYST</div><div class="tc-price">$9 <span>/ mes</span></div>
+          <ul class="tc-feats"><li>EMISARIO_IA desbloqueado</li><li>Episodios GX exclusivos</li><li>Clave GX personal</li></ul>
         </div>
-    </div>
-
-    <!-- ═══════════════════════════════ -->
-    <!-- MODAL COLABORACIONES           -->
-    <!-- ═══════════════════════════════ -->
-    <div class="modal-overlay" id="modal-colaboraciones" onclick="closeOnOverlay(event,'colaboraciones')">
-        <div class="modal-box">
-            <div class="modal-head">
-                <div class="modal-head-title" style="color:#00ff88;">[ COLABORACIONES ]</div>
-                <button class="modal-x" onclick="closeModal('colaboraciones')">✕</button>
-            </div>
-            <div class="modal-body">
-                <div style="font-size:8px;color:#64748b;margin-bottom:8px;">> Tipo de colaboración:</div>
-                <div class="collab-grid">
-                    <button class="collab-chip" onclick="selCollab(this)">Análisis / Redacción</button>
-                    <button class="collab-chip" onclick="selCollab(this)">Desarrollo / Código</button>
-                    <button class="collab-chip" onclick="selCollab(this)">Datos / Fuentes</button>
-                    <button class="collab-chip" onclick="selCollab(this)">Traducción</button>
-                    <button class="collab-chip" onclick="selCollab(this)">Diseño / UX</button>
-                    <button class="collab-chip" onclick="selCollab(this)">Otro</button>
-                </div>
-                <span class="m-label" style="color:#00ff88;">// Tu nombre o alias</span>
-                <input class="m-input" type="text" id="col-nombre" placeholder="Nombre de contacto">
-                <span class="m-label" style="color:#00ff88;">// Tu contacto (email o teléfono)</span>
-                <input class="m-input" type="text" id="col-contacto" placeholder="Email / WhatsApp / Telegram">
-                <span class="m-label" style="color:#00ff88;">// Tu propuesta</span>
-                <textarea class="m-textarea" id="col-msg" placeholder="> Describe tu propuesta de colaboración..."></textarea>
-
-                <div style="margin-top:10px;font-size:7px;color:#475569;margin-bottom:4px;">ENVIAR VÍA:</div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-                    <button class="m-action m-green" style="margin-top:0;" onclick="processCollab('wa')">
-                        📱 WHATSAPP
-                    </button>
-                    <button class="m-action m-green" style="margin-top:0;border-color:#36f4d0;color:#36f4d0;background:rgba(54,244,208,0.08);" onclick="processCollab('email')">
-                        📧 EMAIL
-                    </button>
-                </div>
-                <div class="m-success" id="col-ok">
-                    > SOLICITUD ENVIADA.<br>
-                    > RESPUESTA EN 24-48H VÍA CANAL SEGURO.
-                </div>
-            </div>
+        <div class="tc" id="tc-strategist" onclick="selTier('strategist')">
+          <div class="tc-name">STRATEGIST</div><div class="tc-price">$29 <span>/ mes</span></div>
+          <ul class="tc-feats"><li>Todo ANALYST incluido</li><li>Contacto directo con el Emisario</li></ul>
         </div>
+        <button class="mact m-cyn" onclick="susPaso2()">CONTINUAR ▶</button>
+      </div>
+      <div id="sus-p2" style="display:none;">
+        <div style="font-size:8px;color:var(--neon);margin-bottom:12px;letter-spacing:1px;">> Completa tu registro para recibir tu CLAVE GX:</div>
+        <div class="mlbl">// Nombre completo</div>
+        <input class="minp" type="text" id="sus-nombre" placeholder="Tu nombre completo">
+        <div class="mlbl">// WhatsApp con código de país</div>
+        <input class="minp" type="tel" id="sus-wa" placeholder="+57 300 000 0000">
+        <div class="mlbl">// Email</div>
+        <input class="minp" type="email" id="sus-email" placeholder="tu@email.com">
+        <div class="mlbl">// País</div>
+        <input class="minp" type="text" id="sus-pais" placeholder="Colombia / Venezuela / México...">
+        <div class="m-info" style="margin-top:10px;">> Al continuar serás redirigido a PayPal para completar el pago.<br>> Recibirás tu CLAVE GX por WhatsApp en menos de 24h.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+          <button class="mact" style="margin-top:0;border:1px solid #334155;color:#475569;background:transparent;" onclick="susVolver()">← VOLVER</button>
+          <button class="mact m-cyn" style="margin-top:0;" onclick="processSus()">PAGAR ▶</button>
+        </div>
+      </div>
+      <div class="m-ok" id="sus-ok">> REGISTRO RECIBIDO.<br>> REDIRIGIENDO A PAYPAL...<br>> CLAVE GX EN MENOS DE 24H POR WHATSAPP.</div>
     </div>
-    <script>
-        // ── ERROR HANDLER ──
-        window.onerror = function(msg, src, line, col, err) {
-            console.error('JS ERROR:', msg, 'line:', line);
-            document.body.insertAdjacentHTML('afterbegin',
-                '<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:red;color:white;font-family:monospace;font-size:11px;padding:8px;">'+
-                '⚠️ ERROR JS línea '+line+': '+msg+'</div>'
-            );
-            return false;
-        };
-
-        // ── NOTICIAS REGIONALES ──
-        const NEWS_FEEDS = {
-            global: [
-                {rss:'https://feeds.bbci.co.uk/news/world/rss.xml',         name:'BBC WORLD',     color:'#36f4d0'},
-                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',name:'NYT WORLD',    color:'#36f4d0'},
-                {rss:'https://www.theguardian.com/world/rss',                name:'THE GUARDIAN',  color:'#36f4d0'},
-            ],
-            latam: [
-                {rss:'https://feeds.bbci.co.uk/mundo/rss.xml',               name:'BBC MUNDO',     color:'#fbbf24'},
-                {rss:'https://www.theguardian.com/world/americas/rss',       name:'GUARDIAN LATAM',color:'#fbbf24'},
-                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/Americas.xml',name:'NYT AMERICAS',color:'#fbbf24'},
-            ],
-            usa: [
-                {rss:'https://feeds.bbci.co.uk/news/world/us_and_canada/rss.xml',name:'BBC EEUU',  color:'#60a5fa'},
-                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/US.xml',  name:'NYT USA',       color:'#60a5fa'},
-                {rss:'https://feeds.washingtonpost.com/rss/world',           name:'WASHINGTON POST',color:'#60a5fa'},
-            ],
-            europa: [
-                {rss:'https://feeds.bbci.co.uk/news/world/europe/rss.xml',   name:'BBC EUROPA',    color:'#a78bfa'},
-                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/Europe.xml',name:'NYT EUROPA',  color:'#a78bfa'},
-                {rss:'https://www.theguardian.com/world/europe-news/rss',    name:'GUARDIAN EU',   color:'#a78bfa'},
-            ],
-            asia: [
-                {rss:'https://feeds.bbci.co.uk/news/world/asia/rss.xml',     name:'BBC ASIA',      color:'#f87171'},
-                {rss:'https://rss.nytimes.com/services/xml/rss/nyt/AsiaPacific.xml',name:'NYT ASIA',color:'#f87171'},
-                {rss:'https://www.theguardian.com/world/asia/rss',           name:'GUARDIAN ASIA', color:'#f87171'},
-            ]
-        };
-
-        let currentNewsRegion = 'global';
-
-        function switchNews(region){
-            document.querySelectorAll('.news-tab').forEach(t=>t.classList.remove('active'));
-            document.getElementById('ntab-'+region).classList.add('active');
-            currentNewsRegion = region;
-            loadNews(region);
-        }
-
-        async function loadNews(region){
-            const feedEl = document.getElementById('news-feed');
-            feedEl.innerHTML = '<span style="font-size:7px;color:#475569;font-style:italic;">> Cargando noticias '+region.toUpperCase()+'...</span>';
-
-            const feeds = NEWS_FEEDS[region] || NEWS_FEEDS.global;
-            let allItems = [];
-
-            for(const feed of feeds){
-                try{
-                    const url = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.rss)}&count=3`;
-                    const r = await fetch(url);
-                    const data = await r.json();
-                    if(data.status==='ok' && data.items?.length){
-                        data.items.forEach(item=>{
-                            allItems.push({
-                                title: item.title,
-                                link:  item.link,
-                                date:  item.pubDate,
-                                source: feed.name,
-                                color: feed.color
-                            });
-                        });
-                    }
-                } catch(e){}
-            }
-
-            if(allItems.length > 0){
-                allItems.sort((a,b)=>new Date(b.date)-new Date(a.date));
-                feedEl.innerHTML = allItems.slice(0,5).map(item=>{
-                    const fecha = item.date
-                        ? new Date(item.date).toLocaleDateString('es-CO',{day:'2-digit',month:'short'})
-                        : '';
-                    const titulo = item.title?.length > 85 ? item.title.substring(0,85)+'...' : item.title;
-                    return `<a href="${item.link}" target="_blank" class="news-item">
-                        <div class="news-title">> ${titulo}</div>
-                        <div class="news-meta">
-                            <span class="news-source" style="color:${item.color};">${item.source}</span>
-                            <span class="news-date">${fecha}</span>
-                        </div>
-                    </a>`;
-                }).join('');
-            } else {
-                // Fallback por región
-                const fallbacks = {
-                    global: [{t:'Reuters World News',u:'https://www.reuters.com/world/'},{t:'BBC World News',u:'https://www.bbc.com/news/world'}],
-                    latam:  [{t:'BBC Mundo — Últimas noticias',u:'https://www.bbc.com/mundo'},{t:'Reuters América Latina',u:'https://www.reuters.com/world/americas/'}],
-                    usa:    [{t:'NYT — United States',u:'https://www.nytimes.com/section/us'},{t:'Washington Post',u:'https://www.washingtonpost.com'}],
-                    europa: [{t:'BBC Europe News',u:'https://www.bbc.com/news/world/europe'},{t:'The Guardian — Europe',u:'https://www.theguardian.com/world/europe-news'}],
-                    asia:   [{t:'BBC Asia News',u:'https://www.bbc.com/news/world/asia'},{t:'NYT — Asia Pacific',u:'https://www.nytimes.com/section/world/asia'}],
-                };
-                const fb = fallbacks[region]||fallbacks.global;
-                feedEl.innerHTML = fb.map(i=>`<a href="${i.u}" target="_blank" class="news-item">
-                    <div class="news-title">> ${i.t}</div>
-                    <div class="news-meta"><span class="news-source">ACCESO DIRECTO</span></div>
-                </a>`).join('');
-            }
-            document.getElementById('news-ts').textContent = 'ULT. ACT: '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
-        }
-
-        // Cargar global al inicio
-        loadNews('global');
-        // Auto-refresh cada 10 minutos
-        setInterval(()=>loadNews(currentNewsRegion), 600000);
-
-        // ── ASISTENTE IA GX ──
-        const API_KEY = 'sk-ant-api03-xQQ-Sg5NpyuhXWskHkuZC3_uU5N16iTOAhKAACUn_6-hZKzKOKofEaOf38n7GAJB3dZXWrLpAkdULQ1WbSk3AA-pQishAAA';
-        const chatHistory = [];
-
-        const SYSTEM_PROMPT = `Eres el EMISARIO_IA de Geosystem Intelligence, un asistente especializado en inteligencia geopolítica y financiera para usuarios latinoamericanos. Tu estilo es directo, técnico y estratégico — como un analista de inteligencia de élite.
-
-Tus áreas de expertise:
-1. MERCADOS E ÍNDICES: Análisis de NYSE, DAX, ILF (LATAM), BTC, WTI Oil, SPY. Tendencias, zonas de soporte/resistencia, correlaciones geopolíticas.
-2. PORTAFOLIOS: Construcción por perfil de riesgo (conservador/moderado/agresivo). Diversificación entre activos, geografías y sectores. ETFs, acciones, cripto, commodities.
-3. GEOPOLÍTICA E INVERSIONES: Cómo los conflictos, elecciones y sanciones afectan los mercados. Análisis de riesgo país en LATAM.
-4. DÓNDE VIVIR Y PROTEGER CAPITAL EN LATAM: Mejores países por seguridad jurídica, costo de vida, banca offshore, residencias fiscales, ciudadanías.
-
-Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cuando los conozcas. Añade disclaimers solo al final si das recomendaciones de inversión específicas. Usa formato de terminal — respuestas estructuradas con > para puntos clave.`;
-
-        function usarSugerencia(btn) {
-            document.getElementById('ia-input').value = btn.textContent.replace(/^[^\w]+/, '').trim();
-            enviarMensaje();
-        }
-
-        async function enviarMensaje() {
-            const input = document.getElementById('ia-input');
-            const msg = input.value.trim();
-            if (!msg) return;
-
-            const messagesEl = document.getElementById('ia-messages');
-            const sendBtn = document.getElementById('ia-send-btn');
-
-            // Mostrar mensaje del usuario
-            messagesEl.innerHTML += `<div class="msg-user"><span style="color:#fbbf24;">TÚ</span><br>${msg}</div>`;
-            input.value = '';
-            sendBtn.disabled = true;
-            sendBtn.textContent = '...';
-
-            // Loading
-            const loadId = 'load-' + Date.now();
-            messagesEl.innerHTML += `<div class="msg-loading" id="${loadId}">EMISARIO_IA procesando consulta...</div>`;
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-
-            // Agregar al historial
-            chatHistory.push({ role: 'user', content: msg });
-
-            try {
-                const response = await fetch('https://api.anthropic.com/v1/messages', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': API_KEY,
-                        'anthropic-version': '2023-06-01',
-                        'anthropic-dangerous-direct-browser-access': 'true'
-                    },
-                    body: JSON.stringify({
-                        model: 'claude-haiku-4-5-20251001',
-                        max_tokens: 600,
-                        system: SYSTEM_PROMPT,
-                        messages: chatHistory
-                    })
-                });
-
-                const data = await response.json();
-                const reply = data.content?.[0]?.text || 'Error en la respuesta del sistema.';
-
-                // Agregar respuesta al historial
-                chatHistory.push({ role: 'assistant', content: reply });
-
-                // Reemplazar loading con respuesta
-                document.getElementById(loadId).outerHTML =
-                    `<div class="msg-ia"><span style="color:#36f4d0;">EMISARIO_IA</span><br>${reply.replace(/\n/g,'<br>')}</div>`;
-
-            } catch(e) {
-                document.getElementById(loadId).outerHTML =
-                    `<div class="msg-ia"><span style="color:#f87171;">ERROR</span><br>> Fallo en la conexión con el núcleo IA. Verifica tu conexión e intenta de nuevo.</div>`;
-            }
-
-            sendBtn.disabled = false;
-            sendBtn.textContent = 'ENVIAR ▶';
-            messagesEl.scrollTop = messagesEl.scrollHeight;
-        }
-
-        // ── BUSCADOR INTEL ──
-        let searchCat = 'all';
-
-        const SEARCH_SOURCES = {
-            bolsas: [
-                {icon:'📈', title:'TradingView — Gráficos y análisis',         url:'https://www.tradingview.com/chart/?symbol=',         tag:'BOLSAS'},
-                {icon:'📊', title:'Yahoo Finance — Datos de mercado',           url:'https://finance.yahoo.com/search?q=',                tag:'BOLSAS'},
-                {icon:'💹', title:'Investing.com — Mercados globales',          url:'https://www.investing.com/search/?q=',               tag:'BOLSAS'},
-                {icon:'🏛️', title:'MarketWatch — Wall Street',                  url:'https://www.marketwatch.com/search?q=',              tag:'BOLSAS'},
-            ],
-            geopolitica: [
-                {icon:'🌍', title:'Stratfor — Inteligencia geopolítica',        url:'https://worldview.stratfor.com/search#query=',       tag:'GEOPOL'},
-                {icon:'📰', title:'Foreign Policy — Análisis global',           url:'https://foreignpolicy.com/?s=',                      tag:'GEOPOL'},
-                {icon:'🔍', title:'CFR — Council on Foreign Relations',         url:'https://www.cfr.org/search?search_query=',           tag:'GEOPOL'},
-                {icon:'⚡', title:'Crisis Group — Conflictos activos',          url:'https://www.crisisgroup.org/search?search=',         tag:'GEOPOL'},
-                {icon:'📡', title:'GDELT — Eventos en tiempo real',             url:'https://api.gdeltproject.org/api/v2/doc/doc?query=', tag:'GEOPOL'},
-            ],
-            crypto: [
-                {icon:'₿',  title:'CoinGecko — Precios y datos cripto',        url:'https://www.coingecko.com/en/search?query=',         tag:'CRIPTO'},
-                {icon:'📊', title:'CoinMarketCap — Rankings cripto',            url:'https://coinmarketcap.com/search/?q=',               tag:'CRIPTO'},
-                {icon:'🔥', title:'TradingView Cripto',                         url:'https://www.tradingview.com/chart/?symbol=BINANCE%3A', tag:'CRIPTO'},
-                {icon:'📰', title:'CryptoSlate — Noticias cripto',             url:'https://cryptoslate.com/search/?q=',                 tag:'CRIPTO'},
-            ],
-            portafolios: [
-                {icon:'💼', title:'ETF.com — Búsqueda de ETFs',                url:'https://www.etf.com/etfanalytics/etf-finder?q=',    tag:'ETF'},
-                {icon:'📈', title:'Portfolio Visualizer — Análisis',           url:'https://www.portfoliovisualizer.com',                tag:'PORTAF'},
-                {icon:'🏦', title:'Morningstar — Calificación de fondos',      url:'https://www.morningstar.com/search?query=',          tag:'FONDOS'},
-                {icon:'📊', title:'ETFDB — Base de datos ETFs',                url:'https://etfdb.com/etfs/#etfdb-data|?q=',             tag:'ETF'},
-            ],
-            brokers: [
-                {icon:'🏦', title:'Interactive Brokers — Broker global',       url:'https://www.interactivebrokers.com',                 tag:'BROKER'},
-                {icon:'💰', title:'Charles Schwab — Para LATAM',               url:'https://international.schwab.com',                   tag:'BROKER'},
-                {icon:'📱', title:'eToro — Broker social',                     url:'https://www.etoro.com/search/?q=',                  tag:'BROKER'},
-                {icon:'🇨🇴', title:'Tyba Colombia — Inversión local',          url:'https://tyba.com.co',                               tag:'LATAM'},
-                {icon:'🌎', title:'Nubank — Fintech LATAM',                    url:'https://nubank.com.br',                             tag:'LATAM'},
-            ],
-            tendencias: [
-                {icon:'🔥', title:'Google Trends — Tendencias globales',       url:'https://trends.google.com/trends/explore?q=',       tag:'TREND'},
-                {icon:'📰', title:'Reuters — Noticias financieras',            url:'https://www.reuters.com/search/news?blob=',          tag:'NEWS'},
-                {icon:'📡', title:'Bloomberg — Mercados y economía',           url:'https://www.bloomberg.com/search?query=',            tag:'NEWS'},
-                {icon:'🌐', title:'BBC Business — Economía global',            url:'https://www.bbc.com/search?q=',                     tag:'NEWS'},
-            ]
-        };
-
-        // Todas las fuentes juntas
-        const ALL_SOURCES = Object.values(SEARCH_SOURCES).flat();
-
-        function setCat(btn, cat){
-            document.querySelectorAll('.search-cat').forEach(b=>b.classList.remove('active'));
-            btn.classList.add('active');
-            searchCat = cat;
-            const q = document.getElementById('search-input').value.trim();
-            if(q) runSearch();
-        }
-
-        function runSearch(){
-            const q = document.getElementById('search-input').value.trim();
-            const resultsEl = document.getElementById('search-results');
-
-            if(!q){
-                // Sin query — muestra fuentes de la categoría
-                showDefaultSources(resultsEl);
-                return;
-            }
-
-            const sources = searchCat === 'all' ? ALL_SOURCES : (SEARCH_SOURCES[searchCat] || ALL_SOURCES);
-            const encoded = encodeURIComponent(q);
-
-            resultsEl.innerHTML = sources.map(s => {
-                const url = s.url.includes('?') || s.url.endsWith('=')
-                    ? s.url + encoded
-                    : s.url;
-                return `<a href="${url}" target="_blank" class="sr-item">
-                    <span class="sr-icon">${s.icon}</span>
-                    <div style="flex:1;min-width:0;">
-                        <div class="sr-title">${s.title}</div>
-                        <div class="sr-source">> Buscar: "${q}"</div>
-                    </div>
-                    <span class="sr-tag">${s.tag}</span>
-                </a>`;
-            }).join('');
-
-            resultsEl.classList.add('show');
-        }
-
-        function showDefaultSources(resultsEl){
-            const sources = searchCat === 'all' ? ALL_SOURCES.slice(0,8) : (SEARCH_SOURCES[searchCat] || ALL_SOURCES.slice(0,8));
-            resultsEl.innerHTML = sources.map(s =>
-                `<a href="${s.url}" target="_blank" class="sr-item">
-                    <span class="sr-icon">${s.icon}</span>
-                    <div style="flex:1;min-width:0;">
-                        <div class="sr-title">${s.title}</div>
-                        <div class="sr-source">> Acceso directo</div>
-                    </div>
-                    <span class="sr-tag">${s.tag}</span>
-                </a>`
-            ).join('');
-            resultsEl.classList.add('show');
-        }
-
-        function updateSearchSuggestions(val){
-            if(!val) document.getElementById('search-results').classList.remove('show');
-        }
-
-        // ── MAPA TABS ──
-        function switchMap(id){
-            ['acled','liveuamap','gdelt'].forEach(m=>{
-                document.getElementById('map-'+m).style.display = m===id?'block':'none';
-                const tab = document.getElementById('tab-'+m);
-                tab.classList.toggle('active', m===id);
-            });
-        }
-
-        // Mostrar fallback si iframe no carga
-        document.querySelectorAll('.map-frame iframe').forEach(iframe=>{
-            iframe.addEventListener('error', ()=>{
-                iframe.style.display='none';
-                iframe.nextElementSibling.style.display='block';
-            });
-            // Timeout fallback para iframes bloqueados
-            setTimeout(()=>{
-                try{
-                    if(!iframe.contentDocument && iframe.style.display!=='none'){
-                        iframe.style.display='none';
-                        if(iframe.nextElementSibling) iframe.nextElementSibling.style.display='block';
-                    }
-                }catch(e){
-                    iframe.style.display='none';
-                    if(iframe.nextElementSibling) iframe.nextElementSibling.style.display='block';
-                }
-            }, 4000);
-        });
-
-        // ── TRANSMISIONES ──
-        function playTx(id, videoId){
-            document.getElementById(id+'-overlay').style.display='none';
-            const iframe = document.getElementById(id+'-iframe');
-            iframe.style.display='block';
-            iframe.src='https://www.youtube.com/embed/'+videoId+'?autoplay=1&rel=0&modestbranding=1';
-        }
-
-        // Cuenta regresiva para Parte 02
-        function updateCountdown(){
-            // Fecha objetivo — cambia esto cuando tengas fecha real
-            const target = new Date();
-            target.setDate(target.getDate() + 7); // 7 días desde hoy
-            target.setHours(20, 0, 0, 0);
-
-            const now = new Date();
-            const diff = target - now;
-            if(diff <= 0){
-                document.getElementById('countdown-tx2').textContent = '¡HOY!';
-                return;
-            }
-            const days  = Math.floor(diff / (1000*60*60*24));
-            const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
-            const mins  = Math.floor((diff % (1000*60*60)) / (1000*60));
-            const secs  = Math.floor((diff % (1000*60)) / 1000);
-            const pad = n => String(n).padStart(2,'0');
-            document.getElementById('countdown-tx2').textContent =
-                pad(days)+':'+pad(hours)+':'+pad(mins)+':'+pad(secs);
-        }
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-
-        // ── VIDEO PLAYERS ──
-        // Video público (visible para todos)
-        function playPublicVideo(){
-            const thumb = document.getElementById('pub-thumb');
-            const player = document.getElementById('pub-player');
-            thumb.style.display = 'none';
-            player.style.display = 'block';
-            player.src = 'https://www.youtube.com/embed/8Nx9Zrj1rXs?autoplay=1&rel=0&modestbranding=1';
-        }
-
-        // Video exclusivo GX — usa GX_PLAYLIST definida abajo
-        function playVideo(){
-            const thumb = document.getElementById('yt-thumb');
-            const player = document.getElementById('yt-player');
-            const ep = GX_PLAYLIST[gxEpActual - 1] || GX_PLAYLIST[0];
-            thumb.style.display = 'none';
-            player.style.display = 'block';
-            player.src = 'https://www.youtube.com/embed/' + ep.id + '?autoplay=1&rel=0&modestbranding=1';
-        }
-
-        // Cargar thumbnail del video GX
-        function loadGxThumbnail(){
-            // Carga thumbnail del primer episodio GX
-            const img = document.getElementById('gx-thumb-img');
-            if(img){
-                const firstId = GX_PLAYLIST[0].id;
-                img.src = 'https://img.youtube.com/vi/' + firstId + '/maxresdefault.jpg';
-                img.onerror = function(){ this.src = 'https://img.youtube.com/vi/' + firstId + '/hqdefault.jpg'; };
-            }
-        }
-
-        // ── RELOJ ──
-        function clock(){document.getElementById('reloj-v6').innerText=new Date().toLocaleTimeString();}
-        setInterval(clock,1000);clock();
-
-        // ── BOLSAS ──
-        const BOLSAS=[
-            {region:'EEUU',  nombre:'NYSE/NASDAQ',tz:'America/New_York',abre:{h:9,m:30}, cierra:{h:16,m:0}, color:'#3b82f6',pre:{h:4,m:0}},
-            {region:'EUROPA',nombre:'XETRA/DAX',  tz:'Europe/Berlin',   abre:{h:9,m:0},  cierra:{h:17,m:30},color:'#94a3b8',pre:null},
-            {region:'ASIA',  nombre:'TSE/NIKKEI', tz:'Asia/Tokyo',      abre:{h:9,m:0},  cierra:{h:15,m:30},color:'#f87171',pre:null},
-            {region:'LATAM', nombre:'BVC/BMV',    tz:'America/Bogota',  abre:{h:9,m:30}, cierra:{h:16,m:0}, color:'#fbbf24',pre:null}
-        ];
-        function bolsaStatus(b){
-            const now=new Date();
-            const day=new Intl.DateTimeFormat('en-US',{weekday:'long',timeZone:b.tz}).format(now);
-            if(day==='Saturday'||day==='Sunday')return{estado:'CERRADO',clase:'closed'};
-            const p=new Intl.DateTimeFormat('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:b.tz}).formatToParts(now);
-            const h=parseInt(p.find(x=>x.type==='hour').value),m=parseInt(p.find(x=>x.type==='minute').value);
-            const t=h*60+m,ta=b.abre.h*60+b.abre.m,tc=b.cierra.h*60+b.cierra.m;
-            if(t>=ta&&t<tc)return{estado:'ABIERTO',clase:'open'};
-            if(b.pre){const tp=b.pre.h*60+b.pre.m;if(t>=tp&&t<ta)return{estado:'PRE-MKT',clase:'pre'};}
-            return{estado:'CERRADO',clase:'closed'};
-        }
-        function horaLocal(tz){return new Intl.DateTimeFormat('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZone:tz}).format(new Date());}
-        function renderBolsas(){
-            document.getElementById('bolsas-widget').innerHTML=BOLSAS.map(b=>{
-                const{estado,clase}=bolsaStatus(b);
-                const hr=`${String(b.abre.h).padStart(2,'0')}:${String(b.abre.m).padStart(2,'0')}–${String(b.cierra.h).padStart(2,'0')}:${String(b.cierra.m).padStart(2,'0')}`;
-                return`<div class="bolsa-card" style="border-color:${b.color}22">
-                    <div class="bolsa-region" style="color:${b.color}88">${b.region}</div>
-                    <div class="bolsa-name" style="color:${b.color}">${b.nombre}</div>
-                    <div class="bolsa-hora">${hr} LOCAL<br>${horaLocal(b.tz)}</div>
-                    <div class="bolsa-status ${clase}"><span class="dot ${clase}"></span>${estado}</div>
-                </div>`;
-            }).join('');
-            document.getElementById('bolsas-ts').textContent='COL: '+horaLocal('America/Bogota')+' · AUTO 30S';
-        }
-        renderBolsas();setInterval(renderBolsas,30000);
-
-        // ── SISTEMA DE CLAVES GX SECUENCIAL ──
-        // Formato de clave: GX-YYYY-MM-DD-NOMBRE
-        // Ejemplo: GX-2026-03-12-CAMILO
-        // La fecha es la fecha de inicio de suscripción del usuario
-        // Cada 30 días se desbloquea el siguiente episodio
-
-        // ── PLAYLIST GX — agrega los IDs de YouTube aquí en orden ──
-        const GX_PLAYLIST = [
-            { ep: 1, titulo: "REVELACIÓN DE FUENTES Y METODOLOGÍA",    id: "9TWFmVYAP2E" },
-            { ep: 2, titulo: "EL PORTAFOLIO DEL EMISARIO",              id: "ekQk42FzOvA" },
-            { ep: 3, titulo: "GEOPOLÍTICA Y TU DINERO: CASO REAL",      id: "Z9QNJba3m1M" },
-            // Agrega más episodios aquí: { ep: 4, titulo: "...", id: "..." }
-        ];
-
-        function parseGxKey(key) {
-            // Acepta formato nuevo: GX-YYYY-MM-DD-NOMBRE
-            const match = key.match(/^GX-(\d{4})-(\d{2})-(\d{2})-(.+)$/);
-            if (match) {
-                return {
-                    valid: true,
-                    fecha: new Date(`${match[1]}-${match[2]}-${match[3]}`),
-                    nombre: match[4],
-                    legacy: false
-                };
-            }
-            // Acepta clave legacy: GX-8-7-IMMORTAL (acceso al ep 1)
-            if (key === 'GX-8-7-IMMORTAL' || key === 'GX-ADMIN-CAMILO') {
-                return { valid: true, fecha: new Date('2020-01-01'), nombre: 'ADMIN', legacy: false };
-            }
-            return { valid: false };
-        }
-
-        function calcularEpisodio(fechaInicio) {
-            const ahora = new Date();
-            const diasTranscurridos = Math.floor((ahora - fechaInicio) / (1000 * 60 * 60 * 24));
-            const episodio = Math.floor(diasTranscurridos / 30) + 1; // ep 1 desde día 0
-            return Math.max(1, episodio);
-        }
-
-        function renderEpisodiosGX(epActual) {
-            const container = document.getElementById('gx-episodios');
-            if (!container) return;
-
-            container.innerHTML = GX_PLAYLIST.map(ep => {
-                const desbloqueado = ep.ep <= epActual;
-                const esCurrent = ep.ep === epActual;
-                const diasRestantes = desbloqueado ? 0 : ((ep.ep - epActual) * 30);
-
-                if (desbloqueado) {
-                    return `<div class="gx-ep ${esCurrent ? 'gx-ep-current' : 'gx-ep-done'}" onclick="playGxEp(${ep.ep - 1})">
-                        <div class="gx-ep-num">${esCurrent ? '▶' : '✓'} EP${String(ep.ep).padStart(2,'0')}</div>
-                        <div class="gx-ep-title">${ep.titulo}</div>
-                        <div class="gx-ep-status ${esCurrent ? 'status-live' : 'status-done'}">${esCurrent ? 'ACTIVO' : 'VISTO'}</div>
-                    </div>`;
-                } else {
-                    return `<div class="gx-ep gx-ep-locked">
-                        <div class="gx-ep-num">🔒 EP${String(ep.ep).padStart(2,'0')}</div>
-                        <div class="gx-ep-title">${ep.titulo}</div>
-                        <div class="gx-ep-status status-locked">EN ${diasRestantes} DÍAS</div>
-                    </div>`;
-                }
-            }).join('');
-        }
-
-        let gxEpActual = 1;
-
-        function playGxEp(index) {
-            const ep = GX_PLAYLIST[index];
-            if (!ep) return;
-
-            // Actualizar badge
-            document.getElementById('gx-ep-badge').textContent = `EP${String(ep.ep).padStart(2,'0')} · ${ep.titulo}`;
-
-            // Actualizar player
-            const thumb = document.getElementById('yt-thumb');
-            const player = document.getElementById('yt-player');
-            const img = document.getElementById('gx-thumb-img');
-
-            const videoId = ep.id;
-
-            // Reset player
-            player.style.display = 'none';
-            player.src = '';
-            thumb.style.display = 'flex';
-            img.src = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-            img.onerror = function(){ this.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`; };
-
-            // Highlight selected episode
-            document.querySelectorAll('.gx-ep').forEach((el, i) => {
-                el.style.outline = i === index ? '1px solid #fbbf24' : 'none';
-            });
-
-            // Scroll to player
-            document.getElementById('portal-sinergia').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function unlockSystem(){
-            const rawKey = document.getElementById('pass-input').value.trim().toUpperCase();
-            const parsed = parseGxKey(rawKey);
-
-            if (!parsed.valid) {
-                alert('ERROR: CLAVE INCORRECTA · Verifica tu clave GX');
-                return;
-            }
-
-            // Flash
-            document.body.classList.add('sync-flash');
-            setTimeout(() => document.body.classList.remove('sync-flash'), 500);
-
-            // Calcular episodio actual
-            gxEpActual = parsed.legacy ? 1 : calcularEpisodio(parsed.fecha);
-            gxEpActual = Math.min(gxEpActual, GX_PLAYLIST.length); // no pasar del último
-
-            // Mensaje de bienvenida personalizado
-            const nombre = parsed.nombre.charAt(0) + parsed.nombre.slice(1).toLowerCase();
-            const diasSuscrito = parsed.legacy ? 0 : Math.floor((new Date() - parsed.fecha) / (1000*60*60*24));
-            const tmsg = document.getElementById('terminal-msg');
-            if(tmsg) tmsg.innerHTML = `<span style='color:#fbbf24;font-weight:bold;font-size:8px;letter-spacing:1px;'>
-                🔑 BIENVENIDO ${nombre.toUpperCase()} · EP${gxEpActual} DESBLOQUEADO · ${diasSuscrito} DÍAS ACTIVO
-            </span>`;
-
-            // Mostrar portal
-            document.getElementById('portal-sinergia').style.display='block';
-
-            // Reemplazar form con mensaje de confirmación
-            const lf = document.getElementById('login-form');
-            lf.innerHTML = `<div style="color:#fbbf24;text-align:center;padding:8px;border:1px solid #78350f;font-weight:bold;font-size:8px;letter-spacing:1px;">
-                🔑 SISTEMA GX SINCRONIZADO · EP${gxEpActual} ACTIVO
-            </div>`;
-
-            // Cargar episodios
-            renderEpisodiosGX(gxEpActual);
-            loadGxThumbnail();
-
-            // Cargar el episodio actual automáticamente
-            playGxEp(gxEpActual - 1);
-        }
-
-        // ── MODALES ──
-        function openModal(id){document.getElementById('modal-'+id).classList.add('active');document.body.style.overflow='hidden';}
-        function closeModal(id){document.getElementById('modal-'+id).classList.remove('active');document.body.style.overflow='';}
-        function closeOnOverlay(e,id){if(e.target===e.currentTarget)closeModal(id);}
-        document.addEventListener('keydown',e=>{if(e.key==='Escape')['donaciones','suscripciones','colaboraciones'].forEach(closeModal);});
-
-        function selAmt(btn,val){
-            document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('sel'));
-            btn.classList.add('sel');
-            document.getElementById('custom-amt-row').style.display=val==='custom'?'flex':'none';
-        }
-
-        // Tier seleccionado
-        let tierSeleccionado='analyst';
-        function selTier(c,tier){
-            document.querySelectorAll('.tier-card').forEach(t=>t.style.outline='none');
-            c.style.outline='1px solid #36f4d0';
-            tierSeleccionado=tier;
-            document.getElementById('sus-info').style.display='block';
-            const btn = document.getElementById('sus-btn-paso2');
-            if(btn) btn.style.display='block';
-        }
-
-        function selCollab(b){document.querySelectorAll('.collab-chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}
-
-        // ── DONACIONES — PayPal y Nequi reales ──
-        function processDonacion(){
-            const metodo=document.querySelector('input[name="pay-don"]:checked').value;
-            const monto=document.querySelector('.amount-btn.sel')?.textContent||'';
-
-            if(metodo==='paypal'){
-                // Redirige a PayPal.me con el monto si está seleccionado
-                const montoNum=monto&&monto!=='OTRO'?monto.replace('$',''):'';
-                const url=montoNum
-                    ?`https://paypal.me/geosystemIntelligen/${montoNum}USD`
-                    :'https://paypal.me/geosystemIntelligen';
-                window.open(url,'_blank');
-            }
-            if(metodo==='nequi'){
-                // Abre WhatsApp con instrucciones de Nequi
-                const txt=encodeURIComponent('Hola, quiero hacer una DONACIÓN a Geosystem Intelligence por Nequi.\nNúmero: 3217889102\nMonto: '+monto+'\n¿Confirmas la recepción?');
-                window.open('https://wa.me/573217889102?text='+txt,'_blank');
-            }
-            document.getElementById('don-ok').classList.add('show');
-            setTimeout(()=>closeModal('donaciones'),3500);
-        }
-
-        // ── SUSCRIPCIONES — PayPal ──
-        const PRECIOS={observer:0,analyst:9,strategist:29};
-        function susPaso2(){
-            if(tierSeleccionado==='observer'){
-                alert('El plan OBSERVER es gratuito.\nAccede libremente a la terminal.');
-                closeModal('suscripciones');
-                return;
-            }
-            document.getElementById('sus-paso1').style.display='none';
-            document.getElementById('sus-paso2').style.display='block';
-        }
-
-        function susVolver(){
-            document.getElementById('sus-paso2').style.display='none';
-            document.getElementById('sus-paso1').style.display='block';
-        }
-
-        function processSus(){
-            const nombre   = document.getElementById('sus-nombre').value.trim();
-            const whatsapp = document.getElementById('sus-whatsapp').value.trim();
-            const email    = document.getElementById('sus-email').value.trim();
-            const pais     = document.getElementById('sus-pais').value.trim();
-            const precio   = PRECIOS[tierSeleccionado] || 9;
-            const plan     = tierSeleccionado.toUpperCase();
-            const fecha    = new Date().toLocaleDateString('es-CO');
-
-            if(!nombre || !whatsapp){
-                alert('Por favor completa tu nombre y WhatsApp para continuar.');
-                return;
-            }
-
-            // 1. Enviar notificación a WhatsApp del Emisario
-            const msgWa = encodeURIComponent(
-                '🔑 NUEVO SUSCRIPTOR GX
-' +
-                '─────────────────────
-' +
-                'Plan: ' + plan + ' — $' + precio + '/mes
-' +
-                'Nombre: ' + nombre + '
-' +
-                'WhatsApp: ' + whatsapp + '
-' +
-                'Email: ' + (email || 'No indicado') + '
-' +
-                'País: ' + (pais || 'No indicado') + '
-' +
-                'Fecha: ' + fecha + '
-' +
-                '─────────────────────
-' +
-                '> Pendiente confirmar pago y enviar CLAVE GX.'
-            );
-            window.open('https://wa.me/573217889102?text=' + msgWa, '_blank');
-
-            // 2. Redirigir a PayPal
-            setTimeout(() => {
-                window.open('https://paypal.me/geosystemIntelligen/' + precio + 'USD', '_blank');
-            }, 800);
-
-            // 3. Mostrar confirmación
-            document.getElementById('sus-paso2').style.display='none';
-            document.getElementById('sus-ok').classList.add('show');
-            setTimeout(() => closeModal('suscripciones'), 5000);
-        }
-
-        // ── COLABORACIONES — WhatsApp y Email ──
-        function processCollab(canal){
-            const nombre=document.getElementById('col-nombre').value||'Anónimo';
-            const contacto=document.getElementById('col-contacto').value||'No especificado';
-            const msg=document.getElementById('col-msg').value||'Sin mensaje';
-            const tipo=document.querySelector('.collab-chip.sel')?.textContent||'General';
-
-            if(canal==='wa'){
-                const txt=encodeURIComponent(
-                    '🤝 COLABORACIÓN GEOSYSTEM\n'+
-                    '─────────────────────\n'+
-                    'Tipo: '+tipo+'\n'+
-                    'Nombre: '+nombre+'\n'+
-                    'Contacto: '+contacto+'\n'+
-                    'Propuesta: '+msg
-                );
-                window.open('https://wa.me/573217889102?text='+txt,'_blank');
-            }
-            if(canal==='email'){
-                const asunto=encodeURIComponent('COLABORACIÓN GEOSYSTEM — '+tipo);
-                const cuerpo=encodeURIComponent(
-                    'Tipo: '+tipo+'\n'+
-                    'Nombre: '+nombre+'\n'+
-                    'Contacto: '+contacto+'\n\n'+
-                    'Propuesta:\n'+msg
-                );
-                window.open('mailto:geosystemintelligen@gmail.com?subject='+asunto+'&body='+cuerpo,'_blank');
-            }
-            document.getElementById('col-ok').classList.add('show');
-            setTimeout(()=>closeModal('colaboraciones'),3500);
-        }
-    </script>
+  </div>
+</div>
+
+<!-- MODAL COLABORACIONES -->
+<div class="modal-overlay" id="modal-colaboraciones" onclick="if(event.target===this)closeModal('colaboraciones')">
+  <div class="modal-box">
+    <div class="mhd"><div class="mhd-ttl" style="color:#00ff88;">[ COLABORACIONES ]</div><button class="mx" onclick="closeModal('colaboraciones')">✕</button></div>
+    <div class="mbody">
+      <div style="font-size:8px;color:#64748b;margin-bottom:8px;">> Tipo de colaboración:</div>
+      <div class="cchips">
+        <button class="cchip" onclick="selChip(this)">Análisis / Redacción</button>
+        <button class="cchip" onclick="selChip(this)">Desarrollo / Código</button>
+        <button class="cchip" onclick="selChip(this)">Datos / Fuentes</button>
+        <button class="cchip" onclick="selChip(this)">Traducción</button>
+        <button class="cchip" onclick="selChip(this)">Diseño / UX</button>
+        <button class="cchip" onclick="selChip(this)">Otro</button>
+      </div>
+      <div class="mlbl">// Tu nombre o alias</div>
+      <input class="minp" type="text" id="col-nombre" placeholder="Nombre de contacto">
+      <div class="mlbl">// Tu contacto (email o WhatsApp)</div>
+      <input class="minp" type="text" id="col-contacto" placeholder="Email / WhatsApp / Telegram">
+      <div class="mlbl">// Tu propuesta</div>
+      <textarea class="mtxt" id="col-msg" placeholder="> Describe tu propuesta de colaboración..."></textarea>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;">
+        <button class="mact m-grn" style="margin-top:0;" onclick="processCollab('wa')">📱 WHATSAPP</button>
+        <button class="mact" style="margin-top:0;border-color:var(--neon);color:var(--neon);background:rgba(54,244,208,.05);" onclick="processCollab('email')">📧 EMAIL</button>
+      </div>
+      <div class="m-ok" id="col-ok">> SOLICITUD ENVIADA · RESPUESTA EN 24-48H.</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// RELOJ
+function tick(){ document.getElementById('reloj').textContent=new Date().toLocaleTimeString('es-CO'); }
+setInterval(tick,1000); tick();
+
+// BOLSAS
+const BOLSAS=[
+  {r:'EEUU',  n:'NYSE/NASDAQ',tz:'America/New_York',a:{h:9,m:30},c:{h:16,m:0}, col:'#3b82f6',pre:{h:4,m:0}},
+  {r:'EUROPA',n:'XETRA/DAX',  tz:'Europe/Berlin',   a:{h:9,m:0}, c:{h:17,m:30},col:'#94a3b8',pre:null},
+  {r:'ASIA',  n:'TSE/NIKKEI', tz:'Asia/Tokyo',       a:{h:9,m:0}, c:{h:15,m:30},col:'#f87171',pre:null},
+  {r:'LATAM', n:'BVC/BMV',    tz:'America/Bogota',   a:{h:9,m:30},c:{h:16,m:0}, col:'#fbbf24',pre:null}
+];
+function lt(tz){ return new Intl.DateTimeFormat('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true,timeZone:tz}).format(new Date()); }
+function bSt(b){
+  const now=new Date();
+  const day=new Intl.DateTimeFormat('en-US',{weekday:'long',timeZone:b.tz}).format(now);
+  if(day==='Saturday'||day==='Sunday') return {e:'CERRADO',c:'closed'};
+  const p=new Intl.DateTimeFormat('en-US',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:b.tz}).formatToParts(now);
+  const h=parseInt(p.find(x=>x.type==='hour').value),m=parseInt(p.find(x=>x.type==='minute').value);
+  const t=h*60+m,ta=b.a.h*60+b.a.m,tc=b.c.h*60+b.c.m;
+  if(t>=ta&&t<tc) return {e:'ABIERTO',c:'open'};
+  if(b.pre){const tp=b.pre.h*60+b.pre.m;if(t>=tp&&t<ta)return {e:'PRE-MKT',c:'pre'};}
+  return {e:'CERRADO',c:'closed'};
+}
+function renderBolsas(){
+  document.getElementById('bolsas-widget').innerHTML=BOLSAS.map(b=>{
+    const {e,c}=bSt(b);
+    const hr=`${String(b.a.h).padStart(2,'0')}:${String(b.a.m).padStart(2,'0')}–${String(b.c.h).padStart(2,'0')}:${String(b.c.m).padStart(2,'0')}`;
+    return `<div class="bc" style="border-color:${b.col}33">
+      <div class="bc-region" style="color:${b.col}99">${b.r}</div>
+      <div class="bc-name" style="color:${b.col}">${b.n}</div>
+      <div class="bc-hora">${hr}<br>${lt(b.tz)}</div>
+      <div class="bc-status ${c}"><span class="dot ${c}"></span>${e}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('bolsas-ts').textContent='COL: '+lt('America/Bogota')+' · AUTO 30S';
+}
+renderBolsas(); setInterval(renderBolsas,30000);
+
+// VIDEO TX1
+function playTx(){
+  document.getElementById('tx1-thumb').style.display='none';
+  const f=document.getElementById('tx1-player');
+  f.src='https://www.youtube.com/embed/8Nx9Zrj1rXs?autoplay=1&rel=0&modestbranding=1';
+  f.style.display='block';
+}
+
+// COUNTDOWN
+const TARGET=new Date('2026-04-12T00:00:00');
+function updateCD(){
+  const diff=TARGET-new Date();
+  if(diff<=0){document.getElementById('cd02').innerHTML='<div style="color:#4ade80;font-size:8px;letter-spacing:2px;">● DISPONIBLE</div>';return;}
+  const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+  document.getElementById('cd02').innerHTML=
+    `<div class="cd-u"><div class="cd-n">${String(d).padStart(2,'0')}</div><div class="cd-l">DÍAS</div></div>
+     <div class="cd-u"><div class="cd-n">${String(h).padStart(2,'0')}</div><div class="cd-l">HORAS</div></div>
+     <div class="cd-u"><div class="cd-n">${String(m).padStart(2,'0')}</div><div class="cd-l">MIN</div></div>
+     <div class="cd-u"><div class="cd-n">${String(s).padStart(2,'0')}</div><div class="cd-l">SEG</div></div>`;
+}
+setInterval(updateCD,1000); updateCD();
+
+// MAPA
+function switchMap(id){
+  document.querySelectorAll('.map-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.map-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+// NOTICIAS
+const FEEDS={
+  global: 'https://feeds.bbci.co.uk/news/world/rss.xml',
+  latam:  'https://feeds.bbci.co.uk/mundo/rss.xml',
+  eeuu:   'https://rss.nytimes.com/services/xml/rss/nyt/US.xml',
+  europa: 'https://feeds.bbci.co.uk/news/world/europe/rss.xml',
+  asia:   'https://feeds.bbci.co.uk/news/world/asia/rss.xml'
+};
+let activeFeed='global';
+function loadNews(region,btn){
+  activeFeed=region;
+  document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const box=document.getElementById('news-box');
+  box.innerHTML='<div style="font-size:7px;color:#334155;padding:10px 0;">Cargando...</div>';
+  fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(FEEDS[region])+'&api_key=public&count=5')
+    .then(r=>r.json())
+    .then(d=>{
+      if(!d.items||!d.items.length){box.innerHTML='<div style="font-size:7px;color:#334155;padding:10px;">Sin resultados.</div>';return;}
+      box.innerHTML=d.items.map(i=>`<div class="ni"><div class="ni-src">${d.feed.title}</div><div class="ni-ttl"><a href="${i.link}" target="_blank">${i.title}</a></div><div class="ni-date">${new Date(i.pubDate).toLocaleString('es-CO')}</div></div>`).join('');
+      document.getElementById('news-ts').textContent='Actualizado: '+new Date().toLocaleTimeString('es-CO');
+    })
+    .catch(()=>{box.innerHTML='<div style="font-size:7px;color:#475569;padding:10px;">Error de conexión.</div>';});
+}
+loadNews('global',document.querySelector('.ntab.active'));
+setInterval(()=>loadNews(activeFeed),600000);
+
+// BUSCADOR
+const SRCS=[
+  {i:'📈',n:'TradingView',   u:'https://www.tradingview.com/chart/?symbol=',      t:'bolsas'},
+  {i:'📊',n:'Yahoo Finance', u:'https://finance.yahoo.com/search?q=',             t:'bolsas'},
+  {i:'💹',n:'Investing.com', u:'https://www.investing.com/search/?q=',            t:'bolsas'},
+  {i:'🌍',n:'Reuters',       u:'https://www.reuters.com/search/news?blob=',       t:'geo'},
+  {i:'📡',n:'Al Jazeera',    u:'https://www.aljazeera.com/search?q=',             t:'geo'},
+  {i:'📰',n:'BBC Mundo',     u:'https://www.bbc.com/mundo/search?q=',             t:'geo'},
+  {i:'₿', n:'CoinGecko',    u:'https://www.coingecko.com/en/search?q=',          t:'cripto'},
+  {i:'📉',n:'CoinMarketCap', u:'https://coinmarketcap.com/currencies/',           t:'cripto'},
+  {i:'💼',n:'Morningstar',   u:'https://www.morningstar.com/search#q=',           t:'portafolios'},
+  {i:'📋',n:'ETF.com',       u:'https://www.etf.com/etfanalytics/etf-finder?q=', t:'portafolios'},
+  {i:'🏦',n:'Interactive Brokers',u:'https://www.interactivebrokers.com/',        t:'brokers'},
+  {i:'📱',n:'eToro',         u:'https://www.etoro.com/es/markets/',               t:'brokers'},
+  {i:'🔥',n:'Google Trends', u:'https://trends.google.com/trends/explore?q=',    t:'tendencias'},
+  {i:'📰',n:'Google News',   u:'https://news.google.com/search?q=',              t:'tendencias'},
+];
+let activeCat='todo';
+function setCat(btn,cat){
+  document.querySelectorAll('.scat').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); activeCat=cat;
+  document.getElementById('s-res').classList.remove('show');
+}
+function doSearch(){
+  const q=document.getElementById('sq').value.trim();
+  if(!q)return;
+  const list=activeCat==='todo'?SRCS:SRCS.filter(s=>s.t===activeCat);
+  const box=document.getElementById('s-res');
+  box.innerHTML=list.map(s=>`<div class="s-item" onclick="window.open('${s.u}'+encodeURIComponent('${q.replace(/'/g,"\\'")}'),'_blank')">${s.i} ${s.n} — buscar "${q}"</div>`).join('');
+  box.classList.add('show');
+}
+
+// MODALES
+function openModal(id){document.getElementById('modal-'+id).classList.add('active');document.body.style.overflow='hidden';}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('active');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')['donaciones','suscripciones','colaboraciones'].forEach(closeModal);});
+
+// DONACIONES
+let donAmt='10';
+function selAmt(btn,val){
+  document.querySelectorAll('.amt').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel'); donAmt=val;
+  document.getElementById('don-custom-row').style.display=val==='custom'?'block':'none';
+}
+function processDon(){
+  const monto=donAmt==='custom'?(document.getElementById('don-custom').value||10):donAmt;
+  const msg=document.getElementById('don-msg').value;
+  const txt=encodeURIComponent('💛 DONACIÓN GEOSYSTEM\n─────────────────\nMonto: $'+monto+' USD\n'+(msg?'Mensaje: '+msg+'\n':'')+'Pago: PayPal o Nequi 3217889102');
+  window.open('https://wa.me/573217889102?text='+txt,'_blank');
+  setTimeout(()=>window.open('https://paypal.me/geosystemIntelligen/'+monto+'USD','_blank'),600);
+  document.getElementById('don-ok').classList.add('show');
+  setTimeout(()=>closeModal('donaciones'),4000);
+}
+
+// SUSCRIPCIONES
+let planSel='analyst';
+function selTier(tier){
+  planSel=tier;
+  ['observer','analyst','strategist'].forEach(t=>{
+    const el=document.getElementById('tc-'+t);
+    if(el)el.classList.toggle('sel',t===tier);
+  });
+}
+function susPaso2(){
+  if(planSel==='observer'){alert('El plan OBSERVER es gratuito. Accede libremente a la terminal.');closeModal('suscripciones');return;}
+  document.getElementById('sus-p1').style.display='none';
+  document.getElementById('sus-p2').style.display='block';
+}
+function susVolver(){
+  document.getElementById('sus-p2').style.display='none';
+  document.getElementById('sus-p1').style.display='block';
+}
+function processSus(){
+  const nombre=document.getElementById('sus-nombre').value.trim();
+  const wa=document.getElementById('sus-wa').value.trim();
+  const email=document.getElementById('sus-email').value.trim();
+  const pais=document.getElementById('sus-pais').value.trim();
+  if(!nombre||!wa){alert('Por favor ingresa tu nombre y WhatsApp.');return;}
+  const precio=planSel==='strategist'?29:9;
+  const txt=encodeURIComponent(
+    '🔑 NUEVO SUSCRIPTOR GX\n─────────────────────\n'+
+    'Plan: '+planSel.toUpperCase()+' — $'+precio+'/mes\n'+
+    'Nombre: '+nombre+'\nWhatsApp: '+wa+'\n'+
+    'Email: '+(email||'No indicado')+'\nPaís: '+(pais||'No indicado')+'\n'+
+    'Fecha: '+new Date().toLocaleDateString('es-CO')+'\n─────────────────────\n'+
+    '> Pendiente confirmar pago y enviar CLAVE GX.'
+  );
+  window.open('https://wa.me/573217889102?text='+txt,'_blank');
+  setTimeout(()=>window.open('https://paypal.me/geosystemIntelligen/'+precio+'USD','_blank'),800);
+  document.getElementById('sus-p2').style.display='none';
+  document.getElementById('sus-ok').classList.add('show');
+  setTimeout(()=>closeModal('suscripciones'),5000);
+}
+
+// COLABORACIONES
+function selChip(btn){document.querySelectorAll('.cchip').forEach(c=>c.classList.remove('sel'));btn.classList.add('sel');}
+function processCollab(canal){
+  const nombre=document.getElementById('col-nombre').value||'Anónimo';
+  const contacto=document.getElementById('col-contacto').value||'No especificado';
+  const msg=document.getElementById('col-msg').value||'Sin mensaje';
+  const tipo=document.querySelector('.cchip.sel')?.textContent||'General';
+  if(canal==='wa'){
+    window.open('https://wa.me/573217889102?text='+encodeURIComponent('🤝 COLABORACIÓN GEOSYSTEM\n─────────────────────\nTipo: '+tipo+'\nNombre: '+nombre+'\nContacto: '+contacto+'\nPropuesta: '+msg),'_blank');
+  } else {
+    window.open('mailto:geosystemintelligen@gmail.com?subject='+encodeURIComponent('COLABORACIÓN — '+tipo)+'&body='+encodeURIComponent('Tipo: '+tipo+'\nNombre: '+nombre+'\nContacto: '+contacto+'\nPropuesta: '+msg));
+  }
+  document.getElementById('col-ok').classList.add('show');
+  setTimeout(()=>closeModal('colaboraciones'),3500);
+}
+
+// ══════════ SISTEMA GX ══════════
+const GX_PLAYLIST=[
+  {ep:1,titulo:'REVELACIÓN DE FUENTES Y METODOLOGÍA',id:'9TWFmVYAP2E'},
+  {ep:2,titulo:'EL PORTAFOLIO DEL EMISARIO',          id:'ekQk42FzOvA'},
+  {ep:3,titulo:'GEOPOLÍTICA Y TU DINERO: CASO REAL',  id:'Z9QNJba3m1M'},
+];
+let gxEp=1;
+
+function parseKey(k){
+  if(k==='GX-8-7-IMMORTAL'||k==='GX-ADMIN-CAMILO') return {ok:true,nombre:'ADMIN',fecha:new Date('2020-01-01')};
+  const m=k.match(/^GX-(\d{4})-(\d{2})-(\d{2})-(.+)$/);
+  if(m) return {ok:true,fecha:new Date(m[1]+'-'+m[2]+'-'+m[3]),nombre:m[4]};
+  return {ok:false};
+}
+function calcEp(f){
+  return Math.min(Math.max(1,Math.floor((new Date()-f)/86400000/30)+1),GX_PLAYLIST.length);
+}
+function renderEps(cur){
+  document.getElementById('gx-eps').innerHTML=GX_PLAYLIST.map((ep,i)=>{
+    const ok=ep.ep<=cur, isCur=ep.ep===cur;
+    const cls=isCur?'cur':ok?'done':'lck';
+    const tag=isCur?'<span class="gx-tag t-live">ACTIVO</span>':ok?'<span class="gx-tag t-done">✓</span>':`<span class="gx-tag t-lck">EN ${(ep.ep-cur)*30}D</span>`;
+    const click=ok?`onclick="selectEp(${i})"` :'';
+    return `<div class="gx-ep ${cls}" ${click}>
+      <div class="gx-ep-n">${ok?(isCur?'▶':'✓'):'🔒'} EP${String(ep.ep).padStart(2,'0')}</div>
+      <div class="gx-ep-t">${ep.titulo}</div>${tag}
+    </div>`;
+  }).join('');
+}
+function selectEp(i){
+  const ep=GX_PLAYLIST[i]; if(!ep)return;
+  gxEp=ep.ep;
+  document.getElementById('gx-badge').textContent=`EP${String(ep.ep).padStart(2,'0')} · ${ep.titulo}`;
+  const img=document.getElementById('gx-img');
+  img.src=`https://img.youtube.com/vi/${ep.id}/maxresdefault.jpg`;
+  img.onerror=function(){this.src=`https://img.youtube.com/vi/${ep.id}/hqdefault.jpg`;};
+  document.getElementById('gx-player').style.display='none';
+  document.getElementById('gx-player').src='';
+  document.getElementById('gx-thumb').style.display='flex';
+  renderEps(ep.ep);
+  document.getElementById('gx-portal').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function playGX(){
+  const ep=GX_PLAYLIST[gxEp-1]||GX_PLAYLIST[0];
+  document.getElementById('gx-thumb').style.display='none';
+  const f=document.getElementById('gx-player');
+  f.src='https://www.youtube.com/embed/'+ep.id+'?autoplay=1&rel=0&modestbranding=1';
+  f.style.display='block';
+}
+function unlockGX(){
+  const raw=document.getElementById('pass-input').value.trim().toUpperCase();
+  const p=parseKey(raw);
+  if(!p.ok){alert('❌ CLAVE INCORRECTA\nVerifica tu clave GX e intenta de nuevo.');return;}
+  gxEp=calcEp(p.fecha);
+  const ep=GX_PLAYLIST[gxEp-1]||GX_PLAYLIST[0];
+  const dias=Math.floor((new Date()-p.fecha)/86400000);
+  const nombre=p.nombre.charAt(0)+p.nombre.slice(1).toLowerCase();
+  // Flash
+  document.body.classList.add('flashing');
+  setTimeout(()=>document.body.classList.remove('flashing'),500);
+  // Ocultar form, mostrar portal
+  document.getElementById('gx-form').style.display='none';
+  document.getElementById('gx-portal').style.display='block';
+  // Bienvenida
+  document.getElementById('gx-welcome').textContent='🔑 BIENVENIDO '+nombre.toUpperCase()+' · EP'+gxEp+' DESBLOQUEADO · '+dias+' DÍAS ACTIVO';
+  document.getElementById('gx-badge').textContent='EP'+String(ep.ep).padStart(2,'0')+' · '+ep.titulo;
+  // Thumbnail
+  const img=document.getElementById('gx-img');
+  img.src='https://img.youtube.com/vi/'+ep.id+'/maxresdefault.jpg';
+  img.onerror=function(){this.src='https://img.youtube.com/vi/'+ep.id+'/hqdefault.jpg';};
+  // Episodios
+  renderEps(gxEp);
+  // Scroll
+  setTimeout(()=>document.getElementById('gx-portal').scrollIntoView({behavior:'smooth',block:'start'}),300);
+}
+
+// EMISARIO IA
+function usarSug(btn){document.getElementById('ia-inp').value=btn.textContent;}
+async function enviarIA(){
+  const inp=document.getElementById('ia-inp');
+  const msg=inp.value.trim(); if(!msg)return;
+  const msgs=document.getElementById('ia-msgs');
+  const btn=document.getElementById('ia-btn');
+  msgs.innerHTML+=`<div class="mu">${msg}</div>`;
+  inp.value=''; btn.disabled=true; btn.textContent='...';
+  msgs.scrollTop=msgs.scrollHeight;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':'sk-ant-api03-xQQ-Sg5NpyuhXWskHkuZC3_uU5N16iTOAhKAACUn_6-hZKzKOKofEaOf38n7GAJB3dZXWrLpAkdULQ1WbSk3AA-pQishAAA',
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({
+        model:'claude-haiku-4-5-20251001',
+        max_tokens:600,
+        system:'Eres EMISARIO_IA, asistente geopolítico y financiero de GEOSYSTEM. Responde en español, directo y técnico. Especialista en mercados globales, geopolítica, inversiones en LATAM y protección de capital. Máximo 4 párrafos.',
+        messages:[{role:'user',content:msg}]
+      })
+    });
+    const data=await res.json();
+    const reply=data.content?.[0]?.text||'Sin respuesta.';
+    msgs.innerHTML+=`<div class="ma"><span style="color:var(--neon);">EMISARIO_IA</span><br>${reply.replace(/\n/g,'<br>')}</div>`;
+  } catch(e){
+    msgs.innerHTML+=`<div class="ma" style="color:#ef4444;">ERROR DE CONEXIÓN · Verifica tu API key.</div>`;
+  }
+  btn.disabled=false; btn.textContent='ENVIAR ▶';
+  msgs.scrollTop=msgs.scrollHeight;
+}
+</script>
 </body>
 </html>
