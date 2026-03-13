@@ -272,32 +272,6 @@
     </div>
 
 
-    <!-- BUSCADOR INTEL -->
-    <div class="grid-node mb-3" style="border-color:rgba(54,244,208,0.25);">
-        <span class="label-node">🔍 BUSCADOR_INTEL // ACCESO_UNIVERSAL</span>
-        <div class="search-wrap">
-            <input class="search-input" id="search-input" type="text"
-                placeholder="🔍  Busca bolsas, geopolítica, portafolios, brokers, criptos..."
-                onkeydown="if(event.key==='Enter') runSearch()"
-                oninput="updateSearchSuggestions(this.value)">
-            <button class="search-btn" onclick="runSearch()">BUSCAR ▶</button>
-        </div>
-
-        <!-- Categorías rápidas -->
-        <div class="search-cats" id="search-cats">
-            <button class="search-cat active" onclick="setCat(this,'all')"          >🌐 TODO</button>
-            <button class="search-cat"         onclick="setCat(this,'bolsas')"       >📈 BOLSAS</button>
-            <button class="search-cat"         onclick="setCat(this,'geopolitica')"  >🌍 GEOPOLÍTICA</button>
-            <button class="search-cat"         onclick="setCat(this,'crypto')"       >₿ CRIPTO</button>
-            <button class="search-cat"         onclick="setCat(this,'portafolios')"  >💼 PORTAFOLIOS</button>
-            <button class="search-cat"         onclick="setCat(this,'brokers')"      >🏦 BROKERS</button>
-            <button class="search-cat"         onclick="setCat(this,'tendencias')"   >🔥 TENDENCIAS</button>
-        </div>
-
-        <!-- Resultados -->
-        <div class="search-results" id="search-results"></div>
-    </div>
-
     <!-- ÍNDICES -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
         <div class="grid-node border-l-2 border-l-orange-500"><span class="label-node">ENERGÍA (WTI OIL)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=TVC%3AUSOIL&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
@@ -307,107 +281,6 @@
         <div class="grid-node border-l-2 border-l-zinc-100"><span class="label-node">EU_ZONE (DAX)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=INDEX%3ADAX&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
         <div class="grid-node border-l-2 border-l-yellow-600"><span class="label-node">LATAM_ZONE (ILF)</span><iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=AMEX%3AILF&theme=dark" class="w-full h-28" frameborder="0"></iframe></div>
     </div>
-
-    <!-- INTELIGENCIA + VALIDACIÓN -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
-            <span class="label-node">CENTRO_DE_INTELIGENCIA_IA</span>
-            <div id="terminal-msg" class="h-8 text-[7px] text-zinc-500 italic mb-2">> SISTEMA LISTO PARA VALIDACIÓN...</div>
-
-            <!-- VIDEO PÚBLICO — visible para todos -->
-            <div id="video-publico" style="margin-bottom:8px;">
-                <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:4px;">▶ TRANSMISIÓN LIBRE // ACCESO PÚBLICO</div>
-                <div style="position:relative;width:100%;aspect-ratio:16/9;background:#000;border:1px solid #1e293b;overflow:hidden;">
-                    <div id="pub-thumb" style="position:relative;cursor:pointer;width:100%;height:100%;" onclick="playPublicVideo()">
-                        <img src="https://img.youtube.com/vi/8Nx9Zrj1rXs/maxresdefault.jpg"
-                             style="width:100%;height:100%;object-fit:cover;opacity:0.65;"
-                             onerror="this.src='https://img.youtube.com/vi/8Nx9Zrj1rXs/hqdefault.jpg'">
-                        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
-                            <div style="width:52px;height:52px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(255,0,0,0.5);">
-                                <div style="width:0;height:0;border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent #fff;margin-left:3px;"></div>
-                            </div>
-                            <div style="font-size:7px;letter-spacing:2px;color:#36f4d0;">▶ MANIFIESTO GEOSYSTEM</div>
-                        </div>
-                    </div>
-                    <iframe id="pub-player" src="" frameborder="0" allow="autoplay;fullscreen;encrypted-media" allowfullscreen
-                        style="display:none;position:absolute;inset:0;width:100%;height:100%;"></iframe>
-                </div>
-            </div>
-
-            <!-- VIDEO GX — solo post clave -->
-            <div id="portal-sinergia" class="hidden">
-                <!-- BADGE EXCLUSIVO GX -->
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
-                    <div style="font-size:6px;letter-spacing:2px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 8px;animation:pulse-amber 2s infinite;">🔑 ACCESO_GX // TRANSMISIÓN CLASIFICADA</div>
-                    <div id="gx-ep-badge" style="font-size:6px;color:#94a3b8;letter-spacing:1px;">EP01 · CARGANDO...</div>
-                </div>
-                <div class="border bg-black mb-3" style="position:relative;border-color:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,0.15);">
-                    <div id="yt-thumb" style="position:relative;cursor:pointer;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;" onclick="playVideo()">
-                        <!-- Thumbnail del video GX exclusivo -->
-                        <img id="gx-thumb-img" src="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
-                        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3);"></div>
-                        <div style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px;">
-                            <div style="width:64px;height:64px;background:rgba(251,191,36,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(251,191,36,0.6);">
-                                <div style="width:0;height:0;border-style:solid;border-width:12px 0 12px 22px;border-color:transparent transparent transparent #000;margin-left:4px;"></div>
-                            </div>
-                            <div style="font-size:8px;letter-spacing:2px;color:#fbbf24;text-shadow:0 0 10px #fbbf24;">▶ TRANSMISIÓN EXCLUSIVA GX</div>
-                        </div>
-                    </div>
-                    <iframe id="yt-player" src="" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen style="display:none;width:100%;aspect-ratio:16/9;"></iframe>
-                </div>
-                <!-- LISTA DE EPISODIOS GX -->
-                <div style="margin-bottom:10px;">
-                    <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:6px;">📋 TUS EPISODIOS GX</div>
-                    <div id="gx-episodios" style="display:flex;flex-direction:column;gap:4px;">
-                        <div style="font-size:7px;color:#334155;font-style:italic;">Cargando episodios...</div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-2 mb-3">
-                    <button class="btn-don" onclick="openModal('donaciones')">DONACIONES</button>
-                    <button class="btn-sus" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
-                    <button class="btn-col" onclick="openModal('colaboraciones')">COLABORACIONES</button>
-                </div>
-                <!-- ASISTENTE IA GX -->
-                <div style="border:1px solid rgba(54,244,208,0.3);background:#020617;padding:8px;">
-                    <div style="font-size:8px;font-weight:bold;letter-spacing:2px;color:#36f4d0;border-bottom:1px solid rgba(54,244,208,0.2);padding-bottom:5px;margin-bottom:8px;">🤖 EMISARIO_IA // ASISTENTE GEOPOLÍTICO</div>
-                    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
-                        <button class="sug-btn" onclick="usarSugerencia(this)">📈 ¿Cómo armo un portafolio?</button>
-                        <button class="sug-btn" onclick="usarSugerencia(this)">🌍 ¿Dónde vivir en LATAM?</button>
-                        <button class="sug-btn" onclick="usarSugerencia(this)">💰 ¿Cómo protejo mi capital?</button>
-                        <button class="sug-btn" onclick="usarSugerencia(this)">📊 ¿Qué índice monitorear hoy?</button>
-                    </div>
-                    <div id="ia-messages" style="height:200px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;padding:4px 0;">
-                        <div class="msg-ia"><span style="color:#36f4d0;">EMISARIO_IA</span><br>Sistema activo. Puedo ayudarte con mercados, portafolios, geopolítica e inversiones en LATAM. ¿Cuál es tu consulta?</div>
-                    </div>
-                    <div style="display:flex;gap:6px;align-items:flex-end;">
-                        <textarea id="ia-input" placeholder="> Escribe tu consulta al Emisario..."
-                            style="flex:1;font-family:'JetBrains Mono',monospace;font-size:8px;background:#080c10;border:1px solid #1e293b;color:#cce0f0;padding:7px 9px;outline:none;resize:none;height:36px;line-height:1.4;"
-                            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMensaje();}"></textarea>
-                        <button onclick="enviarMensaje()" id="ia-send-btn"
-                            style="background:#36f4d0;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:bold;letter-spacing:1px;padding:8px 12px;border:none;cursor:pointer;height:36px;">
-                            ENVIAR ▶
-                        </button>
-                    </div>
-                    <div style="font-size:6px;color:#334155;margin-top:4px;letter-spacing:1px;">ENTER para enviar · Solo accesible con clave GX</div>
-                </div>
-            </div>
-        </div>
-        <div class="grid-node border-yellow-900 bg-yellow-950/10">
-            <span class="label-node text-yellow-500 italic text-center">VALIDACIÓN_GX</span>
-            <div id="login-form">
-                <input type="text" id="pass-input" placeholder="INGRESE CLAVE GX"
-                    class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 mb-2 text-[8px] outline-none uppercase">
-                <button onclick="unlockSystem()"
-                    class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] uppercase hover:bg-white active:scale-95 transition">
-                    SINCRONIZAR
-                </button>
-            </div>
-        </div>
-    </div>
-
-
-
 
     <!-- TRANSMISIONES CLASIFICADAS -->
     <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.25);">
@@ -611,6 +484,113 @@
             <span style="font-size:7px;color:#475569;font-style:italic;">> Conectando con fuentes regionales...</span>
         </div>
     </div>
+
+    <!-- BUSCADOR INTEL -->
+    <div class="grid-node mb-3" style="border-color:rgba(54,244,208,0.25);">
+        <span class="label-node">🔍 BUSCADOR_INTEL // ACCESO_UNIVERSAL</span>
+        <div class="search-wrap">
+            <input class="search-input" id="search-input" type="text"
+                placeholder="🔍  Busca bolsas, geopolítica, portafolios, brokers, criptos..."
+                onkeydown="if(event.key==='Enter') runSearch()"
+                oninput="updateSearchSuggestions(this.value)">
+            <button class="search-btn" onclick="runSearch()">BUSCAR ▶</button>
+        </div>
+
+        <!-- Categorías rápidas -->
+        <div class="search-cats" id="search-cats">
+            <button class="search-cat active" onclick="setCat(this,'all')"          >🌐 TODO</button>
+            <button class="search-cat"         onclick="setCat(this,'bolsas')"       >📈 BOLSAS</button>
+            <button class="search-cat"         onclick="setCat(this,'geopolitica')"  >🌍 GEOPOLÍTICA</button>
+            <button class="search-cat"         onclick="setCat(this,'crypto')"       >₿ CRIPTO</button>
+            <button class="search-cat"         onclick="setCat(this,'portafolios')"  >💼 PORTAFOLIOS</button>
+            <button class="search-cat"         onclick="setCat(this,'brokers')"      >🏦 BROKERS</button>
+            <button class="search-cat"         onclick="setCat(this,'tendencias')"   >🔥 TENDENCIAS</button>
+        </div>
+
+        <!-- Resultados -->
+        <div class="search-results" id="search-results"></div>
+    </div>
+
+    <!-- INTELIGENCIA + VALIDACIÓN -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
+            <span class="label-node">CENTRO_DE_INTELIGENCIA_IA</span>
+            <div id="terminal-msg" class="h-8 text-[7px] text-zinc-500 italic mb-2">> SISTEMA LISTO PARA VALIDACIÓN...</div>
+
+            <!-- VIDEO GX — solo post clave -->
+            <div id="portal-sinergia" class="hidden">
+                <!-- BADGE EXCLUSIVO GX -->
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
+                    <div style="font-size:6px;letter-spacing:2px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 8px;animation:pulse-amber 2s infinite;">🔑 ACCESO_GX // TRANSMISIÓN CLASIFICADA</div>
+                    <div id="gx-ep-badge" style="font-size:6px;color:#94a3b8;letter-spacing:1px;">EP01 · CARGANDO...</div>
+                </div>
+                <div class="border bg-black mb-3" style="position:relative;border-color:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,0.15);">
+                    <div id="yt-thumb" style="position:relative;cursor:pointer;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;" onclick="playVideo()">
+                        <!-- Thumbnail del video GX exclusivo -->
+                        <img id="gx-thumb-img" src="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
+                        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3);"></div>
+                        <div style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px;">
+                            <div style="width:64px;height:64px;background:rgba(251,191,36,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(251,191,36,0.6);">
+                                <div style="width:0;height:0;border-style:solid;border-width:12px 0 12px 22px;border-color:transparent transparent transparent #000;margin-left:4px;"></div>
+                            </div>
+                            <div style="font-size:8px;letter-spacing:2px;color:#fbbf24;text-shadow:0 0 10px #fbbf24;">▶ TRANSMISIÓN EXCLUSIVA GX</div>
+                        </div>
+                    </div>
+                    <iframe id="yt-player" src="" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen style="display:none;width:100%;aspect-ratio:16/9;"></iframe>
+                </div>
+                <!-- LISTA DE EPISODIOS GX -->
+                <div style="margin-bottom:10px;">
+                    <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:6px;">📋 TUS EPISODIOS GX</div>
+                    <div id="gx-episodios" style="display:flex;flex-direction:column;gap:4px;">
+                        <div style="font-size:7px;color:#334155;font-style:italic;">Cargando episodios...</div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-2 mb-3">
+                    <button class="btn-don" onclick="openModal('donaciones')">DONACIONES</button>
+                    <button class="btn-sus" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
+                    <button class="btn-col" onclick="openModal('colaboraciones')">COLABORACIONES</button>
+                </div>
+                <!-- ASISTENTE IA GX -->
+                <div style="border:1px solid rgba(54,244,208,0.3);background:#020617;padding:8px;">
+                    <div style="font-size:8px;font-weight:bold;letter-spacing:2px;color:#36f4d0;border-bottom:1px solid rgba(54,244,208,0.2);padding-bottom:5px;margin-bottom:8px;">🤖 EMISARIO_IA // ASISTENTE GEOPOLÍTICO</div>
+                    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
+                        <button class="sug-btn" onclick="usarSugerencia(this)">📈 ¿Cómo armo un portafolio?</button>
+                        <button class="sug-btn" onclick="usarSugerencia(this)">🌍 ¿Dónde vivir en LATAM?</button>
+                        <button class="sug-btn" onclick="usarSugerencia(this)">💰 ¿Cómo protejo mi capital?</button>
+                        <button class="sug-btn" onclick="usarSugerencia(this)">📊 ¿Qué índice monitorear hoy?</button>
+                    </div>
+                    <div id="ia-messages" style="height:200px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;padding:4px 0;">
+                        <div class="msg-ia"><span style="color:#36f4d0;">EMISARIO_IA</span><br>Sistema activo. Puedo ayudarte con mercados, portafolios, geopolítica e inversiones en LATAM. ¿Cuál es tu consulta?</div>
+                    </div>
+                    <div style="display:flex;gap:6px;align-items:flex-end;">
+                        <textarea id="ia-input" placeholder="> Escribe tu consulta al Emisario..."
+                            style="flex:1;font-family:'JetBrains Mono',monospace;font-size:8px;background:#080c10;border:1px solid #1e293b;color:#cce0f0;padding:7px 9px;outline:none;resize:none;height:36px;line-height:1.4;"
+                            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMensaje();}"></textarea>
+                        <button onclick="enviarMensaje()" id="ia-send-btn"
+                            style="background:#36f4d0;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:bold;letter-spacing:1px;padding:8px 12px;border:none;cursor:pointer;height:36px;">
+                            ENVIAR ▶
+                        </button>
+                    </div>
+                    <div style="font-size:6px;color:#334155;margin-top:4px;letter-spacing:1px;">ENTER para enviar · Solo accesible con clave GX</div>
+                </div>
+            </div>
+        </div>
+        <div class="grid-node border-yellow-900 bg-yellow-950/10">
+            <span class="label-node text-yellow-500 italic text-center">VALIDACIÓN_GX</span>
+            <div id="login-form">
+                <input type="text" id="pass-input" placeholder="INGRESE CLAVE GX"
+                    class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 mb-2 text-[8px] outline-none uppercase">
+                <button onclick="unlockSystem()"
+                    class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] uppercase hover:bg-white active:scale-95 transition">
+                    SINCRONIZAR
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
 
     <!-- ═══════════════════════════════ -->
     <!-- MODAL DONACIONES               -->
