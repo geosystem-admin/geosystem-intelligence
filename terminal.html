@@ -511,11 +511,45 @@
         <div class="search-results" id="search-results"></div>
     </div>
 
-    <!-- INTELIGENCIA + VALIDACIÓN -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <div class="md:col-span-2 grid-node border-cyan-700 bg-black/60">
-            <span class="label-node">CENTRO_DE_INTELIGENCIA_IA</span>
-            <div id="terminal-msg" class="h-8 text-[7px] text-zinc-500 italic mb-2">> SISTEMA LISTO PARA VALIDACIÓN...</div>
+    <!-- ZONA FINAL — APOYO + ACCESO GX -->
+    <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.2);">
+
+        <!-- BOTONES PÚBLICOS -->
+        <span class="label-node">APOYA_GEOSYSTEM // ACCESO_LIBRE</span>
+        <div style="font-size:7px;color:#475569;margin-bottom:10px;letter-spacing:1px;">
+            > Si el contenido te aporta valor, apoya el proyecto o suscríbete para acceder al material exclusivo GX.
+        </div>
+        <div class="grid grid-cols-3 gap-2 mb-4">
+            <button class="btn-don" onclick="openModal('donaciones')">DONACIONES</button>
+            <button class="btn-sus" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
+            <button class="btn-col" onclick="openModal('colaboraciones')">COLABORACIONES</button>
+        </div>
+
+        <!-- SEPARADOR -->
+        <div style="border-top:1px solid #1e293b;margin-bottom:14px;"></div>
+
+        <!-- VALIDACIÓN GX -->
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+            <span style="font-size:7px;letter-spacing:2px;color:#fbbf24;font-weight:bold;">🔑 VALIDACIÓN_GX</span>
+            <span style="font-size:6px;color:#334155;letter-spacing:1px;">// INGRESA TU CLAVE PARA ACCEDER AL CONTENIDO EXCLUSIVO</span>
+        </div>
+        <div id="login-form" style="display:flex;gap:6px;align-items:stretch;">
+            <input type="text" id="pass-input" placeholder="GX-YYYY-MM-DD-NOMBRE"
+                style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;background:#000;border:1px solid #78350f;color:#fbbf24;padding:10px 12px;outline:none;text-transform:uppercase;letter-spacing:2px;">
+            <button onclick="unlockSystem()"
+                style="background:#fbbf24;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:900;letter-spacing:2px;padding:10px 16px;border:none;cursor:pointer;white-space:nowrap;transition:all .2s;"
+                onmouseover="this.style.background='#fde68a'" onmouseout="this.style.background='#fbbf24'">
+                SINCRONIZAR ▶
+            </button>
+        </div>
+        <div style="font-size:6px;color:#334155;margin-top:5px;letter-spacing:1px;">
+            > ¿Aún no tienes clave? Suscríbete arriba y la recibirás por WhatsApp en menos de 24h.
+        </div>
+
+        <!-- CONTENIDO GX POST-UNLOCK -->
+        <div id="portal-sinergia" class="hidden" style="margin-top:14px;border-top:1px solid rgba(251,191,36,0.2);padding-top:12px;">
+            <span class="label-node" style="color:#fbbf24;border-color:rgba(251,191,36,0.3);">CENTRO_DE_INTELIGENCIA_IA // ZONA_GX</span>
+            <div id="terminal-msg" style="font-size:7px;color:#475569;margin-bottom:8px;font-style:italic;">> NÚCLEO ACTIVO. BIENVENIDO EMISARIO.</div>
 
             <!-- VIDEO GX — solo post clave -->
             <div id="portal-sinergia" class="hidden">
@@ -526,7 +560,6 @@
                 </div>
                 <div class="border bg-black mb-3" style="position:relative;border-color:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,0.15);">
                     <div id="yt-thumb" style="position:relative;cursor:pointer;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;" onclick="playVideo()">
-                        <!-- Thumbnail del video GX exclusivo -->
                         <img id="gx-thumb-img" src="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
                         <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3);"></div>
                         <div style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px;">
@@ -544,12 +577,6 @@
                     <div id="gx-episodios" style="display:flex;flex-direction:column;gap:4px;">
                         <div style="font-size:7px;color:#334155;font-style:italic;">Cargando episodios...</div>
                     </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-2 mb-3">
-                    <button class="btn-don" onclick="openModal('donaciones')">DONACIONES</button>
-                    <button class="btn-sus" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
-                    <button class="btn-col" onclick="openModal('colaboraciones')">COLABORACIONES</button>
                 </div>
                 <!-- ASISTENTE IA GX -->
                 <div style="border:1px solid rgba(54,244,208,0.3);background:#020617;padding:8px;">
@@ -574,17 +601,6 @@
                     </div>
                     <div style="font-size:6px;color:#334155;margin-top:4px;letter-spacing:1px;">ENTER para enviar · Solo accesible con clave GX</div>
                 </div>
-            </div>
-        </div>
-        <div class="grid-node border-yellow-900 bg-yellow-950/10">
-            <span class="label-node text-yellow-500 italic text-center">VALIDACIÓN_GX</span>
-            <div id="login-form">
-                <input type="text" id="pass-input" placeholder="INGRESE CLAVE GX"
-                    class="w-full bg-black border border-zinc-800 p-2 text-cyan-400 mb-2 text-[8px] outline-none uppercase">
-                <button onclick="unlockSystem()"
-                    class="w-full bg-[#36f4d0] text-black font-black p-2 text-[8px] uppercase hover:bg-white active:scale-95 transition">
-                    SINCRONIZAR
-                </button>
             </div>
         </div>
     </div>
@@ -648,35 +664,70 @@
                 <button class="modal-x" onclick="closeModal('suscripciones')">✕</button>
             </div>
             <div class="modal-body">
-                <div style="font-size:8px;color:#64748b;margin-bottom:10px;">> Selecciona tu nivel de acceso:</div>
 
-                <div class="tier-card" onclick="selTier(this,'observer')">
-                    <div class="tier-name">OBSERVER</div>
-                    <div class="tier-price">$0 <span>/ mes</span></div>
-                    <ul class="tier-feats"><li>Acceso básico al feed</li><li>Alertas geopolíticas generales</li></ul>
-                </div>
-                <div class="tier-card featured" onclick="selTier(this,'analyst')">
-                    <div class="tier-badge">RECOMENDADO</div>
-                    <div class="tier-name">ANALYST</div>
-                    <div class="tier-price">$9 <span>/ mes</span></div>
-                    <ul class="tier-feats"><li>Índices en tiempo real</li><li>Canal del emisario desbloqueado</li><li>Informes semanales exclusivos</li></ul>
-                </div>
-                <div class="tier-card" onclick="selTier(this,'strategist')">
-                    <div class="tier-name">STRATEGIST</div>
-                    <div class="tier-price">$29 <span>/ mes</span></div>
-                    <ul class="tier-feats"><li>Todo ANALYST incluido</li><li>Briefings clasificados</li><li>Soporte prioritario directo</li></ul>
+                <!-- PASO 1: SELECCIONAR PLAN -->
+                <div id="sus-paso1">
+                    <div style="font-size:8px;color:#64748b;margin-bottom:10px;">> Paso 1: Selecciona tu nivel de acceso:</div>
+                    <div class="tier-card" onclick="selTier(this,'observer')">
+                        <div class="tier-name">OBSERVER</div>
+                        <div class="tier-price">$0 <span>/ mes</span></div>
+                        <ul class="tier-feats"><li>Acceso básico al feed</li><li>Indicadores y noticias</li></ul>
+                    </div>
+                    <div class="tier-card featured" onclick="selTier(this,'analyst')">
+                        <div class="tier-badge">RECOMENDADO</div>
+                        <div class="tier-name">ANALYST</div>
+                        <div class="tier-price">$9 <span>/ mes</span></div>
+                        <ul class="tier-feats"><li>EMISARIO_IA desbloqueado</li><li>Episodios GX exclusivos</li><li>Clave GX personal</li></ul>
+                    </div>
+                    <div class="tier-card" onclick="selTier(this,'strategist')">
+                        <div class="tier-name">STRATEGIST</div>
+                        <div class="tier-price">$29 <span>/ mes</span></div>
+                        <ul class="tier-feats"><li>Todo ANALYST incluido</li><li>Contacto directo con el Emisario</li><li>Estrategia personalizada</li></ul>
+                    </div>
+                    <div class="m-info" id="sus-info" style="display:none;">
+                        > Serás redirigido a PayPal para completar el pago.
+                    </div>
+                    <button class="m-action m-cyan" onclick="susPaso2()" id="sus-btn-paso2" style="display:none;">
+                        > CONTINUAR CON REGISTRO ▶
+                    </button>
                 </div>
 
-                <div class="m-info" id="sus-info" style="display:none;">
-                    > Serás redirigido a PayPal para completar el pago de forma segura.
+                <!-- PASO 2: FORMULARIO DE REGISTRO -->
+                <div id="sus-paso2" style="display:none;">
+                    <div style="font-size:8px;color:#36f4d0;margin-bottom:10px;letter-spacing:1px;">> Paso 2: Completa tu registro para recibir la CLAVE GX</div>
+
+                    <span class="m-label" style="color:#36f4d0;">// Tu nombre completo</span>
+                    <input class="m-input" type="text" id="sus-nombre" placeholder="Nombre completo">
+
+                    <span class="m-label" style="color:#36f4d0;">// Tu WhatsApp (con código de país)</span>
+                    <input class="m-input" type="tel" id="sus-whatsapp" placeholder="+57 321 000 0000">
+
+                    <span class="m-label" style="color:#36f4d0;">// Tu email</span>
+                    <input class="m-input" type="email" id="sus-email" placeholder="tu@email.com">
+
+                    <span class="m-label" style="color:#36f4d0;">// País de residencia</span>
+                    <input class="m-input" type="text" id="sus-pais" placeholder="Colombia / Venezuela / México...">
+
+                    <div style="border:1px solid rgba(54,244,208,0.2);background:rgba(54,244,208,0.03);padding:8px;margin:10px 0;font-size:7px;color:#475569;line-height:1.7;">
+                        > Después de registrarte serás redirigido a PayPal para completar el pago.<br>
+                        > Una vez confirmado el pago, recibirás tu CLAVE GX en menos de 24 horas por WhatsApp.
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;">
+                        <button class="m-action" style="margin-top:0;border-color:#334155;color:#475569;background:transparent;font-size:7px;" onclick="susVolver()">
+                            ← VOLVER
+                        </button>
+                        <button class="m-action m-cyan" style="margin-top:0;" onclick="processSus()">
+                            > PAGAR Y REGISTRAR ▶
+                        </button>
+                    </div>
                 </div>
 
-                <button class="m-action m-cyan" onclick="processSus()">
-                    > ACTIVAR SUSCRIPCIÓN
-                </button>
+                <!-- PASO 3: CONFIRMACIÓN -->
                 <div class="m-success" id="sus-ok">
+                    > REGISTRO RECIBIDO.<br>
                     > REDIRIGIENDO A PAYPAL...<br>
-                    > BIENVENIDO AL SISTEMA GEOSYSTEM.
+                    > RECIBIRÁS TU CLAVE GX EN MENOS DE 24H POR WHATSAPP.
                 </div>
             </div>
         </div>
@@ -1268,7 +1319,7 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
 
             // Mostrar portal
             document.getElementById('portal-sinergia').classList.remove('hidden');
-            document.getElementById('login-form').innerHTML =
+            document.getElementById('login-form').style.display='none'; document.getElementById('login-form').innerHTML =
                 `<div style="color:#fbbf24;text-align:center;padding:8px;border:1px solid #78350f;font-weight:bold;font-size:8px;letter-spacing:1px;">
                     🔑 SISTEMA GX SINCRONIZADO · EP${gxEpActual} ACTIVO
                 </div>`;
@@ -1300,6 +1351,8 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
             c.style.outline='1px solid #36f4d0';
             tierSeleccionado=tier;
             document.getElementById('sus-info').style.display='block';
+            const btn = document.getElementById('sus-btn-paso2');
+            if(btn) btn.style.display='block';
         }
 
         function selCollab(b){document.querySelectorAll('.collab-chip').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');}
@@ -1328,18 +1381,68 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
 
         // ── SUSCRIPCIONES — PayPal ──
         const PRECIOS={observer:0,analyst:9,strategist:29};
-        function processSus(){
-            const precio=PRECIOS[tierSeleccionado]||9;
-            if(precio===0){
-                alert('El plan OBSERVER es gratuito.\nAccede directamente con tu clave GX.');
+        function susPaso2(){
+            if(tierSeleccionado==='observer'){
+                alert('El plan OBSERVER es gratuito.\nAccede libremente a la terminal.');
                 closeModal('suscripciones');
                 return;
             }
-            // Redirige a PayPal con el monto de la suscripción
-            const url=`https://paypal.me/geosystemIntelligen/${precio}USD`;
-            window.open(url,'_blank');
+            document.getElementById('sus-paso1').style.display='none';
+            document.getElementById('sus-paso2').style.display='block';
+        }
+
+        function susVolver(){
+            document.getElementById('sus-paso2').style.display='none';
+            document.getElementById('sus-paso1').style.display='block';
+        }
+
+        function processSus(){
+            const nombre   = document.getElementById('sus-nombre').value.trim();
+            const whatsapp = document.getElementById('sus-whatsapp').value.trim();
+            const email    = document.getElementById('sus-email').value.trim();
+            const pais     = document.getElementById('sus-pais').value.trim();
+            const precio   = PRECIOS[tierSeleccionado] || 9;
+            const plan     = tierSeleccionado.toUpperCase();
+            const fecha    = new Date().toLocaleDateString('es-CO');
+
+            if(!nombre || !whatsapp){
+                alert('Por favor completa tu nombre y WhatsApp para continuar.');
+                return;
+            }
+
+            // 1. Enviar notificación a WhatsApp del Emisario
+            const msgWa = encodeURIComponent(
+                '🔑 NUEVO SUSCRIPTOR GX
+' +
+                '─────────────────────
+' +
+                'Plan: ' + plan + ' — $' + precio + '/mes
+' +
+                'Nombre: ' + nombre + '
+' +
+                'WhatsApp: ' + whatsapp + '
+' +
+                'Email: ' + (email || 'No indicado') + '
+' +
+                'País: ' + (pais || 'No indicado') + '
+' +
+                'Fecha: ' + fecha + '
+' +
+                '─────────────────────
+' +
+                '> Pendiente confirmar pago y enviar CLAVE GX.'
+            );
+            window.open('https://wa.me/573217889102?text=' + msgWa, '_blank');
+
+            // 2. Redirigir a PayPal
+            setTimeout(() => {
+                window.open('https://paypal.me/geosystemIntelligen/' + precio + 'USD', '_blank');
+            }, 800);
+
+            // 3. Mostrar confirmación
+            document.getElementById('sus-paso2').style.display='none';
             document.getElementById('sus-ok').classList.add('show');
-            setTimeout(()=>closeModal('suscripciones'),3500);
+            setTimeout(() => closeModal('suscripciones'), 5000);
         }
 
         // ── COLABORACIONES — WhatsApp y Email ──
