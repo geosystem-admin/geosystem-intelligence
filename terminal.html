@@ -236,23 +236,50 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
     <span class="lbl" style="color:#f87171;margin-bottom:0;">🌍 MAPA_CONFLICTOS_GLOBAL // CRISISWATCH</span>
     <a href="https://www.crisisgroup.org/crisiswatch" target="_blank" style="font-size:6px;color:#f87171;border:1px solid #f87171;padding:3px 8px;text-decoration:none;letter-spacing:1px;">ABRIR COMPLETO ↗</a>
   </div>
-  <div style="font-size:7px;color:#475569;margin-bottom:10px;">Rastreador global · International Crisis Group · +70 conflictos monitoreados</div>
-  <div class="map-tabs">
-    <button class="map-tab active" onclick="switchMap('acled')" id="tab-acled">ACLED</button>
-    <button class="map-tab" onclick="switchMap('liveuamap')" id="tab-liveuamap">LIVEUAMAP</button>
-    <button class="map-tab" onclick="switchMap('gdelt')" id="tab-gdelt">GDELT</button>
+  <div style="font-size:7px;color:#475569;margin-bottom:12px;">Rastreador global · International Crisis Group · +70 conflictos monitoreados</div>
+
+  <!-- FUENTES EXTERNAS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:14px;">
+    <a href="https://acleddata.com/dashboard/#/dashboard" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border:1px solid rgba(248,113,113,.3);background:rgba(248,113,113,.05);text-decoration:none;transition:.2s;" onmouseover="this.style.borderColor='#f87171'" onmouseout="this.style.borderColor='rgba(248,113,113,.3)'">
+      <div style="font-size:14px;">🗺️</div>
+      <div style="font-size:6px;letter-spacing:1px;color:#f87171;text-align:center;">ACLED</div>
+      <div style="font-size:5px;color:#475569;text-align:center;">Conflictos armados</div>
+    </a>
+    <a href="https://liveuamap.com/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border:1px solid rgba(248,113,113,.3);background:rgba(248,113,113,.05);text-decoration:none;transition:.2s;" onmouseover="this.style.borderColor='#f87171'" onmouseout="this.style.borderColor='rgba(248,113,113,.3)'">
+      <div style="font-size:14px;">🔴</div>
+      <div style="font-size:6px;letter-spacing:1px;color:#f87171;text-align:center;">LIVEUAMAP</div>
+      <div style="font-size:5px;color:#475569;text-align:center;">Tiempo real</div>
+    </a>
+    <a href="https://www.gdeltproject.org/" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px;border:1px solid rgba(248,113,113,.3);background:rgba(248,113,113,.05);text-decoration:none;transition:.2s;" onmouseover="this.style.borderColor='#f87171'" onmouseout="this.style.borderColor='rgba(248,113,113,.3)'">
+      <div style="font-size:14px;">📊</div>
+      <div style="font-size:6px;letter-spacing:1px;color:#f87171;text-align:center;">GDELT</div>
+      <div style="font-size:5px;color:#475569;text-align:center;">Eventos globales</div>
+    </a>
   </div>
-  <div class="map-panel active" id="panel-acled">
-    <iframe class="map-frame" src="https://acleddata.com/dashboard/#/dashboard"></iframe>
-    <a href="https://acleddata.com/dashboard/#/dashboard" target="_blank" style="display:inline-block;margin-top:8px;font-size:7px;color:#f87171;border:1px solid #f87171;padding:4px 12px;text-decoration:none;">ABRIR ACLED ↗</a>
-  </div>
-  <div class="map-panel" id="panel-liveuamap">
-    <iframe class="map-frame" src="https://liveuamap.com/"></iframe>
-    <a href="https://liveuamap.com/" target="_blank" style="display:inline-block;margin-top:8px;font-size:7px;color:#f87171;border:1px solid #f87171;padding:4px 12px;text-decoration:none;">ABRIR LIVEUAMAP ↗</a>
-  </div>
-  <div class="map-panel" id="panel-gdelt">
-    <iframe class="map-frame" src="https://gdeltproject.org/gdelt-2.0-television-api.html"></iframe>
-    <a href="https://www.gdeltproject.org/" target="_blank" style="display:inline-block;margin-top:8px;font-size:7px;color:#f87171;border:1px solid #f87171;padding:4px 12px;text-decoration:none;">ABRIR GDELT ↗</a>
+
+  <!-- FOCOS LATAM -->
+  <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:8px;">📍 FOCOS DE TENSIÓN // LATAM</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+    <div style="border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.04);padding:10px;">
+      <div style="font-size:7px;font-weight:700;color:#f87171;letter-spacing:1px;margin-bottom:4px;">🔴 COLOMBIA</div>
+      <div style="font-size:6px;color:#475569;line-height:1.7;">Grupos armados · ELN · Disidencias FARC</div>
+      <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/colombia" target="_blank" style="font-size:6px;color:#f87171;text-decoration:none;display:block;margin-top:6px;letter-spacing:1px;">VER ANÁLISIS ↗</a>
+    </div>
+    <div style="border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.04);padding:10px;">
+      <div style="font-size:7px;font-weight:700;color:#f87171;letter-spacing:1px;margin-bottom:4px;">🔴 HAITÍ</div>
+      <div style="font-size:6px;color:#475569;line-height:1.7;">Crisis política · Pandillas · Colapso institucional</div>
+      <a href="https://www.crisisgroup.org/latin-america-caribbean/haiti" target="_blank" style="font-size:6px;color:#f87171;text-decoration:none;display:block;margin-top:6px;letter-spacing:1px;">VER ANÁLISIS ↗</a>
+    </div>
+    <div style="border:1px solid rgba(251,191,36,.3);background:rgba(251,191,36,.04);padding:10px;">
+      <div style="font-size:7px;font-weight:700;color:#fbbf24;letter-spacing:1px;margin-bottom:4px;">🟡 VENEZUELA</div>
+      <div style="font-size:6px;color:#475569;line-height:1.7;">Crisis humanitaria · Tensión política · Migración</div>
+      <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/venezuela" target="_blank" style="font-size:6px;color:#fbbf24;text-decoration:none;display:block;margin-top:6px;letter-spacing:1px;">VER ANÁLISIS ↗</a>
+    </div>
+    <div style="border:1px solid rgba(251,191,36,.3);background:rgba(251,191,36,.04);padding:10px;">
+      <div style="font-size:7px;font-weight:700;color:#fbbf24;letter-spacing:1px;margin-bottom:4px;">🟡 ECUADOR</div>
+      <div style="font-size:6px;color:#475569;line-height:1.7;">Crimen organizado · Narco-violencia · Inestabilidad</div>
+      <a href="https://www.crisisgroup.org/latin-america-caribbean/andes/ecuador" target="_blank" style="font-size:6px;color:#fbbf24;text-decoration:none;display:block;margin-top:6px;letter-spacing:1px;">VER ANÁLISIS ↗</a>
+    </div>
   </div>
 </div>
 
@@ -544,22 +571,81 @@ const FEEDS={
   europa: 'https://feeds.bbci.co.uk/news/world/europe/rss.xml',
   asia:   'https://feeds.bbci.co.uk/news/world/asia/rss.xml'
 };
+const FEED_NAMES={global:'BBC World',latam:'BBC Mundo',eeuu:'NYT US',europa:'BBC Europe',asia:'BBC Asia'};
 let activeFeed='global';
 function loadNews(region,btn){
   activeFeed=region;
   document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));
   if(btn)btn.classList.add('active');
   const box=document.getElementById('news-box');
-  box.innerHTML='<div style="font-size:7px;color:#334155;padding:10px 0;">Cargando...</div>';
-  fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(FEEDS[region])+'&api_key=public&count=5')
-    .then(r=>r.json())
+  box.innerHTML='<div style="font-size:7px;color:#334155;padding:10px 0;letter-spacing:1px;">⟳ CARGANDO NOTICIAS...</div>';
+  const apiUrl='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(FEEDS[region])+'&count=6';
+  fetch(apiUrl)
+    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(d=>{
-      if(!d.items||!d.items.length){box.innerHTML='<div style="font-size:7px;color:#334155;padding:10px;">Sin resultados.</div>';return;}
-      box.innerHTML=d.items.map(i=>`<div class="ni"><div class="ni-src">${d.feed.title}</div><div class="ni-ttl"><a href="${i.link}" target="_blank">${i.title}</a></div><div class="ni-date">${new Date(i.pubDate).toLocaleString('es-CO')}</div></div>`).join('');
-      document.getElementById('news-ts').textContent='Actualizado: '+new Date().toLocaleTimeString('es-CO');
+      if(!d||d.status==='error'||!d.items||!d.items.length){
+        box.innerHTML=manualNews(region);
+        return;
+      }
+      box.innerHTML=d.items.slice(0,6).map(i=>`
+        <div class="ni">
+          <div class="ni-src">${FEED_NAMES[region]||region.toUpperCase()} · ${new Date(i.pubDate).toLocaleDateString('es-CO')}</div>
+          <div class="ni-ttl"><a href="${i.link}" target="_blank">${i.title}</a></div>
+        </div>`).join('');
+      document.getElementById('news-ts').textContent='✓ Actualizado: '+new Date().toLocaleTimeString('es-CO')+' · Auto 10min';
     })
-    .catch(()=>{box.innerHTML='<div style="font-size:7px;color:#475569;padding:10px;">Error de conexión.</div>';});
+    .catch(()=>{
+      box.innerHTML=manualNews(region);
+    });
 }
+
+function manualNews(region){
+  const links={
+    global:[
+      {t:'BBC World News — Últimas noticias globales',u:'https://www.bbc.com/news/world'},
+      {t:'Reuters — Internacional',u:'https://www.reuters.com/world/'},
+      {t:'Al Jazeera English — Breaking News',u:'https://www.aljazeera.com/news/'},
+      {t:'The Guardian — World',u:'https://www.theguardian.com/world'},
+      {t:'DW News — Global',u:'https://www.dw.com/en/top-stories/s-9097'},
+    ],
+    latam:[
+      {t:'BBC Mundo — América Latina',u:'https://www.bbc.com/mundo/topics/c207p54m4r8t'},
+      {t:'Infobae — Latinoamérica',u:'https://www.infobae.com/america/'},
+      {t:'El País América',u:'https://elpais.com/america/'},
+      {t:'CNN en Español',u:'https://cnnespanol.cnn.com/'},
+      {t:'Semana Colombia',u:'https://www.semana.com/'},
+    ],
+    eeuu:[
+      {t:'New York Times — US News',u:'https://www.nytimes.com/section/us'},
+      {t:'Washington Post',u:'https://www.washingtonpost.com/'},
+      {t:'CNN Breaking News',u:'https://edition.cnn.com/'},
+      {t:'Bloomberg — Markets & Economy',u:'https://www.bloomberg.com/'},
+      {t:'Wall Street Journal',u:'https://www.wsj.com/'},
+    ],
+    europa:[
+      {t:'BBC Europe — Latest News',u:'https://www.bbc.com/news/world/europe'},
+      {t:'Euronews — Europa',u:'https://es.euronews.com/'},
+      {t:'El País — Europa',u:'https://elpais.com/internacional/'},
+      {t:'Der Spiegel — International',u:'https://www.spiegel.de/international/'},
+      {t:'Le Monde — International',u:'https://www.lemonde.fr/international/'},
+    ],
+    asia:[
+      {t:'BBC Asia — Latest',u:'https://www.bbc.com/news/world/asia'},
+      {t:'South China Morning Post',u:'https://www.scmp.com/'},
+      {t:'Japan Times',u:'https://www.japantimes.co.jp/'},
+      {t:'The Hindu — India',u:'https://www.thehindu.com/'},
+      {t:'Nikkei Asia',u:'https://asia.nikkei.com/'},
+    ]
+  };
+  const items=links[region]||links.global;
+  document.getElementById('news-ts').textContent='> Links directos · Toca para abrir';
+  return items.map(i=>`
+    <div class="ni">
+      <div class="ni-src">${FEED_NAMES[region]||region.toUpperCase()}</div>
+      <div class="ni-ttl"><a href="${i.u}" target="_blank">${i.t}</a></div>
+    </div>`).join('');
+}
+
 loadNews('global',document.querySelector('.ntab.active'));
 setInterval(()=>loadNews(activeFeed),600000);
 
