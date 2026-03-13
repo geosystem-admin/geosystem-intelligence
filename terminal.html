@@ -552,7 +552,7 @@
             <div id="terminal-msg" style="font-size:7px;color:#475569;margin-bottom:8px;font-style:italic;">> NÚCLEO ACTIVO. BIENVENIDO EMISARIO.</div>
 
             <!-- VIDEO GX — solo post clave -->
-            <div id="portal-sinergia" class="hidden">
+            <div>
                 <!-- BADGE EXCLUSIVO GX -->
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
                     <div style="font-size:6px;letter-spacing:2px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 8px;animation:pulse-amber 2s infinite;">🔑 ACCESO_GX // TRANSMISIÓN CLASIFICADA</div>
@@ -1222,8 +1222,9 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
                 };
             }
             // Acepta clave legacy: GX-8-7-IMMORTAL (acceso al ep 1)
-            if (key === 'GX-8-7-IMMORTAL') {
-                return { valid: true, fecha: new Date(), nombre: 'EMISARIO', legacy: true };
+            if (key === 'GX-8-7-IMMORTAL' || key === 'GX-ADMIN-CAMILO') {
+                // Clave admin — fecha muy antigua para desbloquear todos los episodios
+                return { valid: true, fecha: new Date('2020-01-01'), nombre: 'ADMIN', legacy: true };
             }
             return { valid: false };
         }
