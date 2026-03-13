@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GEOSYSTEM · TERMINAL v6.0</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
 :root{--neon:#36f4d0;--bg:#020617;--card:#080c18;}
@@ -255,6 +257,13 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
       <div style="font-size:6px;letter-spacing:1px;color:#f87171;text-align:center;">GDELT</div>
       <div style="font-size:5px;color:#475569;text-align:center;">Eventos globales</div>
     </a>
+  </div>
+
+  <!-- MAPA INTERACTIVO LEAFLET -->
+  <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:8px;">🗺️ MAPA INTERACTIVO // EXPLORACIÓN LIBRE</div>
+  <div style="position:relative;margin-bottom:14px;">
+    <div id="leaflet-map" style="width:100%;height:320px;border:1px solid rgba(248,113,113,.3);"></div>
+    <div style="font-size:6px;color:#334155;margin-top:4px;letter-spacing:1px;">▲ Toca y arrastra para explorar · Pinch para zoom · Toca un marcador para ver el conflicto</div>
   </div>
 
   <!-- FOCOS LATAM -->
@@ -834,6 +843,67 @@ function unlockGX(){
   // Scroll
   setTimeout(()=>document.getElementById('gx-portal').scrollIntoView({behavior:'smooth',block:'start'}),300);
 }
+
+// MAPA LEAFLET
+(function(){
+  const map = L.map('leaflet-map', {
+    center: [10, -20],
+    zoom: 2,
+    zoomControl: true,
+    attributionControl: true
+  });
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap · © CartoDB',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(map);
+
+  const icon = (color) => L.divIcon({
+    html: `<div style="width:12px;height:12px;border-radius:50%;background:${color};border:2px solid #fff;box-shadow:0 0 8px ${color};"></div>`,
+    className: '',
+    iconSize: [12,12],
+    iconAnchor: [6,6]
+  });
+
+  const conflictos = [
+    {lat:4.71,lng:-74.07,  nombre:'Colombia',     nivel:'CRÍTICO', color:'#ef4444', info:'Grupos armados · ELN · Disidencias FARC', url:'https://www.crisisgroup.org/latin-america-caribbean/andes/colombia'},
+    {lat:18.97,lng:-72.33, nombre:'Haití',         nivel:'CRÍTICO', color:'#ef4444', info:'Crisis política · Pandillas · Colapso institucional', url:'https://www.crisisgroup.org/latin-america-caribbean/haiti'},
+    {lat:6.42, lng:1.33,   nombre:'Ghana/Sahel',   nivel:'ALTO',    color:'#f97316', info:'Inestabilidad regional · Yihadismo', url:'https://www.crisisgroup.org/africa'},
+    {lat:48.37,lng:31.16,  nombre:'Ucrania',       nivel:'CRÍTICO', color:'#ef4444', info:'Guerra Rusia-Ucrania · Conflicto activo', url:'https://www.crisisgroup.org/europe-central-asia/eastern-europe/ukraine'},
+    {lat:31.95,lng:35.93,  nombre:'Israel/Gaza',   nivel:'CRÍTICO', color:'#ef4444', info:'Conflicto Israel-Gaza · Crisis humanitaria', url:'https://www.crisisgroup.org/middle-east-north-africa/east-mediterranean-mena/israelpalestine'},
+    {lat:15.55,lng:32.53,  nombre:'Sudán',         nivel:'CRÍTICO', color:'#ef4444', info:'Guerra civil · Crisis humanitaria', url:'https://www.crisisgroup.org/africa/horn-africa/sudan'},
+    {lat:33.93,lng:67.71,  nombre:'Afganistán',    nivel:'ALTO',    color:'#f97316', info:'Gobierno talibán · Inestabilidad', url:'https://www.crisisgroup.org/asia/south-asia/afghanistan'},
+    {lat:15.35,lng:44.21,  nombre:'Yemen',         nivel:'CRÍTICO', color:'#ef4444', info:'Guerra civil · Crisis humanitaria', url:'https://www.crisisgroup.org/middle-east-north-africa/gulf-and-arabian-peninsula/yemen'},
+    {lat:12.36,lng:43.15,  nombre:'Etiopía',       nivel:'ALTO',    color:'#f97316', info:'Conflictos étnicos · Tigray', url:'https://www.crisisgroup.org/africa/horn-africa/ethiopia'},
+    {lat:10.45,lng:-13.58, nombre:'Guinea',        nivel:'MEDIO',   color:'#fbbf24', info:'Inestabilidad política · Golpe de estado', url:'https://www.crisisgroup.org/africa/west-africa/guinea'},
+    {lat:23.68,lng:90.35,  nombre:'Myanmar',       nivel:'ALTO',    color:'#f97316', info:'Golpe militar · Conflicto civil', url:'https://www.crisisgroup.org/asia/south-east-asia/myanmar'},
+    {lat:10.69,lng:-61.22, nombre:'Venezuela',     nivel:'ALTO',    color:'#f97316', info:'Crisis humanitaria · Tensión política', url:'https://www.crisisgroup.org/latin-america-caribbean/andes/venezuela'},
+    {lat:-0.23, lng:-78.52,nombre:'Ecuador',       nivel:'MEDIO',   color:'#fbbf24', info:'Crimen organizado · Narco-violencia', url:'https://www.crisisgroup.org/latin-america-caribbean/andes/ecuador'},
+    {lat:35.86,lng:104.19, nombre:'Taiwán/China',  nivel:'ALTO',    color:'#f97316', info:'Tensión geopolítica · Estrecho de Taiwán', url:'https://www.crisisgroup.org/asia/north-east-asia/taiwan-strait'},
+    {lat:37.09,lng:127.04, nombre:'Corea del Norte',nivel:'ALTO',   color:'#f97316', info:'Programa nuclear · Tensión regional', url:'https://www.crisisgroup.org/asia/north-east-asia/korean-peninsula'},
+  ];
+
+  conflictos.forEach(c => {
+    const marker = L.marker([c.lat, c.lng], {icon: icon(c.color)}).addTo(map);
+    marker.bindPopup(`
+      <div style="font-family:'JetBrains Mono',monospace;background:#080c18;color:#cce0f0;padding:8px;min-width:180px;border:1px solid ${c.color};">
+        <div style="font-size:10px;font-weight:700;color:${c.color};margin-bottom:4px;">${c.nombre}</div>
+        <div style="font-size:9px;color:#64748b;margin-bottom:6px;letter-spacing:1px;">NIVEL: ${c.nivel}</div>
+        <div style="font-size:9px;color:#94a3b8;margin-bottom:8px;line-height:1.5;">${c.info}</div>
+        <a href="${c.url}" target="_blank" style="font-size:8px;color:${c.color};text-decoration:none;letter-spacing:1px;">VER ANÁLISIS COMPLETO ↗</a>
+      </div>
+    `, {
+      className: 'gx-popup',
+      maxWidth: 220
+    });
+  });
+
+  // Estilo del popup
+  const style = document.createElement('style');
+  style.textContent = `.gx-popup .leaflet-popup-content-wrapper{background:#080c18;border:none;border-radius:0;padding:0;box-shadow:0 0 20px rgba(0,0,0,.8);} .gx-popup .leaflet-popup-tip{background:#080c18;} .gx-popup .leaflet-popup-content{margin:0;}`;
+  document.head.appendChild(style);
+})();
 
 // EMISARIO IA
 function usarSug(btn){document.getElementById('ia-inp').value=btn.textContent;}
