@@ -511,96 +511,100 @@
         <div class="search-results" id="search-results"></div>
     </div>
 
-    <!-- ZONA FINAL — APOYO + ACCESO GX -->
+    <!-- APOYO PÚBLICO — botones siempre visibles -->
     <div class="grid-node mt-2" style="border-color:rgba(54,244,208,0.2);">
-
-        <!-- BOTONES PÚBLICOS -->
         <span class="label-node">APOYA_GEOSYSTEM // ACCESO_LIBRE</span>
         <div style="font-size:7px;color:#475569;margin-bottom:10px;letter-spacing:1px;">
             > Si el contenido te aporta valor, apoya el proyecto o suscríbete para acceder al material exclusivo GX.
         </div>
-        <div class="grid grid-cols-3 gap-2 mb-4">
+        <div class="grid grid-cols-3 gap-2">
             <button class="btn-don" onclick="openModal('donaciones')">DONACIONES</button>
             <button class="btn-sus" onclick="openModal('suscripciones')">SUSCRIPCIONES</button>
             <button class="btn-col" onclick="openModal('colaboraciones')">COLABORACIONES</button>
         </div>
+    </div>
 
-        <!-- SEPARADOR -->
-        <div style="border-top:1px solid #1e293b;margin-bottom:14px;"></div>
-
-        <!-- VALIDACIÓN GX -->
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-            <span style="font-size:7px;letter-spacing:2px;color:#fbbf24;font-weight:bold;">🔑 VALIDACIÓN_GX</span>
-            <span style="font-size:6px;color:#334155;letter-spacing:1px;">// INGRESA TU CLAVE PARA ACCEDER AL CONTENIDO EXCLUSIVO</span>
-        </div>
-        <div id="login-form" style="display:flex;gap:6px;align-items:stretch;">
-            <input type="text" id="pass-input" placeholder="GX-YYYY-MM-DD-NOMBRE"
-                style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;background:#000;border:1px solid #78350f;color:#fbbf24;padding:10px 12px;outline:none;text-transform:uppercase;letter-spacing:2px;">
-            <button onclick="unlockSystem()"
-                style="background:#fbbf24;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:900;letter-spacing:2px;padding:10px 16px;border:none;cursor:pointer;white-space:nowrap;transition:all .2s;"
-                onmouseover="this.style.background='#fde68a'" onmouseout="this.style.background='#fbbf24'">
-                SINCRONIZAR ▶
-            </button>
-        </div>
-        <div style="font-size:6px;color:#334155;margin-top:5px;letter-spacing:1px;">
-            > ¿Aún no tienes clave? Suscríbete arriba y la recibirás por WhatsApp en menos de 24h.
+    <!-- VALIDACIÓN GX — siempre visible -->
+    <div class="grid-node mt-2" style="border-color:rgba(251,191,36,0.3);background:rgba(120,53,15,0.05);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <span style="font-size:8px;letter-spacing:2px;color:#fbbf24;font-weight:bold;">🔑 VALIDACIÓN_GX</span>
+            <span style="font-size:6px;color:#334155;letter-spacing:1px;">// ZONA EXCLUSIVA SUSCRIPTORES</span>
         </div>
 
-        <!-- CONTENIDO GX POST-UNLOCK -->
-        <div id="portal-sinergia" class="hidden" style="margin-top:14px;border-top:1px solid rgba(251,191,36,0.2);padding-top:12px;">
-            <span class="label-node" style="color:#fbbf24;border-color:rgba(251,191,36,0.3);">CENTRO_DE_INTELIGENCIA_IA // ZONA_GX</span>
-            <div id="terminal-msg" style="font-size:7px;color:#475569;margin-bottom:8px;font-style:italic;">> NÚCLEO ACTIVO. BIENVENIDO EMISARIO.</div>
+        <!-- Formulario clave — se oculta al sincronizar -->
+        <div id="login-form">
+            <div style="display:flex;gap:6px;align-items:stretch;">
+                <input type="text" id="pass-input" placeholder="GX-YYYY-MM-DD-NOMBRE"
+                    style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;background:#000;border:1px solid #78350f;color:#fbbf24;padding:10px 12px;outline:none;text-transform:uppercase;letter-spacing:1px;"
+                    onkeydown="if(event.key==='Enter')unlockSystem()">
+                <button onclick="unlockSystem()"
+                    style="background:#fbbf24;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:900;letter-spacing:2px;padding:10px 16px;border:none;cursor:pointer;white-space:nowrap;"
+                    onmouseover="this.style.background='#fde68a'" onmouseout="this.style.background='#fbbf24'">
+                    SINCRONIZAR ▶
+                </button>
+            </div>
+            <div style="font-size:6px;color:#334155;margin-top:5px;letter-spacing:1px;">
+                > ¿Sin clave? Suscríbete arriba · Recibirás tu clave GX por WhatsApp en menos de 24h.
+            </div>
+        </div>
 
-            <!-- VIDEO GX — solo post clave -->
-            <div>
-                <!-- BADGE EXCLUSIVO GX -->
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
-                    <div style="font-size:6px;letter-spacing:2px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 8px;animation:pulse-amber 2s infinite;">🔑 ACCESO_GX // TRANSMISIÓN CLASIFICADA</div>
-                    <div id="gx-ep-badge" style="font-size:6px;color:#94a3b8;letter-spacing:1px;">EP01 · CARGANDO...</div>
-                </div>
-                <div class="border bg-black mb-3" style="position:relative;border-color:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,0.15);">
-                    <div id="yt-thumb" style="position:relative;cursor:pointer;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;" onclick="playVideo()">
-                        <img id="gx-thumb-img" src="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
-                        <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3);"></div>
-                        <div style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px;">
-                            <div style="width:64px;height:64px;background:rgba(251,191,36,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(251,191,36,0.6);">
-                                <div style="width:0;height:0;border-style:solid;border-width:12px 0 12px 22px;border-color:transparent transparent transparent #000;margin-left:4px;"></div>
-                            </div>
-                            <div style="font-size:8px;letter-spacing:2px;color:#fbbf24;text-shadow:0 0 10px #fbbf24;">▶ TRANSMISIÓN EXCLUSIVA GX</div>
+        <!-- Contenido GX — aparece al sincronizar -->
+        <div id="portal-sinergia" style="display:none;">
+
+            <!-- Mensaje bienvenida -->
+            <div id="terminal-msg" style="font-size:7px;color:#fbbf24;margin-bottom:10px;font-weight:bold;letter-spacing:1px;"></div>
+
+            <!-- BADGE -->
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;">
+                <div style="font-size:6px;letter-spacing:2px;color:#fbbf24;border:1px solid #fbbf24;padding:2px 8px;animation:pulse-amber 2s infinite;">🔑 ACCESO_GX // TRANSMISIÓN CLASIFICADA</div>
+                <div id="gx-ep-badge" style="font-size:6px;color:#94a3b8;letter-spacing:1px;">EP01 · CARGANDO...</div>
+            </div>
+
+            <!-- PLAYER GX -->
+            <div class="border bg-black mb-3" style="position:relative;border-color:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,0.15);">
+                <div id="yt-thumb" style="position:relative;cursor:pointer;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;" onclick="playVideo()">
+                    <img id="gx-thumb-img" src="" style="width:100%;height:100%;object-fit:cover;opacity:0.7;"
+                         onerror="this.src='https://img.youtube.com/vi/9TWFmVYAP2E/hqdefault.jpg'">
+                    <div style="position:absolute;inset:0;background:rgba(0,0,0,0.3);"></div>
+                    <div style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:8px;">
+                        <div style="width:64px;height:64px;background:rgba(251,191,36,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(251,191,36,0.6);">
+                            <div style="width:0;height:0;border-style:solid;border-width:12px 0 12px 22px;border-color:transparent transparent transparent #000;margin-left:4px;"></div>
                         </div>
-                    </div>
-                    <iframe id="yt-player" src="" frameborder="0" allow="autoplay; fullscreen; encrypted-media" allowfullscreen style="display:none;width:100%;aspect-ratio:16/9;"></iframe>
-                </div>
-                <!-- LISTA DE EPISODIOS GX -->
-                <div style="margin-bottom:10px;">
-                    <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:6px;">📋 TUS EPISODIOS GX</div>
-                    <div id="gx-episodios" style="display:flex;flex-direction:column;gap:4px;">
-                        <div style="font-size:7px;color:#334155;font-style:italic;">Cargando episodios...</div>
+                        <div style="font-size:8px;letter-spacing:2px;color:#fbbf24;text-shadow:0 0 10px #fbbf24;">▶ TRANSMISIÓN EXCLUSIVA GX</div>
                     </div>
                 </div>
-                <!-- ASISTENTE IA GX -->
-                <div style="border:1px solid rgba(54,244,208,0.3);background:#020617;padding:8px;">
-                    <div style="font-size:8px;font-weight:bold;letter-spacing:2px;color:#36f4d0;border-bottom:1px solid rgba(54,244,208,0.2);padding-bottom:5px;margin-bottom:8px;">🤖 EMISARIO_IA // ASISTENTE GEOPOLÍTICO</div>
-                    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
-                        <button class="sug-btn" onclick="usarSugerencia(this)">📈 ¿Cómo armo un portafolio?</button>
-                        <button class="sug-btn" onclick="usarSugerencia(this)">🌍 ¿Dónde vivir en LATAM?</button>
-                        <button class="sug-btn" onclick="usarSugerencia(this)">💰 ¿Cómo protejo mi capital?</button>
-                        <button class="sug-btn" onclick="usarSugerencia(this)">📊 ¿Qué índice monitorear hoy?</button>
-                    </div>
-                    <div id="ia-messages" style="height:200px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;padding:4px 0;">
-                        <div class="msg-ia"><span style="color:#36f4d0;">EMISARIO_IA</span><br>Sistema activo. Puedo ayudarte con mercados, portafolios, geopolítica e inversiones en LATAM. ¿Cuál es tu consulta?</div>
-                    </div>
-                    <div style="display:flex;gap:6px;align-items:flex-end;">
-                        <textarea id="ia-input" placeholder="> Escribe tu consulta al Emisario..."
-                            style="flex:1;font-family:'JetBrains Mono',monospace;font-size:8px;background:#080c10;border:1px solid #1e293b;color:#cce0f0;padding:7px 9px;outline:none;resize:none;height:36px;line-height:1.4;"
-                            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMensaje();}"></textarea>
-                        <button onclick="enviarMensaje()" id="ia-send-btn"
-                            style="background:#36f4d0;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:bold;letter-spacing:1px;padding:8px 12px;border:none;cursor:pointer;height:36px;">
-                            ENVIAR ▶
-                        </button>
-                    </div>
-                    <div style="font-size:6px;color:#334155;margin-top:4px;letter-spacing:1px;">ENTER para enviar · Solo accesible con clave GX</div>
+                <iframe id="yt-player" src="" frameborder="0" allow="autoplay;fullscreen;encrypted-media" allowfullscreen
+                    style="display:none;width:100%;aspect-ratio:16/9;"></iframe>
+            </div>
+
+            <!-- EPISODIOS -->
+            <div style="margin-bottom:10px;">
+                <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:6px;">📋 TUS EPISODIOS GX</div>
+                <div id="gx-episodios" style="display:flex;flex-direction:column;gap:4px;"></div>
+            </div>
+
+            <!-- EMISARIO IA -->
+            <div style="border:1px solid rgba(54,244,208,0.3);background:#020617;padding:8px;margin-top:8px;">
+                <div style="font-size:8px;font-weight:bold;letter-spacing:2px;color:#36f4d0;border-bottom:1px solid rgba(54,244,208,0.2);padding-bottom:5px;margin-bottom:8px;">🤖 EMISARIO_IA // ASISTENTE GEOPOLÍTICO</div>
+                <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
+                    <button class="sug-btn" onclick="usarSugerencia(this)">📈 ¿Cómo armo un portafolio?</button>
+                    <button class="sug-btn" onclick="usarSugerencia(this)">🌍 ¿Dónde vivir en LATAM?</button>
+                    <button class="sug-btn" onclick="usarSugerencia(this)">💰 ¿Cómo protejo mi capital?</button>
+                    <button class="sug-btn" onclick="usarSugerencia(this)">📊 ¿Qué índice monitorear hoy?</button>
                 </div>
+                <div id="ia-messages" style="height:200px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;gap:6px;padding:4px 0;">
+                    <div class="msg-ia"><span style="color:#36f4d0;">EMISARIO_IA</span><br>Sistema activo. Puedo ayudarte con mercados, portafolios, geopolítica e inversiones en LATAM. ¿Cuál es tu consulta?</div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:flex-end;">
+                    <textarea id="ia-input" placeholder="> Escribe tu consulta al Emisario..."
+                        style="flex:1;font-family:'JetBrains Mono',monospace;font-size:8px;background:#080c10;border:1px solid #1e293b;color:#cce0f0;padding:7px 9px;outline:none;resize:none;height:36px;line-height:1.4;"
+                        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();enviarMensaje();}"></textarea>
+                    <button onclick="enviarMensaje()" id="ia-send-btn"
+                        style="background:#36f4d0;color:#000;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:bold;letter-spacing:1px;padding:8px 12px;border:none;cursor:pointer;height:36px;">
+                        ENVIAR ▶
+                    </button>
+                </div>
+                <div style="font-size:6px;color:#334155;margin-top:4px;letter-spacing:1px;">ENTER para enviar · Solo accesible con clave GX</div>
             </div>
         </div>
     </div>
@@ -608,7 +612,8 @@
 
 
 
-    <!-- ═══════════════════════════════ -->
+
+        <!-- ═══════════════════════════════ -->
     <!-- MODAL DONACIONES               -->
     <!-- ═══════════════════════════════ -->
     <div class="modal-overlay" id="modal-donaciones" onclick="closeOnOverlay(event,'donaciones')">
@@ -775,9 +780,17 @@
             </div>
         </div>
     </div>
-
-
     <script>
+        // ── ERROR HANDLER ──
+        window.onerror = function(msg, src, line, col, err) {
+            console.error('JS ERROR:', msg, 'line:', line);
+            document.body.insertAdjacentHTML('afterbegin',
+                '<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:red;color:white;font-family:monospace;font-size:11px;padding:8px;">'+
+                '⚠️ ERROR JS línea '+line+': '+msg+'</div>'
+            );
+            return false;
+        };
+
         // ── NOTICIAS REGIONALES ──
         const NEWS_FEEDS = {
             global: [
@@ -1133,28 +1146,24 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
             player.src = 'https://www.youtube.com/embed/8Nx9Zrj1rXs?autoplay=1&rel=0&modestbranding=1';
         }
 
-        // Video exclusivo GX (solo suscriptores con clave)
-        // REEMPLAZA GX_VIDEO_ID_AQUI con el ID de YouTube del video exclusivo cuando lo grabes
-        const GX_VIDEO_ID = 'GX_VIDEO_ID_AQUI';
-
+        // Video exclusivo GX — usa GX_PLAYLIST definida abajo
         function playVideo(){
             const thumb = document.getElementById('yt-thumb');
             const player = document.getElementById('yt-player');
+            const ep = GX_PLAYLIST[gxEpActual - 1] || GX_PLAYLIST[0];
             thumb.style.display = 'none';
             player.style.display = 'block';
-            player.src = 'https://www.youtube.com/embed/' + GX_VIDEO_ID + '?autoplay=1&rel=0&modestbranding=1';
+            player.src = 'https://www.youtube.com/embed/' + ep.id + '?autoplay=1&rel=0&modestbranding=1';
         }
 
         // Cargar thumbnail del video GX
         function loadGxThumbnail(){
+            // Carga thumbnail del primer episodio GX
             const img = document.getElementById('gx-thumb-img');
-            if(img && GX_VIDEO_ID !== 'GX_VIDEO_ID_AQUI'){
-                img.src = 'https://img.youtube.com/vi/' + GX_VIDEO_ID + '/maxresdefault.jpg';
-                img.onerror = function(){ this.src = 'https://img.youtube.com/vi/' + GX_VIDEO_ID + '/hqdefault.jpg'; };
-            } else if(img) {
-                // Fallback mientras no hay video GX grabado
-                img.src = 'https://img.youtube.com/vi/8Nx9Zrj1rXs/maxresdefault.jpg';
-                img.style.filter = 'blur(3px) brightness(0.4)';
+            if(img){
+                const firstId = GX_PLAYLIST[0].id;
+                img.src = 'https://img.youtube.com/vi/' + firstId + '/maxresdefault.jpg';
+                img.onerror = function(){ this.src = 'https://img.youtube.com/vi/' + firstId + '/hqdefault.jpg'; };
             }
         }
 
@@ -1223,8 +1232,7 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
             }
             // Acepta clave legacy: GX-8-7-IMMORTAL (acceso al ep 1)
             if (key === 'GX-8-7-IMMORTAL' || key === 'GX-ADMIN-CAMILO') {
-                // Clave admin — fecha muy antigua para desbloquear todos los episodios
-                return { valid: true, fecha: new Date('2020-01-01'), nombre: 'ADMIN', legacy: true };
+                return { valid: true, fecha: new Date('2020-01-01'), nombre: 'ADMIN', legacy: false };
             }
             return { valid: false };
         }
@@ -1313,17 +1321,19 @@ Responde siempre en español. Sé conciso pero sustancioso. Usa datos reales cua
             // Mensaje de bienvenida personalizado
             const nombre = parsed.nombre.charAt(0) + parsed.nombre.slice(1).toLowerCase();
             const diasSuscrito = parsed.legacy ? 0 : Math.floor((new Date() - parsed.fecha) / (1000*60*60*24));
-            document.getElementById('terminal-msg').innerHTML =
-                `<span style='color:#fbbf24;font-weight:bold;font-size:8px;'>
-                    🔑 ACCESO GX · BIENVENIDO ${nombre.toUpperCase()} · EP${gxEpActual} DESBLOQUEADO · ${diasSuscrito} DÍAS ACTIVO
-                </span>`;
+            const tmsg = document.getElementById('terminal-msg');
+            if(tmsg) tmsg.innerHTML = `<span style='color:#fbbf24;font-weight:bold;font-size:8px;letter-spacing:1px;'>
+                🔑 BIENVENIDO ${nombre.toUpperCase()} · EP${gxEpActual} DESBLOQUEADO · ${diasSuscrito} DÍAS ACTIVO
+            </span>`;
 
             // Mostrar portal
-            document.getElementById('portal-sinergia').classList.remove('hidden');
-            document.getElementById('login-form').style.display='none'; document.getElementById('login-form').innerHTML =
-                `<div style="color:#fbbf24;text-align:center;padding:8px;border:1px solid #78350f;font-weight:bold;font-size:8px;letter-spacing:1px;">
-                    🔑 SISTEMA GX SINCRONIZADO · EP${gxEpActual} ACTIVO
-                </div>`;
+            document.getElementById('portal-sinergia').style.display='block';
+
+            // Reemplazar form con mensaje de confirmación
+            const lf = document.getElementById('login-form');
+            lf.innerHTML = `<div style="color:#fbbf24;text-align:center;padding:8px;border:1px solid #78350f;font-weight:bold;font-size:8px;letter-spacing:1px;">
+                🔑 SISTEMA GX SINCRONIZADO · EP${gxEpActual} ACTIVO
+            </div>`;
 
             // Cargar episodios
             renderEpisodiosGX(gxEpActual);
