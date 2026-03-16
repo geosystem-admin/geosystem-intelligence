@@ -180,15 +180,6 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap');
 
-:root {
-  --bg:#020408; --surface:#080f1a; --panel:#0c1520; --border:#0d2035;
-  --accent:#36f4d0; --accent2:#fbbf24; --accent3:#0ea5e9;
-  --green:#4ade80; --yellow:#ffd600; --orange:#f97316;
-  --text:#c8dae8; --dim:#4a6278; --glow:rgba(54,244,208,0.15);
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-/* skipped: body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;} */
-/* skipped: body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;} */
 #gx-agent .container {position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:16px;}
 
 /* HEADER */
@@ -1326,7 +1317,7 @@ const API_URL = "https://api.anthropic.com/v1/messages";
 const MODEL = "claude-sonnet-4-20250514";
 
 // ─── API KEY ───
-function saveKey() {
+function agentSaveKey() {
   const key = document.getElementById('api-key-input').value.trim();
   if (!key.startsWith('sk-ant-')) { alert('⚠️ La key debe empezar con sk-ant-...\nCópiala exactamente desde console.anthropic.com'); return; }
   sessionStorage.setItem('nexus_key', key);
@@ -1337,7 +1328,7 @@ function saveKey() {
   document.getElementById('api-key-input').type = 'password';
   alert('✅ ¡API Key guardada! Ya puedes usar los 3 módulos.');
 }
-function toggleKey() {
+function agentToggleKey() {
   const i = document.getElementById('api-key-input'), b = document.getElementById('btn-show');
   if (i.type==='password'){i.type='text';b.textContent='🙈 OCULTAR';}else{i.type='password';b.textContent='👁 VER';}
 }
@@ -1371,7 +1362,7 @@ function showSub(module, tab) {
 }
 
 // ─── COPY ───
-function copyEl(id) {
+function agentCopyEl(id) {
   navigator.clipboard.writeText(document.getElementById(id).innerText)
     .then(()=>alert('✅ Copiado al portapapeles'));
 }
@@ -1384,7 +1375,7 @@ function setLoad(id, on) {
 }
 
 // ─── API CALL ───
-async function ai(prompt, sys='') {
+async function agentAI(prompt, sys='') {
   const key = getKey();
   if (!key) { alert('⚠️ Pega tu API Key en el campo de arriba y presiona GUARDAR'); throw new Error('Sin key'); }
   const body = { model:MODEL, max_tokens:1000, messages:[{role:'user',content:prompt}] };
@@ -1412,7 +1403,7 @@ async function runVigilancia() {
   const region = document.getElementById('t-region').value;
   setLoad('out-tendencias',true);
   try {
-    const r = await ai(`Analiza las tendencias ACTUALES de YouTube para el nicho CIENCIA Y TECNOLOGÍA.
+    const r = await agentAI(`Analiza las tendencias ACTUALES de YouTube para el nicho CIENCIA Y TECNOLOGÍA.
 Subtema específico: "${subtema}"
 Región/mercado: ${region}
 
@@ -1434,7 +1425,7 @@ async function runCompetencia() {
   const titulo = document.getElementById('c-titulo').value;
   setLoad('out-competencia',true);
   try {
-    const r = await ai(`Analiza los METADATOS y estrategia de un video viral de la competencia en CIENCIA Y TECNOLOGÍA:
+    const r = await agentAI(`Analiza los METADATOS y estrategia de un video viral de la competencia en CIENCIA Y TECNOLOGÍA:
 
 Tema del video: "${tema}"
 Vistas aproximadas: ${vistas}
@@ -1458,7 +1449,7 @@ async function runHueco() {
   const tendencia = document.getElementById('h-tendencia').value||'IA dominará el mundo';
   setLoad('out-hueco',true);
   try {
-    const r = await ai(`Eres el estratega del "Immortal Emitter". Tu misión: encontrar el HUECO NARRATIVO perfecto.
+    const r = await agentAI(`Eres el estratega del "Immortal Emitter". Tu misión: encontrar el HUECO NARRATIVO perfecto.
 
 MANIFIESTO DEL CANAL (verdad eterna): "${manifiesto}"
 TENDENCIA ACTUAL EN YOUTUBE: "${tendencia}"
@@ -1483,7 +1474,7 @@ async function generateTags() {
   });
   setLoad('tags-all',true);
   try {
-    const r = await ai(`Genera tags SEO para YouTube sobre: "${topic}" en CIENCIA Y TECNOLOGÍA en español.
+    const r = await agentAI(`Genera tags SEO para YouTube sobre: "${topic}" en CIENCIA Y TECNOLOGÍA en español.
 Responde SOLO en JSON sin markdown:
 {"viral":["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8"],"trending":["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8"],"niche":["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8"],"all":"tag1, tag2, tag3..."}
 viral=alto volumen, trending=creciendo, niche=alta conversión. all=${count==='500'?'máximo 500 chars':count+' tags'}`, SYS);
@@ -1512,7 +1503,7 @@ async function runTitulos() {
   const emocion = document.getElementById('tit-emocion').value;
   setLoad('out-titulos',true);
   try {
-    const r = await ai(`Genera TÍTULOS DE ALTO IMPACTO para YouTube — nicho Geopolítica · IA · Economía LATAM.
+    const r = await agentAI(`Genera TÍTULOS DE ALTO IMPACTO para YouTube — nicho Geopolítica · IA · Economía LATAM.
 Tema: "${tema}"
 Emoción objetivo: ${emocion}
 
@@ -1539,7 +1530,7 @@ async function runHook() {
   const duracion = document.getElementById('hook-duracion').value;
   setLoad('out-hook',true);
   try {
-    const r = await ai(`Crea el SCRIPT EXACTO para los primeros 30 segundos del video — técnica: "${tecnica}"
+    const r = await agentAI(`Crea el SCRIPT EXACTO para los primeros 30 segundos del video — técnica: "${tecnica}"
 
 Título del video: "${titulo}"
 Promesa central: "${promesa}"
@@ -1567,7 +1558,7 @@ async function runDescripcion() {
   const tags = document.getElementById('desc-tags').value;
   setLoad('out-descripcion',true);
   try {
-    const r = await ai(`Crea una DESCRIPCIÓN SEO COMPLETA para YouTube — diseñada para conectar semánticamente con videos de alta autoridad.
+    const r = await agentAI(`Crea una DESCRIPCIÓN SEO COMPLETA para YouTube — diseñada para conectar semánticamente con videos de alta autoridad.
 
 Título: "${titulo}"
 Duración: ${duracion}
@@ -1593,7 +1584,7 @@ async function runGuion() {
   const tono = document.getElementById('guion-tono').value;
   setLoad('out-guion',true);
   try {
-    const r = await ai(`Genera un GUIÓN COMPLETO y estructurado para YouTube — Geopolítica · IA · Economía LATAM.
+    const r = await agentAI(`Genera un GUIÓN COMPLETO y estructurado para YouTube — Geopolítica · IA · Economía LATAM.
 
 Tema: "${tema}"
 Formato: ${formato}
@@ -1627,7 +1618,7 @@ async function runABTest() {
   const tema = document.getElementById('ab-tema').value||'tecnología';
   setLoad('out-ab-diagnostico',true);
   try {
-    const r = await ai(`PROTOCOLO DE EMERGENCIA A/B TESTING — CTR BAJO DETECTADO
+    const r = await agentAI(`PROTOCOLO DE EMERGENCIA A/B TESTING — CTR BAJO DETECTADO
 
 Video: "${titulo}"
 CTR a las 2 horas: ${ctr}%
@@ -1678,7 +1669,7 @@ async function runComentarios() {
   const cantidad = document.getElementById('com-cantidad').value;
   setLoad('out-comentarios',true);
   try {
-    const r = await ai(`Genera ${cantidad} RESPUESTAS A COMENTARIOS de YouTube para el video sobre: "${tema}"
+    const r = await agentAI(`Genera ${cantidad} RESPUESTAS A COMENTARIOS de YouTube para el video sobre: "${tema}"
 
 Tipo de comentarios: ${tipo}
 Tono de respuesta: ${tono}
@@ -1723,7 +1714,7 @@ async function runFeedback() {
 
   setLoad('out-feedback',true);
   try {
-    const r = await ai(`ANÁLISIS MENSUAL DEL IMMORTAL EMITTER — Canal Geopolítica · IA · Economía LATAM
+    const r = await agentAI(`ANÁLISIS MENSUAL DEL IMMORTAL EMITTER — Canal Geopolítica · IA · Economía LATAM
 
 MÉTRICAS:
 - Vistas: ${parseInt(views).toLocaleString()}
@@ -1754,7 +1745,7 @@ async function runCalendario() {
   const out = document.getElementById('cal-output');
   out.innerHTML = '<div class="output-box loading">⏳ Generando calendario IA...</div>';
   try {
-    const r = await ai(`Genera un PLAN DE CONTENIDO MENSUAL para el Immortal Emitter — YouTube Geopolítica · IA · Economía LATAM.
+    const r = await agentAI(`Genera un PLAN DE CONTENIDO MENSUAL para el Immortal Emitter — YouTube Geopolítica · IA · Economía LATAM.
 
 Frecuencia: ${freq}
 Horario de publicación: ${time}
