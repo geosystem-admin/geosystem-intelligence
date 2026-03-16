@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IMMORTAL AGENT — Herramienta GX · GEOSYSTEM</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap');
+
+:root {
+  --bg:#020408; --surface:#080f1a; --panel:#0c1520; --border:#0d2035;
+  --accent:#36f4d0; --accent2:#fbbf24; --accent3:#0ea5e9;
+  --green:#4ade80; --yellow:#ffd600; --orange:#f97316;
+  --text:#c8dae8; --dim:#4a6278; --glow:rgba(54,244,208,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+.container{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:16px;}
+
+/* HEADER */
+header{text-align:center;padding:32px 0 24px;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.logo-line{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:6px;}
+.logo-icon{width:52px;height:52px;background:linear-gradient(135deg,var(--accent),var(--accent3));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 0 30px var(--glow);}
+h1{font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;}
+.tagline{font-family:'Share Tech Mono',monospace;color:var(--dim);font-size:0.75rem;letter-spacing:2px;margin-top:4px;}
+.status-bar{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px;flex-wrap:wrap;}
+.status-pill{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:0.68rem;font-family:'Share Tech Mono',monospace;color:var(--dim);}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,136,0.4);}50%{opacity:.7;box-shadow:0 0 0 6px rgba(0,255,136,0);}}
+
+/* API BANNER */
+.api-banner{background:var(--panel);border:1px solid rgba(255,214,0,0.3);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.api-banner.active{border-color:rgba(0,255,136,0.35);}
+
+/* MODULE HEADERS */
+.module-header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;margin-bottom:4px;cursor:pointer;border:1px solid var(--border);background:var(--surface);transition:all .2s;user-select:none;}
+.module-header:hover{border-color:var(--accent);background:rgba(0,212,255,0.04);}
+.module-num{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:0.9rem;font-weight:700;flex-shrink:0;}
+.m1 .module-num{background:rgba(0,212,255,0.15);color:var(--accent);border:1px solid rgba(0,212,255,0.3);}
+.m2 .module-num{background:rgba(123,47,255,0.15);color:#b77fff;border:1px solid rgba(123,47,255,0.3);}
+.m3 .module-num{background:rgba(255,60,172,0.15);color:var(--accent2);border:1px solid rgba(255,60,172,0.3);}
+.module-title{flex:1;}
+.module-name{font-family:'Orbitron',monospace;font-size:0.75rem;letter-spacing:2px;}
+.m1 .module-name{color:var(--accent);}
+.m2 .module-name{color:#b77fff;}
+.m3 .module-name{color:var(--accent2);}
+.module-sub{font-size:0.68rem;color:var(--dim);font-family:'Share Tech Mono',monospace;margin-top:3px;}
+.module-arrow{font-size:0.7rem;color:var(--dim);transition:transform .2s;}
+.module-arrow.open{transform:rotate(90deg);}
+
+.module-body{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:20px;margin-bottom:16px;}
+.module-body.open{display:block;}
+
+/* TABS inside modules */
+.subtabs{display:flex;gap:4px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:16px;overflow-x:auto;}
+.subtab{flex:1;min-width:100px;padding:8px 12px;border:none;background:transparent;color:var(--dim);font-family:'Orbitron',monospace;font-size:0.58rem;letter-spacing:1px;cursor:pointer;border-radius:7px;transition:all .2s;white-space:nowrap;}
+.subtab.active{background:rgba(0,212,255,0.12);color:var(--accent);border:1px solid rgba(0,212,255,0.25);}
+.subtab:hover:not(.active){background:var(--surface);color:var(--text);}
+.subpanel{display:none;}.subpanel.active{display:block;}
+
+/* CARDS */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent3));}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.card-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--surface);border:1px solid var(--border);}
+.card-title{font-family:'Orbitron',monospace;font-size:0.72rem;color:var(--accent);letter-spacing:2px;}
+
+/* INPUTS */
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+@media(max-width:580px){.input-grid{grid-template-columns:1fr;}}
+.input-group{display:flex;flex-direction:column;gap:5px;}
+label{font-size:0.68rem;color:var(--dim);font-family:'Share Tech Mono',monospace;letter-spacing:1px;}
+input,select,textarea{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:0.83rem;padding:9px 11px;outline:none;transition:border-color .2s;width:100%;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,212,255,0.1);}
+textarea{resize:vertical;min-height:75px;}
+select option{background:var(--panel);}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border:none;border-radius:9px;font-family:'Orbitron',monospace;font-size:0.65rem;letter-spacing:2px;cursor:pointer;transition:all .2s;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#000;font-weight:700;box-shadow:0 4px 18px rgba(0,212,255,0.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(0,212,255,0.4);}
+.btn-m2{background:linear-gradient(135deg,var(--accent3),var(--accent2));color:#fff;}
+.btn-m2:hover{transform:translateY(-2px);}
+.btn-m3{background:linear-gradient(135deg,var(--accent2),var(--orange));color:#fff;}
+.btn-m3:hover{transform:translateY(-2px);}
+.btn-secondary{background:var(--panel);border:1px solid var(--border);color:var(--accent);}
+.btn-secondary:hover{border-color:var(--accent);background:rgba(0,212,255,0.06);}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+
+/* OUTPUT */
+.output-box{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:14px;font-family:'Share Tech Mono',monospace;font-size:0.76rem;line-height:1.75;color:var(--text);min-height:60px;white-space:pre-wrap;word-break:break-word;}
+.output-box.loading{color:var(--dim);animation:flicker 1.5s infinite;}
+@keyframes flicker{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* TAGS */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
+.tag-chip{padding:4px 11px;border-radius:20px;font-size:0.7rem;font-family:'Share Tech Mono',monospace;cursor:pointer;transition:all .15s;border:1px solid;}
+.tag-chip.viral{background:rgba(255,60,172,.1);border-color:rgba(255,60,172,.4);color:var(--accent2);}
+.tag-chip.trending{background:rgba(0,212,255,.1);border-color:rgba(0,212,255,.4);color:var(--accent);}
+.tag-chip.niche{background:rgba(0,255,136,.1);border-color:rgba(0,255,136,.4);color:var(--green);}
+.tag-chip:hover{transform:scale(1.06);}
+
+/* ALGO BARS */
+.algo-item{margin-bottom:12px;}
+.algo-row{display:flex;justify-content:space-between;font-size:0.73rem;margin-bottom:4px;}
+.progress-wrap{background:var(--panel);border-radius:6px;height:5px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent3));transition:width .6s ease;}
+
+/* METRICS */
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px;}
+.metric-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.metric-val{font-family:'Orbitron',monospace;font-size:1.5rem;font-weight:700;color:var(--accent);line-height:1;}
+.metric-lbl{font-size:0.62rem;color:var(--dim);font-family:'Share Tech Mono',monospace;letter-spacing:1px;margin-top:4px;}
+.metric-change{font-size:0.68rem;margin-top:4px;}
+.up{color:var(--green);} .dn{color:var(--accent2);}
+
+/* AB TEST CARDS */
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+@media(max-width:580px){.ab-grid{grid-template-columns:1fr;}}
+.ab-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.ab-label{font-family:'Orbitron',monospace;font-size:0.65rem;letter-spacing:2px;margin-bottom:8px;}
+.ab-a .ab-label{color:var(--accent);}
+.ab-b .ab-label{color:var(--accent2);}
+
+/* COMMENTS */
+.comment-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px;margin-bottom:8px;}
+.comment-meta{font-size:0.65rem;color:var(--dim);font-family:'Share Tech Mono',monospace;margin-bottom:5px;}
+.comment-text{font-size:0.8rem;color:var(--text);line-height:1.5;}
+
+/* CALENDAR */
+.cal-week{margin-bottom:14px;}
+.cal-week-title{font-family:'Orbitron',monospace;font-size:0.68rem;color:var(--accent);letter-spacing:2px;margin-bottom:8px;}
+.cal-video{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.cal-date{background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:5px 9px;text-align:center;min-width:44px;}
+.cal-day-num{font-family:'Orbitron',monospace;font-size:1rem;color:var(--accent);}
+.cal-day-name{font-size:0.55rem;color:var(--dim);font-family:'Share Tech Mono',monospace;}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:0.58rem;font-family:'Share Tech Mono',monospace;letter-spacing:1px;}
+.badge-g{background:rgba(0,255,136,.12);color:var(--green);border:1px solid rgba(0,255,136,.3);}
+.badge-y{background:rgba(255,214,0,.12);color:var(--yellow);border:1px solid rgba(255,214,0,.3);}
+.badge-r{background:rgba(255,60,172,.12);color:var(--accent2);border:1px solid rgba(255,60,172,.3);}
+
+.flex-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.copy-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--dim);padding:4px 10px;font-size:0.62rem;cursor:pointer;font-family:'Share Tech Mono',monospace;transition:all .15s;}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent);}
+.sep{border:none;border-top:1px solid var(--border);margin:16px 0;}
+.tip{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.2);border-radius:9px;padding:10px 14px;font-size:0.76rem;color:var(--text);line-height:1.6;margin-top:10px;}
+.tip strong{color:var(--accent);}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,212,255,.3);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.section-label{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--dim);letter-spacing:1px;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<header>
+  <div class="logo-line">
+    <div class="logo-icon">🔥</div>
+    <h1>IMMORTAL EMITTER</h1>
+  </div>
+  <p class="tagline">AGENTE DE PRODUCCIÓN · GEOPOLÍTICA · IA · NUEVO ORDEN MUNDIAL · GEOSYSTEM</p>
+  <p style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:rgba(0,212,255,0.4);margin-top:6px;letter-spacing:1px;">
+    <a href="terminal.html" style="color:rgba(54,244,208,0.5);text-decoration:none;">← Volver a la Terminal</a>
+  </p>
+  <div class="status-bar">
+    <div class="status-pill"><span class="dot"></span> GEOSYSTEM · AGENTE ACTIVO</div>
+    <div class="status-pill">🔭 MÓDULO VIGILANCIA</div>
+    <div class="status-pill">⚗️ ALQUIMIA_NARRATIVA</div>
+    <div class="status-pill">♾️ INMORTALIDAD_ALGORITMO</div>
+  </div>
+</header>
+
+<!-- GX GATE -->
+<div id="gx-gate" style="background:var(--panel);border:1px solid rgba(251,191,36,.3);border-radius:12px;padding:20px;margin-bottom:18px;text-align:center;">
+  <div style="font-size:28px;margin-bottom:8px;">🔑</div>
+  <div style="font-family:'Orbitron',monospace;font-size:0.8rem;color:#fbbf24;letter-spacing:3px;margin-bottom:6px;">ACCESO EXCLUSIVO GX</div>
+  <div style="font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--dim);margin-bottom:14px;letter-spacing:1px;">Ingresa tu clave GX para acceder al Agente de Producción</div>
+  <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+    <input id="gx-key-input" type="text" placeholder="GX-YYYY-MM-DD-NOMBRE" 
+      style="font-family:'Share Tech Mono',monospace;font-size:0.85rem;background:#000;border:1px solid #78350f;color:#fbbf24;padding:10px 14px;outline:none;text-transform:uppercase;letter-spacing:1px;width:260px;"
+      onkeydown="if(event.key==='Enter')validateGX()">
+    <button onclick="validateGX()" 
+      style="background:#fbbf24;color:#000;font-family:'Orbitron',monospace;font-size:0.65rem;font-weight:900;letter-spacing:2px;padding:10px 18px;border:none;cursor:pointer;">
+      SINCRONIZAR ▶
+    </button>
+  </div>
+  <div style="margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--dim);">
+    ¿Sin clave? <a href="terminal.html" style="color:#fbbf24;text-decoration:none;">Suscríbete en la Terminal ↗</a>
+  </div>
+</div>
+
+<!-- AGENT CONTENT — hidden until GX validated -->
+<div id="agent-content" style="display:none;">
+<div class="api-banner active" id="api-banner">
+  <div style="font-size:18px">✅</div>
+  <div style="flex:1">
+    <div style="font-family:'Orbitron',monospace;font-size:0.68rem;color:var(--green);letter-spacing:2px;">SISTEMA ACTIVO · CLAVE GX VERIFICADA</div>
+    <div style="font-family:'Share Tech Mono',monospace;font-size:0.62rem;color:var(--dim);margin-top:3px;" id="gx-user-info">Cargando...</div>
+  </div>
+  <div id="key-status" style="font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--green);">⬤ ACTIVO</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MÓDULO 1 — VIGILANCIA
+══════════════════════════════════════ -->
+<div class="module-header m1" onclick="toggleModule('m1')">
+  <div class="module-num">01</div>
+  <div class="module-title">
+    <div class="module-name">🔭 MÓDULO DE VIGILANCIA</div>
+    <div class="module-sub">Vigilancia de tendencias geopolíticas · Análisis competencia · Detección de huecos narrativos en LATAM</div>
+  </div>
+  <div class="module-arrow" id="arrow-m1">▶</div>
+</div>
+<div class="module-body" id="body-m1">
+
+  <div class="subtabs">
+    <button class="subtab active" onclick="showSub('m1','tendencias')">📡 TENDENCIAS</button>
+    <button class="subtab" onclick="showSub('m1','competencia')">🕵️ COMPETENCIA</button>
+    <button class="subtab" onclick="showSub('m1','hueco')">🎯 HUECO NARRATIVO</button>
+    <button class="subtab" onclick="showSub('m1','tags')">🏷️ TAGS VIRALES</button>
+  </div>
+
+  <!-- TENDENCIAS -->
+  <div class="subpanel active" id="m1-tendencias">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">📡</div><span class="card-title">ESCÁNER DE TENDENCIAS EN TIEMPO REAL</span></div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>SUBTEMA A VIGILAR</label>
+          <input id="t-subtema" placeholder="ej: CBDC en LATAM, guerra China-EEUU, Bitcoin 2026..." />
+        </div>
+        <div class="input-group">
+          <label>REGIÓN / MERCADO</label>
+          <select id="t-region">
+            <option>Colombia / LATAM (principal)</option>
+            <option>Español global</option>
+            <option>Venezuela</option>
+            <option>México</option>
+            <option>Argentina</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="runVigilancia()">📡 ESCANEAR TENDENCIAS</button>
+    </div>
+    <div class="card">
+      <div class="flex-between"><span class="card-title" style="color:var(--accent)">REPORTE DE TENDENCIAS</span><button class="copy-btn" onclick="copyEl('out-tendencias')">COPIAR</button></div>
+      <div class="output-box" id="out-tendencias">Ejecuta el escáner para ver tendencias activas...</div>
+    </div>
+  </div>
+
+  <!-- COMPETENCIA -->
+  <div class="subpanel" id="m1-competencia">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">🕵️</div><span class="card-title">ANÁLISIS DE METADATOS DE COMPETENCIA</span></div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>TEMA DEL VIDEO VIRAL</label>
+          <input id="c-tema" placeholder="ej: El petróleo llegó a $100, Trump vs China en LATAM..." />
+        </div>
+        <div class="input-group">
+          <label>VISTAS APROXIMADAS</label>
+          <select id="c-vistas">
+            <option>100K - 500K</option>
+            <option>500K - 1M</option>
+            <option>1M - 5M</option>
+            <option>+5M (viral masivo)</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group" style="margin-bottom:12px">
+        <label>TÍTULO DEL VIDEO VIRAL (opcional)</label>
+        <input id="c-titulo" placeholder="Pega el título exacto del video que quieres analizar" />
+      </div>
+      <button class="btn btn-primary" onclick="runCompetencia()">🔬 ANALIZAR METADATOS</button>
+    </div>
+    <div class="card">
+      <div class="flex-between"><span class="card-title" style="color:var(--accent)">ANÁLISIS DE COMPETENCIA</span><button class="copy-btn" onclick="copyEl('out-competencia')">COPIAR</button></div>
+      <div class="output-box" id="out-competencia">Ingresa datos del video a analizar...</div>
+    </div>
+  </div>
+
+  <!-- HUECO NARRATIVO -->
+  <div class="subpanel" id="m1-hueco">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">🎯</div><span class="card-title">DETECTOR DE HUECO NARRATIVO</span></div>
+      <div class="input-group" style="margin-bottom:10px">
+        <label>¿CUÁL ES TU "VERDAD ETERNA" / MANIFIESTO?</label>
+        <textarea id="h-manifiesto" placeholder="El mundo está en la transición de poder más grande en 500 años. La IA, el dinero programable y la geopolítica están redefiniendo todo — y LATAM no está preparada. Geosystem existe para mostrar el tablero real."></textarea>
+      </div>
+      <div class="input-group" style="margin-bottom:12px">
+        <label>TEMA DE TENDENCIA ACTUAL</label>
+        <input id="h-tendencia" placeholder="ej: El dinero digital va a controlar tu vida" />
+      </div>
+      <button class="btn btn-primary" onclick="runHueco()">🎯 ENCONTRAR EL HUECO</button>
+    </div>
+    <div class="card">
+      <div class="flex-between"><span class="card-title" style="color:var(--accent)">HUECO IDENTIFICADO</span><button class="copy-btn" onclick="copyEl('out-hueco')">COPIAR</button></div>
+      <div class="output-box" id="out-hueco">Define tu manifiesto y el tema para encontrar dónde encajas...</div>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="subpanel" id="m1-tags">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">🏷️</div><span class="card-title">GENERADOR DE TAGS VIRALES</span></div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>TEMA DEL VIDEO</label>
+          <input id="tag-topic" placeholder="ej: Geopolítica LATAM, CBDC, Bitcoin, Nuevo Orden Mundial..." />
+        </div>
+        <div class="input-group">
+          <label>CANTIDAD</label>
+          <select id="tag-count">
+            <option value="15">15 tags</option>
+            <option value="30" selected>30 tags (recomendado)</option>
+            <option value="500">Máximo (500 chars)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="generateTags()">🔍 ANALIZAR TAGS VIRALES</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-icon">🔥</div><span class="card-title">TAGS POR CATEGORÍA</span></div>
+      <div style="margin-bottom:10px">
+        <div class="section-label">🔴 VIRALES (alto volumen)</div>
+        <div class="tags-wrap" id="tags-viral"></div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div class="section-label" style="color:var(--accent)">🔵 TENDENCIA</div>
+        <div class="tags-wrap" id="tags-trending"></div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div class="section-label" style="color:var(--green)">🟢 NICHO (alta conversión)</div>
+        <div class="tags-wrap" id="tags-niche"></div>
+      </div>
+      <div class="flex-between">
+        <span class="section-label">TODOS (copiar a YouTube)</span>
+        <button class="copy-btn" onclick="copyEl('tags-all')">COPIAR TODO</button>
+      </div>
+      <div class="output-box" id="tags-all" style="margin-top:6px">Los tags aparecerán aquí...</div>
+    </div>
+  </div>
+
+</div><!-- /m1 body -->
+
+<!-- ══════════════════════════════════════
+     MÓDULO 2 — ALQUIMIA NARRATIVA
+══════════════════════════════════════ -->
+<div class="module-header m2" onclick="toggleModule('m2')">
+  <div class="module-num">02</div>
+  <div class="module-title">
+    <div class="module-name">⚗️ ALQUIMIA_NARRATIVA</div>
+    <div class="module-sub">Títulos de alto impacto · Hooks 30s · Descripción SEO · Guión Manifiesto completo</div>
+  </div>
+  <div class="module-arrow" id="arrow-m2">▶</div>
+</div>
+<div class="module-body" id="body-m2">
+
+  <div class="subtabs">
+    <button class="subtab active" onclick="showSub('m2','titulos')">📌 TÍTULOS</button>
+    <button class="subtab" onclick="showSub('m2','hook')">🎣 HOOK 30s</button>
+    <button class="subtab" onclick="showSub('m2','descripcion')">📝 DESCRIPCIÓN</button>
+    <button class="subtab" onclick="showSub('m2','guion')">🎬 GUIÓN</button>
+  </div>
+
+  <!-- TÍTULOS -->
+  <div class="subpanel active" id="m2-titulos">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">📌</div><span class="card-title">GENERADOR DE TÍTULOS DE ALTO IMPACTO</span></div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>TEMA / VERDAD A TRANSMITIR</label>
+          <input id="tit-tema" placeholder="ej: El CBDC colombiano y el fin de la privacidad financiera" />
+        </div>
+        <div class="input-group">
+          <label>EMOCIÓN OBJETIVO</label>
+          <select id="tit-emocion">
+            <option>Curiosidad extrema</option>
+            <option>Urgencia / FOMO</option>
+            <option>Asombro / Shock</option>
+            <option>Controversia / Debate</option>
+            <option>Esperanza / Inspiración</option>
+            <option>Miedo / Alerta</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-m2" onclick="runTitulos()">⚗️ GENERAR TÍTULOS</button>
+    </div>
+    <div class="card">
+      <div class="flex-between"><span class="card-title" style="color:#b77fff">TÍTULOS GENERADOS (CTR MÁXIMO)</span><button class="copy-btn" onclick="copyEl('out-titulos')">COPIAR</button></div>
+      <div class="output-box" id="out-titulos">Los títulos de alto impacto aparecerán aquí...</div>
+    </div>
+  </div>
+
+  <!-- HOOK 30s -->
+  <div class="subpanel" id="m2-hook">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">🎣</div><span class="card-title">ARQUITECTO DE HOOKS — PRIMEROS 30 SEGUNDOS</span></div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>TÍTULO DEL VIDEO</label>
+          <input id="hook-titulo" placeholder="Pega el título que usarás" />
+        </div>
+        <div class="input-group">
+          <label>PROMESA CENTRAL</label>
+          <input id="hook-promesa" placeholder="¿Qué aprenderá el viewer que no sabe nadie más?" />
+        </div>
+        <div class="input-group">
+          <label>TÉCNICA DE HOOK</label>
+          <select id="hook-tecnica">
+            <option>Pregunta retórica + dato impactante</option>
+            <option>Contraintuitivo / paradoja</option>
+            <option>Historia personal en 10 segundos</option>
+            <option>Estadística que rompe creencias</option>
+            <option>Loop de curiosidad abierto</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>DURACIÓN TOTAL DEL VIDEO</label>
+          <select id="hook-duracion">
+            <option>Short (&lt;60s)</option>
+            <option>Corto (3-7 min)</option>
+            <option selected>Medio (8-15 min)</option>
+            <option>Largo (15-30 min)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-m2" onclick="runHook()">🎣 CONSTRUIR HOOK</button>
+    </div>
+    <div class="card">
+      <div class="flex-between"><span class="card-title" style="color:#b77fff">SCRIPT HOOK (0-30 SEGUNDOS)</span><button class="copy-btn" onclick="copyEl('out-hook')">COPIAR</button></div>
+      <div class="output-box" id="out-hook">El script de los primeros 30s aparecerá aquí...</div>
+    </div>
+  </div>
+
+  <!-- DESCRIPCIÓN -->
+  <div class="subpanel" id="m2-descripcion">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">📝</div><span class="card-title">DESCRIPCIÓN SEMÁNTICA DE ALTO RANGO</span></div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>TÍTULO DEL VIDEO</label>
+          <input id="desc-titulo" placeholder="Título final del video" />
+        </div>
+        <div class="input-group">
+          <label>DURACIÓN REAL</label>
+          <input id="desc-duracion" placeholder="ej: 12:34" />
+        </div>
+      </div>
+      <div class="input-group" style="margin-bottom:10px">
+        <label>CONTENIDO PRINCIPAL (puntos clave del video)</label>
+        <textarea id="desc-contenido" placeholder="Resume los 3-5 puntos principales que cubre el video..."></textarea>
+      </div>
+      <div class="input-group" style="margin-bottom:12px">
+        <label>TAGS PRINCIPALES (de la sección de Tags)</label>
+        <input id="desc-tags" placeholder="pega aquí los 5 tags más importantes" />
+      </div>
+      <button class="btn btn-m2" onclick="runDescripcion()">📝 GENERAR DESCRIPCIÓN SEO</button>
+    </div>
+    <div class="card">
+      <div class="flex-between"><span class="card-title" style="color:#b77fff">DESCRIPCIÓN COMPLETA</span><button class="copy-btn" onclick="copyEl('out-descripcion')">COPIAR</button></div>
+      <div class="output-box" id="out-descripcion">La descripción optimizada aparecerá aquí...</div>
+    </div>
+  </div>
+
+  <!-- GUIÓN -->
+  <div class="subpanel" id="m2-guion">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">🎬</div><span class="card-title">GENERADOR DE GUIÓN COMPLETO</span></div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>TEMA DEL VIDEO</label>
+          <input id="guion-tema" placeholder="ej: Computación cuántica para principiantes" />
+        </div>
+        <div class="input-group">
+          <label>FORMATO</label>
+          <select id="guion-formato">
+            <option>Tutorial explicativo (10 min)</option>
+            <option>Análisis de tendencia (8 min)</option>
+            <option>Top lista (12 min)</option>
+            <option>Documental corto (15 min)</option>
+            <option>Debate / controversia (10 min)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>AUDIENCIA</label>
+          <select id="guion-audiencia">
+            <option>Principiantes curiosos</option>
+            <option>Entusiastas tech</option>
+            <option selected>Público general 18-35</option>
+            <option>Estudiantes universitarios</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>TONO</label>
+          <select id="guion-tono">
+            <option>Dinámico y entretenido</option>
+            <option>Divulgativo accesible</option>
+            <option selected>Storytelling narrativo</option>
+            <option>Polémico / provocador</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-m2" onclick="runGuion()">🎬 GENERAR GUIÓN COMPLETO</button>
+    </div>
+    <div class="card">
+      <div class="flex-between"><span class="card-title" style="color:#b77fff">GUIÓN ESTRUCTURADO</span><button class="copy-btn" onclick="copyEl('out-guion')">COPIAR</button></div>
+      <div class="output-box" id="out-guion">El guión completo aparecerá aquí...</div>
+    </div>
+  </div>
+
+</div><!-- /m2 body -->
+
+<!-- ══════════════════════════════════════
+     MÓDULO 3 — INMORTALIDAD
+══════════════════════════════════════ -->
+<div class="module-header m3" onclick="toggleModule('m3')">
+  <div class="module-num">03</div>
+  <div class="module-title">
+    <div class="module-name">♾️ MÓDULO DE INMORTALIDAD</div>
+    <div class="module-sub">A/B Testing autónomo · Respuesta a comentarios · Feedback mensual · Calendario</div>
+  </div>
+  <div class="module-arrow" id="arrow-m3">▶</div>
+</div>
+<div class="module-body" id="body-m3">
+
+  <div class="subtabs">
+    <button class="subtab active" onclick="showSub('m3','ab')">🔄 A/B TESTING</button>
+    <button class="subtab" onclick="showSub('m3','comentarios')">💬 COMENTARIOS</button>
+    <button class="subtab" onclick="showSub('m3','feedback')">📊 FEEDBACK IA</button>
+    <button class="subtab" onclick="showSub('m3','calendario')">📅 CALENDARIO</button>
+  </div>
+
+  <!-- A/B TESTING -->
+  <div class="subpanel active" id="m3-ab">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">🔄</div><span class="card-title">A/B TESTING AUTÓNOMO — CTR BAJO DETECTADO</span></div>
+      <div class="tip">⚡ <strong>Protocolo automático:</strong> Si a las 2 horas el CTR es inferior al 4%, el agente genera variantes alternativas de título y miniatura para reemplazar inmediatamente.</div>
+      <div class="input-grid" style="margin-top:14px">
+        <div class="input-group">
+          <label>TÍTULO ORIGINAL</label>
+          <input id="ab-titulo" placeholder="Título actual del video publicado" />
+        </div>
+        <div class="input-group">
+          <label>CTR ACTUAL (%) — 2 HORAS POST</label>
+          <input id="ab-ctr" type="number" placeholder="ej: 2.8" step="0.1" />
+        </div>
+        <div class="input-group">
+          <label>VISTAS EN 2 HORAS</label>
+          <input id="ab-vistas" type="number" placeholder="ej: 340" />
+        </div>
+        <div class="input-group">
+          <label>TEMA / NICHO DEL VIDEO</label>
+          <input id="ab-tema" placeholder="ej: IA, espacio, biotecnología..." />
+        </div>
+      </div>
+      <button class="btn btn-m3" onclick="runABTest()">🔄 GENERAR VARIANTES A/B</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-icon">📊</div><span class="card-title">DIAGNÓSTICO DE CTR</span></div>
+      <div class="output-box" id="out-ab-diagnostico">Ingresa los datos del video para diagnosticar...</div>
+    </div>
+
+    <div class="ab-grid" id="ab-variants-container" style="display:none">
+      <div class="card ab-card ab-a">
+        <div class="ab-label">🅰 VARIANTE A — CONSERVADORA</div>
+        <div class="output-box" id="out-ab-a" style="min-height:120px"></div>
+      </div>
+      <div class="card ab-card ab-b" style="position:relative">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent2),var(--orange))"></div>
+        <div class="ab-label">🅱 VARIANTE B — AGRESIVA (recomendada)</div>
+        <div class="output-box" id="out-ab-b" style="min-height:120px"></div>
+      </div>
+    </div>
+
+    <div class="card" id="ab-thumbnail-card" style="display:none">
+      <div class="flex-between">
+        <div class="card-header" style="margin-bottom:0"><div class="card-icon">🖼️</div><span class="card-title">INSTRUCCIONES DE MINIATURA</span></div>
+        <button class="copy-btn" onclick="copyEl('out-ab-thumbnail')">COPIAR</button>
+      </div>
+      <div class="output-box" id="out-ab-thumbnail" style="margin-top:10px"></div>
+    </div>
+  </div>
+
+  <!-- COMENTARIOS -->
+  <div class="subpanel" id="m3-comentarios">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">💬</div><span class="card-title">GENERADOR DE RESPUESTAS A COMENTARIOS</span></div>
+      <div class="tip">🚀 <strong>Estrategia de engagement:</strong> Responder los primeros 10-15 comentarios en la primera hora genera la señal de actividad que YouTube necesita para distribuir el video masivamente.</div>
+      <div class="input-grid" style="margin-top:14px">
+        <div class="input-group">
+          <label>TEMA DEL VIDEO</label>
+          <input id="com-tema" placeholder="ej: IA y el futuro del trabajo" />
+        </div>
+        <div class="input-group">
+          <label>TIPO DE COMENTARIOS A RESPONDER</label>
+          <select id="com-tipo">
+            <option>Mix variado (primeros comentarios)</option>
+            <option>Preguntas técnicas</option>
+            <option>Críticas / escepticismo</option>
+            <option>Elogios / fans</option>
+            <option>Trolls / negativos</option>
+            <option>Sugerencias de temas</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>TONO DE RESPUESTA</label>
+          <select id="com-tono">
+            <option>Cercano y humano</option>
+            <option>Experto y educativo</option>
+            <option>Provocador / debate</option>
+            <option>Gracioso / meme</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>CANTIDAD DE RESPUESTAS</label>
+          <select id="com-cantidad">
+            <option>5 respuestas</option>
+            <option selected>10 respuestas (primera hora)</option>
+            <option>15 respuestas</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-m3" onclick="runComentarios()">💬 GENERAR RESPUESTAS</button>
+    </div>
+    <div class="card">
+      <div class="flex-between"><span class="card-title" style="color:var(--accent2)">BANCO DE RESPUESTAS</span><button class="copy-btn" onclick="copyEl('out-comentarios')">COPIAR</button></div>
+      <div class="output-box" id="out-comentarios">Las respuestas aparecerán aquí para copiar y pegar...</div>
+    </div>
+  </div>
+
+  <!-- FEEDBACK -->
+  <div class="subpanel" id="m3-feedback">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">📊</div><span class="card-title">AUTO-ANÁLISIS MENSUAL DEL CANAL</span></div>
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="metric-val" id="met-views">—</div><div class="metric-lbl">VISTAS/MES</div><div class="metric-change" id="met-views-c">—</div></div>
+        <div class="metric-card"><div class="metric-val" id="met-retention">—</div><div class="metric-lbl">RETENCIÓN %</div><div class="metric-change" id="met-ret-c">—</div></div>
+        <div class="metric-card"><div class="metric-val" id="met-ctr">—</div><div class="metric-lbl">CTR MINIATURA</div><div class="metric-change" id="met-ctr-c">—</div></div>
+        <div class="metric-card"><div class="metric-val" id="met-subs">—</div><div class="metric-lbl">SUBS NUEVOS</div><div class="metric-change" id="met-subs-c">—</div></div>
+      </div>
+      <div class="input-grid">
+        <div class="input-group"><label>VISTAS ESTE MES</label><input id="fb-views" type="number" placeholder="ej: 45000" /></div>
+        <div class="input-group"><label>RETENCIÓN PROMEDIO (%)</label><input id="fb-retention" type="number" placeholder="ej: 42" /></div>
+        <div class="input-group"><label>CTR DE MINIATURA (%)</label><input id="fb-ctr" type="number" placeholder="ej: 5.2" /></div>
+        <div class="input-group"><label>SUSCRIPTORES GANADOS</label><input id="fb-subs" type="number" placeholder="ej: 1200" /></div>
+      </div>
+      <div class="input-group" style="margin-bottom:12px">
+        <label>VIDEO MÁS EXITOSO</label>
+        <input id="fb-best" placeholder="Título del video con más vistas este mes" />
+      </div>
+      <button class="btn btn-m3" onclick="runFeedback()">🔄 ANALIZAR Y GENERAR PLAN</button>
+    </div>
+    <div class="card">
+      <div class="flex-between"><span class="card-title" style="color:var(--accent2)">DIAGNÓSTICO IA + PLAN PRÓXIMO MES</span><button class="copy-btn" onclick="copyEl('out-feedback')">COPIAR</button></div>
+      <div class="output-box" id="out-feedback">Ingresa tus métricas para el análisis mensual...</div>
+    </div>
+  </div>
+
+  <!-- CALENDARIO -->
+  <div class="subpanel" id="m3-calendario">
+    <div class="card">
+      <div class="card-header"><div class="card-icon">📅</div><span class="card-title">CALENDARIO DE PUBLICACIÓN MENSUAL</span></div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>FRECUENCIA SEMANAL</label>
+          <select id="cal-freq">
+            <option>1 video/semana</option>
+            <option selected>2 videos/semana</option>
+            <option>3 videos/semana</option>
+            <option>Diario</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>HORA DE PUBLICACIÓN</label>
+          <select id="cal-time">
+            <option>18:00 - 20:00 (recomendado)</option>
+            <option>12:00 - 14:00 (mediodía)</option>
+            <option>20:00 - 22:00 (noche)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>MANIFIESTO / ENFOQUE DEL CANAL</label>
+          <input id="cal-enfoque" placeholder="ej: revelar verdades ocultas de la ciencia" />
+        </div>
+        <div class="input-group">
+          <label>MES A PLANIFICAR</label>
+          <input id="cal-mes" placeholder="ej: Abril 2025" />
+        </div>
+      </div>
+      <button class="btn btn-m3" onclick="runCalendario()">📅 GENERAR CALENDARIO IA</button>
+    </div>
+    <div id="cal-output"></div>
+  </div>
+
+</div><!-- /m3 body -->
+
+</div><!-- /container -->
+
+<script>
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-sonnet-4-20250514";
+
+// ─── API KEY ───
+// ── GX VALIDATION ──
+const GX_API_KEY = 'sk-ant-api03-xQQ-Sg5NpyuhXWskHkuZC3_uU5N16iTOAhKAACUn_6-hZKzKOKofEaOf38n7GAJB3dZXWrLpAkdULQ1WbSk3AA-pQishAAA';
+
+function parseGxKeyAgent(key) {
+  if(key === 'GX-8-7-IMMORTAL' || key === 'GX-ADMIN-CAMILO')
+    return { valid:true, nombre:'ADMIN', fecha:new Date('2020-01-01') };
+  const m = key.match(/^GX-(\d{4})-(\d{2})-(\d{2})-(.+)$/);
+  if(m) return { valid:true, fecha:new Date(`${m[1]}-${m[2]}-${m[3]}`), nombre:m[4] };
+  return { valid:false };
+}
+
+function validateGX() {
+  const raw = document.getElementById('gx-key-input').value.trim().toUpperCase();
+  const parsed = parseGxKeyAgent(raw);
+  if(!parsed.valid) {
+    alert('❌ CLAVE INCORRECTA\nVerifica tu clave GX e intenta de nuevo.');
+    return;
+  }
+  const dias = Math.floor((new Date()-parsed.fecha)/86400000);
+  const nombre = parsed.nombre.charAt(0)+parsed.nombre.slice(1).toLowerCase();
+  // Show agent
+  document.getElementById('gx-gate').style.display='none';
+  document.getElementById('agent-content').style.display='block';
+  document.getElementById('gx-user-info').textContent = 
+    `Bienvenido ${nombre.toUpperCase()} · ${dias} días activo · Agente listo`;
+  // Set API key automatically
+  API_KEY = GX_API_KEY;
+}
+
+// ── ORIGINAL SAVE KEY (kept for compatibility) ──
+function saveKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key.startsWith('sk-ant-')) { alert('⚠️ La key debe empezar con sk-ant-...\nCópiala exactamente desde console.anthropic.com'); return; }
+  sessionStorage.setItem('nexus_key', key);
+  document.getElementById('key-status').innerHTML = '⬤ KEY ACTIVA ✅';
+  document.getElementById('key-status').style.color = 'var(--green)';
+  document.getElementById('api-banner').classList.add('active');
+  document.getElementById('api-key-input').value = '••••••••••••••••••••';
+  document.getElementById('api-key-input').type = 'password';
+  alert('✅ ¡API Key guardada! Ya puedes usar los 3 módulos.');
+}
+function toggleKey() {
+  const i = document.getElementById('api-key-input'), b = document.getElementById('btn-show');
+  if (i.type==='password'){i.type='text';b.textContent='🙈 OCULTAR';}else{i.type='password';b.textContent='👁 VER';}
+}
+function getKey() { return sessionStorage.getItem('nexus_key')||''; }
+window.addEventListener('load', () => {
+  if (sessionStorage.getItem('nexus_key')) {
+    document.getElementById('key-status').innerHTML='⬤ KEY ACTIVA ✅';
+    document.getElementById('key-status').style.color='var(--green)';
+    document.getElementById('api-banner').classList.add('active');
+    document.getElementById('api-key-input').value='••••••••••••••••••••';
+  }
+});
+
+// ─── MODULES TOGGLE ───
+function toggleModule(id) {
+  const body = document.getElementById('body-'+id);
+  const arrow = document.getElementById('arrow-'+id);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+  arrow.textContent = isOpen ? '▶' : '▼';
+}
+
+// ─── SUBTABS ───
+function showSub(module, tab) {
+  const body = document.getElementById('body-'+module);
+  body.querySelectorAll('.subpanel').forEach(p=>p.classList.remove('active'));
+  body.querySelectorAll('.subtab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(module+'-'+tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─── COPY ───
+function copyEl(id) {
+  navigator.clipboard.writeText(document.getElementById(id).innerText)
+    .then(()=>alert('✅ Copiado al portapapeles'));
+}
+
+// ─── LOADING ───
+function setLoad(id, on) {
+  const el = document.getElementById(id);
+  if(on){el.classList.add('loading');el.textContent='⏳ Procesando con IA...';}
+  else el.classList.remove('loading');
+}
+
+// ─── API CALL ───
+async function ai(prompt, sys='') {
+  const key = getKey();
+  if (!key) { alert('⚠️ Pega tu API Key en el campo de arriba y presiona GUARDAR'); throw new Error('Sin key'); }
+  const body = { model:MODEL, max_tokens:1000, messages:[{role:'user',content:prompt}] };
+  if (sys) body.system = sys;
+  const res = await fetch(API_URL, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify(body)
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.content?.[0]?.text || 'Error en respuesta.';
+}
+
+const SYS = `Eres el Agente "Immortal Emitter" — un experto en estrategia de YouTube para el nicho de Ciencia y Tecnología en español.
+Tu misión: ayudar al creador a posicionarse como una voz inmortal y única en el algoritmo de YouTube.
+Generas contenido altamente optimizado, viral, con máxima retención y CTR. Siempre en español.`;
+
+// ══════════════════════════════
+// MÓDULO 1 — VIGILANCIA
+// ══════════════════════════════
+
+async function runVigilancia() {
+  const subtema = document.getElementById('t-subtema').value||'Inteligencia Artificial';
+  const region = document.getElementById('t-region').value;
+  setLoad('out-tendencias',true);
+  try {
+    const r = await ai(`Analiza las tendencias ACTUALES de YouTube para el nicho CIENCIA Y TECNOLOGÍA.
+Subtema específico: "${subtema}"
+Región/mercado: ${region}
+
+Genera un REPORTE DE TENDENCIAS con:
+1. TOP 5 TENDENCIAS ACTIVAS: temas que el algoritmo está priorizando ahora mismo
+2. PALABRAS CLAVE EN ASCENSO: 10 términos de búsqueda con alto crecimiento
+3. FORMATOS QUE TRIUNFAN: qué tipo de videos están siendo más recomendados
+4. VENTANA DE OPORTUNIDAD: en qué momento exacto publicar para surfear la tendencia
+5. PREDICCIÓN 30 DÍAS: qué temas van a explotar el próximo mes
+6. ALERTA ALGORITMO: señales de que el algoritmo está castigando ciertos tipos de contenido`, SYS);
+    document.getElementById('out-tendencias').textContent = r;
+  } catch(e) { document.getElementById('out-tendencias').textContent = 'Error: '+e.message; }
+  setLoad('out-tendencias',false);
+}
+
+async function runCompetencia() {
+  const tema = document.getElementById('c-tema').value||'IA';
+  const vistas = document.getElementById('c-vistas').value;
+  const titulo = document.getElementById('c-titulo').value;
+  setLoad('out-competencia',true);
+  try {
+    const r = await ai(`Analiza los METADATOS y estrategia de un video viral de la competencia en CIENCIA Y TECNOLOGÍA:
+
+Tema del video: "${tema}"
+Vistas aproximadas: ${vistas}
+${titulo ? 'Título exacto: "'+titulo+'"' : ''}
+
+Realiza un análisis forense con:
+1. ESTRUCTURA DEL TÍTULO: técnicas de CTR usadas (números, palabras poder, emociones)
+2. PALABRAS CLAVE SEMÁNTICAS: términos que probablemente usa en la descripción
+3. ESTRATEGIA DE THUMBNAIL: qué elementos visuales maximizan el CTR en este tipo de video
+4. PATRÓN DE RETENCIÓN: en qué momentos del video probablemente hay picos y caídas
+5. ESTRATEGIA DE TAGS: qué tags debe estar usando para ese nivel de alcance
+6. PUNTO DÉBIL: el "hueco" que deja este video que tu canal puede explotar
+7. CÓMO SUPERARLO: estrategia concreta para crear un video mejor`, SYS);
+    document.getElementById('out-competencia').textContent = r;
+  } catch(e) { document.getElementById('out-competencia').textContent = 'Error: '+e.message; }
+  setLoad('out-competencia',false);
+}
+
+async function runHueco() {
+  const manifiesto = document.getElementById('h-manifiesto').value||'La ciencia oculta verdades que cambiarían el mundo';
+  const tendencia = document.getElementById('h-tendencia').value||'IA dominará el mundo';
+  setLoad('out-hueco',true);
+  try {
+    const r = await ai(`Eres el estratega del "Immortal Emitter". Tu misión: encontrar el HUECO NARRATIVO perfecto.
+
+MANIFIESTO DEL CANAL (verdad eterna): "${manifiesto}"
+TENDENCIA ACTUAL EN YOUTUBE: "${tendencia}"
+
+Identifica y describe:
+1. EL HUECO: qué ángulo específico nadie está cubriendo en esta tendencia
+2. LA INTERSECCIÓN PERFECTA: cómo el manifiesto del canal encaja como anillo al dedo en este hueco
+3. EL ÁNGULO ÚNICO: la perspectiva diferenciadora que hará que este video sea recordado
+4. TÍTULO DERIVADO: 3 títulos que capturen exactamente este hueco narrativo
+5. PRIMER PÁRRAFO DEL HOOK: cómo abrir el video desde este ángulo único
+6. POR QUÉ TRIUNFARÁ: razón estratégica por la que el algoritmo va a favorecer este enfoque`, SYS);
+    document.getElementById('out-hueco').textContent = r;
+  } catch(e) { document.getElementById('out-hueco').textContent = 'Error: '+e.message; }
+  setLoad('out-hueco',false);
+}
+
+async function generateTags() {
+  const topic = document.getElementById('tag-topic').value||'tecnología';
+  const count = document.getElementById('tag-count').value;
+  ['tags-viral','tags-trending','tags-niche'].forEach(id=>{
+    document.getElementById(id).innerHTML='<span style="color:var(--dim);font-size:.75rem;font-family:\'Share Tech Mono\'">⏳ Analizando...</span>';
+  });
+  setLoad('tags-all',true);
+  try {
+    const r = await ai(`Genera tags SEO para YouTube sobre: "${topic}" en CIENCIA Y TECNOLOGÍA en español.
+Responde SOLO en JSON sin markdown:
+{"viral":["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8"],"trending":["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8"],"niche":["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8"],"all":"tag1, tag2, tag3..."}
+viral=alto volumen, trending=creciendo, niche=alta conversión. all=${count==='500'?'máximo 500 chars':count+' tags'}`, SYS);
+    const data = JSON.parse(r.replace(/```json|```/g,'').trim());
+    function chips(cid,tags,cls){
+      const c=document.getElementById(cid); c.innerHTML='';
+      (tags||[]).forEach(t=>{const d=document.createElement('div');d.className=`tag-chip ${cls}`;d.textContent=t;d.onclick=()=>navigator.clipboard.writeText(t);c.appendChild(d);});
+    }
+    chips('tags-viral',data.viral,'viral');
+    chips('tags-trending',data.trending,'trending');
+    chips('tags-niche',data.niche,'niche');
+    document.getElementById('tags-all').textContent=data.all||[...data.viral,...data.trending,...data.niche].join(', ');
+  } catch(e) {
+    ['tags-viral','tags-trending','tags-niche'].forEach(id=>{document.getElementById(id).innerHTML=`<span style="color:var(--accent2);font-size:.75rem">Error</span>`;});
+    document.getElementById('tags-all').textContent='Error: '+e.message;
+  }
+  setLoad('tags-all',false);
+}
+
+// ══════════════════════════════
+// MÓDULO 2 — ALQUIMIA NARRATIVA
+// ══════════════════════════════
+
+async function runTitulos() {
+  const tema = document.getElementById('tit-tema').value||'Inteligencia Artificial cuántica';
+  const emocion = document.getElementById('tit-emocion').value;
+  setLoad('out-titulos',true);
+  try {
+    const r = await ai(`Genera TÍTULOS DE ALTO IMPACTO para YouTube — nicho Geopolítica · IA · Economía LATAM.
+Tema: "${tema}"
+Emoción objetivo: ${emocion}
+
+Crea 8 títulos con estas categorías:
+1. PREGUNTA RETÓRICA: que genere curiosidad irresistible
+2. NÚMERO + SHOCK: con estadística o dato impactante
+3. "SECRETO/REVELADO/OCULTO": conspirativo pero legítimo
+4. CONTRAINTUITIVO: rompe una creencia popular
+5. URGENCIA/FOMO: sensación de que hay que verlo ahora
+6. AUTORIDAD: posiciona al canal como referente único
+7. STORYTELLING: basado en una historia o personaje
+8. CORTO Y BRUTAL: máximo 6 palabras, máximo impacto
+
+Para cada título indica: [Emoción principal] y [Técnica de CTR usada]`, SYS);
+    document.getElementById('out-titulos').textContent = r;
+  } catch(e) { document.getElementById('out-titulos').textContent = 'Error: '+e.message; }
+  setLoad('out-titulos',false);
+}
+
+async function runHook() {
+  const titulo = document.getElementById('hook-titulo').value||'El secreto que la IA no quiere que sepas';
+  const promesa = document.getElementById('hook-promesa').value||'revelar la verdad oculta sobre la IA';
+  const tecnica = document.getElementById('hook-tecnica').value;
+  const duracion = document.getElementById('hook-duracion').value;
+  setLoad('out-hook',true);
+  try {
+    const r = await ai(`Crea el SCRIPT EXACTO para los primeros 30 segundos del video — técnica: "${tecnica}"
+
+Título del video: "${titulo}"
+Promesa central: "${promesa}"
+Duración total: ${duracion}
+
+Escribe el script palabra por palabra con:
+— Segundo 0-5: GANCHO DE APERTURA (la frase que detiene el scroll)
+— Segundo 5-15: AMPLIFICACIÓN (desarrollar la tensión o curiosidad)
+— Segundo 15-25: PROMESA DE VALOR (qué obtendrá el viewer si sigue viendo)
+— Segundo 25-30: TRANSICIÓN (puente hacia el contenido sin perder momentum)
+
+Incluye también:
+• NOTAS DE DIRECCIÓN: tono de voz, ritmo, énfasis
+• SUGERENCIA VISUAL: qué imágenes/b-roll usar en cada segundo
+• POR QUÉ FUNCIONA: análisis psicológico del hook`, SYS);
+    document.getElementById('out-hook').textContent = r;
+  } catch(e) { document.getElementById('out-hook').textContent = 'Error: '+e.message; }
+  setLoad('out-hook',false);
+}
+
+async function runDescripcion() {
+  const titulo = document.getElementById('desc-titulo').value||'Mi video de ciencia';
+  const duracion = document.getElementById('desc-duracion').value||'10:00';
+  const contenido = document.getElementById('desc-contenido').value||'contenido de geopolítica, economía e inteligencia artificial';
+  const tags = document.getElementById('desc-tags').value;
+  setLoad('out-descripcion',true);
+  try {
+    const r = await ai(`Crea una DESCRIPCIÓN SEO COMPLETA para YouTube — diseñada para conectar semánticamente con videos de alta autoridad.
+
+Título: "${titulo}"
+Duración: ${duracion}
+Contenido: ${contenido}
+Tags principales: ${tags||'ciencia, tecnología, IA'}
+
+La descripción debe incluir:
+1. PÁRRAFO INICIAL (150 palabras): resumen del video con palabras clave naturales, las primeras 2 líneas son cruciales (aparecen sin expandir)
+2. TIMESTAMPS: genera 6-8 capítulos con tiempos estimados y títulos descriptivos
+3. PÁRRAFO SEO (100 palabras): denso en palabras clave semánticas relacionadas con el tema
+4. LINKS DE REDES (placeholder): sección de redes sociales y recursos mencionados
+5. HASHTAGS FINALES: 15 hashtags relevantes al final
+6. CTA OPTIMIZADO: llamada a acción para suscripción que no dañe la retención`, SYS);
+    document.getElementById('out-descripcion').textContent = r;
+  } catch(e) { document.getElementById('out-descripcion').textContent = 'Error: '+e.message; }
+  setLoad('out-descripcion',false);
+}
+
+async function runGuion() {
+  const tema = document.getElementById('guion-tema').value||'Computación cuántica';
+  const formato = document.getElementById('guion-formato').value;
+  const audiencia = document.getElementById('guion-audiencia').value;
+  const tono = document.getElementById('guion-tono').value;
+  setLoad('out-guion',true);
+  try {
+    const r = await ai(`Genera un GUIÓN COMPLETO y estructurado para YouTube — Geopolítica · IA · Economía LATAM.
+
+Tema: "${tema}"
+Formato: ${formato}
+Audiencia: ${audiencia}
+Tono: ${tono}
+
+Estructura obligatoria:
+[HOOK - 0:00-0:30] Script palabra por palabra del gancho de apertura
+[INTRODUCCIÓN - 0:30-1:30] Contexto y presentación del tema
+[BLOQUE 1 - 1:30-4:00] Primer punto clave con ejemplos
+[BLOQUE 2 - 4:00-7:00] Desarrollo y profundización
+[BLOQUE 3 - 7:00-9:30] Punto más impactante / revelación
+[PUNTOS DE RETENCIÓN]: marca con ★ los momentos donde hay que insertar un "loop de curiosidad" para retener audiencia
+[CONCLUSIÓN - 9:30-10:00] Cierre emocional + promesa de próximo video
+[CTA FINAL] Suscripción, like y comentario (sin sonar desesperado)
+
+Incluye: notas de tono, datos/estadísticas sugeridas, transiciones entre bloques.`, SYS);
+    document.getElementById('out-guion').textContent = r;
+  } catch(e) { document.getElementById('out-guion').textContent = 'Error: '+e.message; }
+  setLoad('out-guion',false);
+}
+
+// ══════════════════════════════
+// MÓDULO 3 — INMORTALIDAD
+// ══════════════════════════════
+
+async function runABTest() {
+  const titulo = document.getElementById('ab-titulo').value||'Mi video';
+  const ctr = parseFloat(document.getElementById('ab-ctr').value)||2;
+  const vistas = document.getElementById('ab-vistas').value||'200';
+  const tema = document.getElementById('ab-tema').value||'tecnología';
+  setLoad('out-ab-diagnostico',true);
+  try {
+    const r = await ai(`PROTOCOLO DE EMERGENCIA A/B TESTING — CTR BAJO DETECTADO
+
+Video: "${titulo}"
+CTR a las 2 horas: ${ctr}%
+Vistas en 2 horas: ${vistas}
+Tema: ${tema}
+
+DIAGNÓSTICO URGENTE:
+- Evalúa si el CTR de ${ctr}% está por debajo del umbral crítico (4%)
+- Identifica las causas probables del bajo CTR
+- Nivel de urgencia: CRÍTICO / MODERADO / ACCEPTABLE
+- Acción recomendada: cambiar ahora / esperar 1h más / no cambiar
+
+Luego genera en secciones separadas con === delimitadores:
+=== VARIANTE_A ===
+[Título conservador + descripción de miniatura alternativa A]
+
+=== VARIANTE_B ===
+[Título agresivo recomendado + descripción de miniatura alternativa B]
+
+=== THUMBNAIL ===
+[Instrucciones detalladas para rediseñar la miniatura: colores, texto, expresión facial, composición, elementos visuales — para maximizar CTR]`, SYS);
+
+    const parts = r.split('===');
+    const diagIdx = 0;
+    document.getElementById('out-ab-diagnostico').textContent = parts[diagIdx]?.trim()||r;
+
+    const aIdx = parts.findIndex(p=>p.includes('VARIANTE_A'));
+    const bIdx = parts.findIndex(p=>p.includes('VARIANTE_B'));
+    const tIdx = parts.findIndex(p=>p.includes('THUMBNAIL'));
+
+    if (aIdx>=0 || bIdx>=0) {
+      document.getElementById('ab-variants-container').style.display='grid';
+      if(aIdx>=0 && parts[aIdx+1]) document.getElementById('out-ab-a').textContent = parts[aIdx+1].trim();
+      if(bIdx>=0 && parts[bIdx+1]) document.getElementById('out-ab-b').textContent = parts[bIdx+1].trim();
+    }
+    if (tIdx>=0 && parts[tIdx+1]) {
+      document.getElementById('ab-thumbnail-card').style.display='block';
+      document.getElementById('out-ab-thumbnail').textContent = parts[tIdx+1].trim();
+    }
+  } catch(e) { document.getElementById('out-ab-diagnostico').textContent = 'Error: '+e.message; }
+  setLoad('out-ab-diagnostico',false);
+}
+
+async function runComentarios() {
+  const tema = document.getElementById('com-tema').value||'IA y tecnología';
+  const tipo = document.getElementById('com-tipo').value;
+  const tono = document.getElementById('com-tono').value;
+  const cantidad = document.getElementById('com-cantidad').value;
+  setLoad('out-comentarios',true);
+  try {
+    const r = await ai(`Genera ${cantidad} RESPUESTAS A COMENTARIOS de YouTube para el video sobre: "${tema}"
+
+Tipo de comentarios: ${tipo}
+Tono de respuesta: ${tono}
+
+Para cada respuesta:
+- Simula primero el comentario del viewer (realista)
+- Luego la respuesta del creador
+
+Las respuestas deben:
+✓ Generar respuesta o diálogo (engagement)
+✓ Invitar a que otros comenten
+✓ Posicionar al creador como experto accesible
+✓ Incluir algún emoji estratégico
+✓ Máximo 3 líneas por respuesta (legibles en móvil)
+✓ Variar el estilo para que no parezca automatizado
+✓ En algunos, hacer una pregunta de vuelta para multiplicar comentarios
+
+Al final incluye: 3 COMENTARIOS ANCLA — comentarios que el creador puede publicar él mismo para iniciar conversaciones estratégicas`, SYS);
+    document.getElementById('out-comentarios').textContent = r;
+  } catch(e) { document.getElementById('out-comentarios').textContent = 'Error: '+e.message; }
+  setLoad('out-comentarios',false);
+}
+
+async function runFeedback() {
+  const views = document.getElementById('fb-views').value;
+  const retention = document.getElementById('fb-retention').value;
+  const ctr = document.getElementById('fb-ctr').value;
+  const subs = document.getElementById('fb-subs').value;
+  const best = document.getElementById('fb-best').value;
+  if (!views||!retention||!ctr||!subs) { alert('⚠️ Completa todas las métricas'); return; }
+
+  document.getElementById('met-views').textContent = parseInt(views).toLocaleString();
+  document.getElementById('met-retention').textContent = retention+'%';
+  document.getElementById('met-ctr').textContent = ctr+'%';
+  document.getElementById('met-subs').textContent = parseInt(subs).toLocaleString();
+  const rc = parseFloat(retention);
+  document.getElementById('met-ret-c').className='metric-change '+(rc>=40?'up':'dn');
+  document.getElementById('met-ret-c').textContent=rc>=40?'▲ ÓPTIMO':'▼ MEJORAR';
+  const cc = parseFloat(ctr);
+  document.getElementById('met-ctr-c').className='metric-change '+(cc>=5?'up':'dn');
+  document.getElementById('met-ctr-c').textContent=cc>=5?'▲ BUENO':'▼ BAJO';
+
+  setLoad('out-feedback',true);
+  try {
+    const r = await ai(`ANÁLISIS MENSUAL DEL IMMORTAL EMITTER — Canal Geopolítica · IA · Economía LATAM
+
+MÉTRICAS:
+- Vistas: ${parseInt(views).toLocaleString()}
+- Retención promedio: ${retention}%
+- CTR miniatura: ${ctr}%
+- Suscriptores nuevos: ${parseInt(subs).toLocaleString()}
+- Video más exitoso: "${best||'no especificado'}"
+
+Genera el INFORME MENSUAL con:
+1. DIAGNÓSTICO EJECUTIVO: semáforo verde/amarillo/rojo para cada métrica (benchmarks: CTR óptimo 5-10%, retención óptima 40-60%)
+2. QUÉ ESTÁ FUNCIONANDO: identifica el patrón ganador del mes
+3. PUNTOS CRÍTICOS: las 2-3 cosas que están frenando el crecimiento
+4. PLAN DE ACCIÓN PRÓXIMO MES: 5 acciones concretas y medibles con fecha límite
+5. TEMAS RECOMENDADOS: 8 ideas de video basadas en el rendimiento actual
+6. EXPERIMENTO A PROBAR: 1 prueba específica de A/B testing para el próximo mes
+7. OBJETIVOS SMART: metas realistas para el próximo mes con números exactos
+8. PREDICCIÓN DE CRECIMIENTO: si se siguen estas recomendaciones, resultado esperado`, SYS);
+    document.getElementById('out-feedback').textContent = r;
+  } catch(e) { document.getElementById('out-feedback').textContent = 'Error: '+e.message; }
+  setLoad('out-feedback',false);
+}
+
+async function runCalendario() {
+  const freq = document.getElementById('cal-freq').value;
+  const time = document.getElementById('cal-time').value;
+  const enfoque = document.getElementById('cal-enfoque').value||'geopolítica, economía e inteligencia artificial';
+  const mes = document.getElementById('cal-mes').value||'próximo mes';
+  const out = document.getElementById('cal-output');
+  out.innerHTML = '<div class="output-box loading">⏳ Generando calendario IA...</div>';
+  try {
+    const r = await ai(`Genera un PLAN DE CONTENIDO MENSUAL para el Immortal Emitter — YouTube Geopolítica · IA · Economía LATAM.
+
+Frecuencia: ${freq}
+Horario de publicación: ${time}
+Enfoque del canal: "${enfoque}"
+Mes: ${mes}
+
+Responde SOLO en JSON sin markdown:
+{"weeks":[{"week":1,"theme":"tema semana","videos":[{"day":"Martes","date":4,"title":"título","type":"formato","priority":"alta","hook":"gancho breve del video"}]}]}
+
+Crea 4 semanas con videos variados. Formatos: Tutorial, Análisis, Short, Documental, Debate, Top-Lista.
+Temas Geosystem 2026: CBDC y fin del efectivo, guerra China-EEUU por LATAM, Bitcoin como soberanía financiera, IA y el nuevo orden del poder, tokenización de activos, empleos y automatización en LATAM, geopolítica del petróleo, identidad digital obligatoria.
+Incluye 1 Short viral por semana cuando la frecuencia lo permita.`, SYS);
+
+    const data = JSON.parse(r.replace(/```json|```/g,'').trim());
+    const pi = {'alta':'badge-r','media':'badge-y','baja':'badge-g'};
+    const ti = {'Tutorial':'📖','Análisis':'🔬','Short':'⚡','Documental':'🎥','Debate':'🎙️','Top':'🏆','Top-Lista':'🏆'};
+
+    let html = '';
+    data.weeks.forEach(w=>{
+      html += `<div class="cal-week"><div class="cal-week-title">SEMANA ${w.week} — ${w.theme}</div>`;
+      w.videos.forEach(v=>{
+        const ic = Object.entries(ti).find(([k])=>v.type?.includes(k))?.[1]||'🎬';
+        const bg = pi[v.priority]||'badge-g';
+        html += `<div class="cal-video">
+          <div class="cal-date"><div class="cal-day-num">${v.date}</div><div class="cal-day-name">${(v.day||'').slice(0,3).toUpperCase()}</div></div>
+          <div style="flex:1;min-width:160px">
+            <div style="font-size:.82rem;color:var(--text);margin-bottom:4px">${ic} ${v.title}</div>
+            <div style="font-size:.7rem;color:var(--dim);font-family:'Share Tech Mono',monospace;margin-bottom:4px">${v.hook||''}</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:.62rem;color:var(--dim);font-family:'Share Tech Mono',monospace">${v.type}</span><span class="badge ${bg}">${(v.priority||'').toUpperCase()}</span></div>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+
+    out.innerHTML = `<div class="card" style="margin-top:14px">
+      <div class="card-header"><div class="card-icon">🗓️</div><span class="card-title">PLAN ${mes.toUpperCase()} — ${freq.toUpperCase()}</span></div>
+      ${html}
+      <div class="tip"><strong>⚡ PROTOCOLO INMORTALIDAD:</strong> Publica siempre en el mismo horario. El algoritmo aprende tu patrón y empieza a pre-distribuir el contenido antes de que lo publiques. Constancia = inmortalidad en el algoritmo.</div>
+    </div>`;
+  } catch(e) {
+    out.innerHTML = `<div class="output-box">Error: ${e.message}</div>`;
+  }
+}
+</script>
+</body>
+</html>
