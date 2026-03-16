@@ -144,6 +144,189 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
 .flashing{animation:flash .5s;}
 @keyframes pAmber{0%,100%{box-shadow:0 0 4px rgba(251,191,36,.3)}50%{box-shadow:0 0 12px rgba(251,191,36,.8)}}
 .pa{animation:pAmber 2s infinite;}
+
+/* TOKEN IMMORTAL */
+.token-section{background:linear-gradient(135deg,rgba(251,191,36,.06),rgba(120,53,15,.08));border:1px solid rgba(251,191,36,.3);}
+.token-hero{text-align:center;padding:16px 10px 10px;border-bottom:1px solid rgba(251,191,36,.15);}
+.token-symbol{font-size:36px;margin-bottom:6px;}
+.token-name{font-size:11px;font-weight:900;letter-spacing:4px;color:#fbbf24;}
+.token-sub{font-size:6px;letter-spacing:2px;color:#475569;margin-top:3px;}
+.token-balance-box{background:rgba(0,0,0,.4);border:1px solid rgba(251,191,36,.2);padding:12px;margin:12px 0;text-align:center;}
+.token-bal-num{font-size:32px;font-weight:900;color:#fbbf24;line-height:1;}
+.token-bal-lbl{font-size:6px;letter-spacing:2px;color:#475569;margin-top:4px;}
+.token-ranks{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;}
+.rank-card{border:1px solid #1e293b;padding:8px;text-align:center;transition:.2s;}
+.rank-card.active{border-color:#fbbf24;background:rgba(251,191,36,.06);}
+.rank-icon{font-size:18px;margin-bottom:4px;}
+.rank-name{font-size:7px;font-weight:700;letter-spacing:1px;color:#94a3b8;}
+.rank-card.active .rank-name{color:#fbbf24;}
+.rank-req{font-size:6px;color:#334155;margin-top:2px;}
+.rank-card.active .rank-req{color:#92400e;}
+.rank-card.unlocked{border-color:rgba(54,244,208,.3);background:rgba(54,244,208,.03);}
+.rank-card.unlocked .rank-name{color:var(--neon);}
+.token-input-row{display:flex;gap:6px;margin-bottom:8px;}
+.token-inp{flex:1;background:#000;border:1px solid #78350f;color:#fbbf24;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;text-align:center;}
+.token-presets{display:flex;gap:4px;margin-bottom:10px;}
+.tpreset{flex:1;background:transparent;border:1px solid rgba(251,191,36,.2);color:#92400e;padding:6px 2px;font-family:'JetBrains Mono',monospace;font-size:8px;cursor:pointer;transition:.2s;text-align:center;}
+.tpreset:hover,.tpreset.sel{border-color:#fbbf24;color:#fbbf24;background:rgba(251,191,36,.08);}
+.token-history{max-height:140px;overflow-y:auto;}
+.th-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #0f172a;font-size:7px;}
+.th-item:last-child{border-bottom:none;}
+.th-date{color:#334155;}
+.th-amt{color:#fbbf24;font-weight:700;}
+.th-type{color:#475569;}
+
+/* ── IMMORTAL AGENT ── */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap');
+
+:root {
+  --bg:#020408; --surface:#080f1a; --panel:#0c1520; --border:#0d2035;
+  --accent:#36f4d0; --accent2:#fbbf24; --accent3:#0ea5e9;
+  --green:#4ade80; --yellow:#ffd600; --orange:#f97316;
+  --text:#c8dae8; --dim:#4a6278; --glow:rgba(54,244,208,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+/* skipped: body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;} */
+/* skipped: body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;} */
+#gx-agent .container {position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:16px;}
+
+/* HEADER */
+#gx-agent header {text-align:center;padding:32px 0 24px;border-bottom:1px solid var(--border);margin-bottom:20px;}
+#gx-agent .logo-line {display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:6px;}
+#gx-agent .logo-icon {width:52px;height:52px;background:linear-gradient(135deg,var(--accent),var(--accent3));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 0 30px var(--glow);}
+#gx-agent h1 {font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px;}
+#gx-agent .tagline {font-family:'Share Tech Mono',monospace;color:var(--dim);font-size:0.75rem;letter-spacing:2px;margin-top:4px;}
+#gx-agent .status-bar {display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px;flex-wrap:wrap;}
+#gx-agent .status-pill {display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:0.68rem;font-family:'Share Tech Mono',monospace;color:var(--dim);}
+#gx-agent .dot {width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,255,136,0.4);}50%{opacity:.7;box-shadow:0 0 0 6px rgba(0,255,136,0);}}
+
+/* API BANNER */
+.api-banner{background:var(--panel);border:1px solid rgba(255,214,0,0.3);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.api-banner.active{border-color:rgba(0,255,136,0.35);}
+
+/* MODULE HEADERS */
+.module-header{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;margin-bottom:4px;cursor:pointer;border:1px solid var(--border);background:var(--surface);transition:all .2s;user-select:none;}
+.module-header:hover{border-color:var(--accent);background:rgba(0,212,255,0.04);}
+.module-num{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:0.9rem;font-weight:700;flex-shrink:0;}
+.m1 .module-num{background:rgba(0,212,255,0.15);color:var(--accent);border:1px solid rgba(0,212,255,0.3);}
+.m2 .module-num{background:rgba(123,47,255,0.15);color:#b77fff;border:1px solid rgba(123,47,255,0.3);}
+.m3 .module-num{background:rgba(255,60,172,0.15);color:var(--accent2);border:1px solid rgba(255,60,172,0.3);}
+.module-title{flex:1;}
+.module-name{font-family:'Orbitron',monospace;font-size:0.75rem;letter-spacing:2px;}
+.m1 .module-name{color:var(--accent);}
+.m2 .module-name{color:#b77fff;}
+.m3 .module-name{color:var(--accent2);}
+.module-sub{font-size:0.68rem;color:var(--dim);font-family:'Share Tech Mono',monospace;margin-top:3px;}
+.module-arrow{font-size:0.7rem;color:var(--dim);transition:transform .2s;}
+.module-arrow.open{transform:rotate(90deg);}
+
+.module-body{display:none;background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:20px;margin-bottom:16px;}
+.module-body.open{display:block;}
+
+/* TABS inside modules */
+.subtabs{display:flex;gap:4px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:16px;overflow-x:auto;}
+.subtab{flex:1;min-width:100px;padding:8px 12px;border:none;background:transparent;color:var(--dim);font-family:'Orbitron',monospace;font-size:0.58rem;letter-spacing:1px;cursor:pointer;border-radius:7px;transition:all .2s;white-space:nowrap;}
+.subtab.active{background:rgba(0,212,255,0.12);color:var(--accent);border:1px solid rgba(0,212,255,0.25);}
+.subtab:hover:not(.active){background:var(--surface);color:var(--text);}
+.subpanel{display:none;}.subpanel.active{display:block;}
+
+/* CARDS */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent3));}
+.card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.card-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--surface);border:1px solid var(--border);}
+.card-title{font-family:'Orbitron',monospace;font-size:0.72rem;color:var(--accent);letter-spacing:2px;}
+
+/* INPUTS */
+.input-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+@media(max-width:580px){.input-grid{grid-template-columns:1fr;}}
+.input-group{display:flex;flex-direction:column;gap:5px;}
+label{font-size:0.68rem;color:var(--dim);font-family:'Share Tech Mono',monospace;letter-spacing:1px;}
+input,select,textarea{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:0.83rem;padding:9px 11px;outline:none;transition:border-color .2s;width:100%;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,212,255,0.1);}
+textarea{resize:vertical;min-height:75px;}
+select option{background:var(--panel);}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border:none;border-radius:9px;font-family:'Orbitron',monospace;font-size:0.65rem;letter-spacing:2px;cursor:pointer;transition:all .2s;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent3));color:#000;font-weight:700;box-shadow:0 4px 18px rgba(0,212,255,0.3);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(0,212,255,0.4);}
+.btn-m2{background:linear-gradient(135deg,var(--accent3),var(--accent2));color:#fff;}
+.btn-m2:hover{transform:translateY(-2px);}
+.btn-m3{background:linear-gradient(135deg,var(--accent2),var(--orange));color:#fff;}
+.btn-m3:hover{transform:translateY(-2px);}
+.btn-secondary{background:var(--panel);border:1px solid var(--border);color:var(--accent);}
+.btn-secondary:hover{border-color:var(--accent);background:rgba(0,212,255,0.06);}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
+
+/* OUTPUT */
+.output-box{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:14px;font-family:'Share Tech Mono',monospace;font-size:0.76rem;line-height:1.75;color:var(--text);min-height:60px;white-space:pre-wrap;word-break:break-word;}
+.output-box.loading{color:var(--dim);animation:flicker 1.5s infinite;}
+@keyframes flicker{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* TAGS */
+.tags-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
+.tag-chip{padding:4px 11px;border-radius:20px;font-size:0.7rem;font-family:'Share Tech Mono',monospace;cursor:pointer;transition:all .15s;border:1px solid;}
+.tag-chip.viral{background:rgba(255,60,172,.1);border-color:rgba(255,60,172,.4);color:var(--accent2);}
+.tag-chip.trending{background:rgba(0,212,255,.1);border-color:rgba(0,212,255,.4);color:var(--accent);}
+.tag-chip.niche{background:rgba(0,255,136,.1);border-color:rgba(0,255,136,.4);color:var(--green);}
+.tag-chip:hover{transform:scale(1.06);}
+
+/* ALGO BARS */
+.algo-item{margin-bottom:12px;}
+.algo-row{display:flex;justify-content:space-between;font-size:0.73rem;margin-bottom:4px;}
+.progress-wrap{background:var(--panel);border-radius:6px;height:5px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent3));transition:width .6s ease;}
+
+/* METRICS */
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px;}
+.metric-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.metric-val{font-family:'Orbitron',monospace;font-size:1.5rem;font-weight:700;color:var(--accent);line-height:1;}
+.metric-lbl{font-size:0.62rem;color:var(--dim);font-family:'Share Tech Mono',monospace;letter-spacing:1px;margin-top:4px;}
+.metric-change{font-size:0.68rem;margin-top:4px;}
+.up{color:var(--green);} .dn{color:var(--accent2);}
+
+/* AB TEST CARDS */
+.ab-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+@media(max-width:580px){.ab-grid{grid-template-columns:1fr;}}
+.ab-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.ab-label{font-family:'Orbitron',monospace;font-size:0.65rem;letter-spacing:2px;margin-bottom:8px;}
+.ab-a .ab-label{color:var(--accent);}
+.ab-b .ab-label{color:var(--accent2);}
+
+/* COMMENTS */
+.comment-item{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:12px;margin-bottom:8px;}
+.comment-meta{font-size:0.65rem;color:var(--dim);font-family:'Share Tech Mono',monospace;margin-bottom:5px;}
+.comment-text{font-size:0.8rem;color:var(--text);line-height:1.5;}
+
+/* CALENDAR */
+.cal-week{margin-bottom:14px;}
+.cal-week-title{font-family:'Orbitron',monospace;font-size:0.68rem;color:var(--accent);letter-spacing:2px;margin-bottom:8px;}
+.cal-video{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.cal-date{background:var(--panel);border:1px solid var(--border);border-radius:7px;padding:5px 9px;text-align:center;min-width:44px;}
+.cal-day-num{font-family:'Orbitron',monospace;font-size:1rem;color:var(--accent);}
+.cal-day-name{font-size:0.55rem;color:var(--dim);font-family:'Share Tech Mono',monospace;}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:0.58rem;font-family:'Share Tech Mono',monospace;letter-spacing:1px;}
+.badge-g{background:rgba(0,255,136,.12);color:var(--green);border:1px solid rgba(0,255,136,.3);}
+.badge-y{background:rgba(255,214,0,.12);color:var(--yellow);border:1px solid rgba(255,214,0,.3);}
+.badge-r{background:rgba(255,60,172,.12);color:var(--accent2);border:1px solid rgba(255,60,172,.3);}
+
+.flex-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.copy-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--dim);padding:4px 10px;font-size:0.62rem;cursor:pointer;font-family:'Share Tech Mono',monospace;transition:all .15s;}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent);}
+.sep{border:none;border-top:1px solid var(--border);margin:16px 0;}
+.tip{background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.2);border-radius:9px;padding:10px 14px;font-size:0.76rem;color:var(--text);line-height:1.6;margin-top:10px;}
+.tip strong{color:var(--accent);}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,212,255,.3);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.section-label{font-family:'Share Tech Mono',monospace;font-size:0.68rem;color:var(--dim);letter-spacing:1px;margin-bottom:6px;}
+
+/* ── END AGENT ── */
 </style>
 </head>
 <body>
@@ -403,6 +586,101 @@ body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradi
   </div>
 </div>
 
+
+<!-- TOKEN IMMORTAL -->
+<div class="gn token-section" id="token-section">
+  <!-- HERO -->
+  <div class="token-hero">
+    <div class="token-symbol">🔥</div>
+    <div class="token-name">IMMORTAL TOKEN</div>
+    <div class="token-sub">GEOSYSTEM · MONEDA DE LEALTAD · $1 USD = 1 TOKEN</div>
+  </div>
+
+  <!-- BALANCE -->
+  <div style="padding:10px;">
+    <div class="token-balance-box">
+      <div class="token-bal-num" id="tok-balance">0</div>
+      <div class="token-bal-lbl">IMMORTAL TOKENS ACUMULADOS</div>
+    </div>
+
+    <!-- RANGO ACTUAL -->
+    <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:8px;">🏆 TU RANGO ACTUAL</div>
+    <div class="token-ranks" id="tok-ranks">
+      <div class="rank-card active" id="rank-0">
+        <div class="rank-icon">👁️</div>
+        <div class="rank-name">OBSERVER</div>
+        <div class="rank-req">0 tokens</div>
+      </div>
+      <div class="rank-card" id="rank-1">
+        <div class="rank-icon">📡</div>
+        <div class="rank-name">SIGNAL</div>
+        <div class="rank-req">10+ tokens</div>
+      </div>
+      <div class="rank-card" id="rank-2">
+        <div class="rank-icon">⚡</div>
+        <div class="rank-name">ANALYST</div>
+        <div class="rank-req">50+ tokens</div>
+      </div>
+      <div class="rank-card" id="rank-3">
+        <div class="rank-icon">🔥</div>
+        <div class="rank-name">IMMORTAL</div>
+        <div class="rank-req">100+ tokens</div>
+      </div>
+      <div class="rank-card" id="rank-4">
+        <div class="rank-icon">💀</div>
+        <div class="rank-name">EMISARIO</div>
+        <div class="rank-req">500+ tokens</div>
+      </div>
+      <div class="rank-card" id="rank-5">
+        <div class="rank-icon">👑</div>
+        <div class="rank-name">ARCHITECT</div>
+        <div class="rank-req">1000+ tokens</div>
+      </div>
+    </div>
+
+    <!-- ADQUIRIR -->
+    <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:8px;margin-top:4px;">⚡ ADQUIRIR TOKENS</div>
+    <div class="token-presets">
+      <button class="tpreset" onclick="selToken(this,5)">5 🔥<br><span style="font-size:6px;">$5</span></button>
+      <button class="tpreset" onclick="selToken(this,10)">10 🔥<br><span style="font-size:6px;">$10</span></button>
+      <button class="tpreset" onclick="selToken(this,25)">25 🔥<br><span style="font-size:6px;">$25</span></button>
+      <button class="tpreset" onclick="selToken(this,50)">50 🔥<br><span style="font-size:6px;">$50</span></button>
+      <button class="tpreset" onclick="selToken(this,100)">100 🔥<br><span style="font-size:6px;">$100</span></button>
+    </div>
+    <div class="token-input-row">
+      <input class="token-inp" type="number" id="tok-amt" placeholder="0" min="1" oninput="updateTokenPreview()">
+      <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;padding:0 8px;font-size:7px;color:#475569;white-space:nowrap;">
+        = <span id="tok-preview" style="color:#fbbf24;font-weight:700;font-size:10px;">0</span> 🔥
+      </div>
+    </div>
+    <button onclick="buyToken()" style="width:100%;background:#fbbf24;color:#000;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:900;letter-spacing:2px;padding:12px;border:none;cursor:pointer;margin-bottom:10px;">
+      ⚡ ADQUIRIR IMMORTAL TOKENS ▶
+    </button>
+    <div style="font-size:6px;color:#334155;text-align:center;line-height:1.8;margin-bottom:12px;">
+      Pago via PayPal · Los tokens se acreditan manualmente en menos de 24h<br>
+      Envía tu comprobante a WhatsApp +57 321 788 9102
+    </div>
+
+    <!-- HISTORIAL -->
+    <div style="font-size:6px;letter-spacing:2px;color:#475569;margin-bottom:6px;">📋 HISTORIAL DE TOKENS</div>
+    <div class="token-history" id="tok-history">
+      <div style="font-size:7px;color:#334155;text-align:center;padding:10px;">Sin transacciones aún.</div>
+    </div>
+
+    <!-- BENEFICIOS POR RANGO -->
+    <div style="margin-top:12px;border:1px solid rgba(251,191,36,.15);background:rgba(0,0,0,.3);padding:10px;">
+      <div style="font-size:6px;letter-spacing:2px;color:#fbbf24;margin-bottom:8px;">🏆 BENEFICIOS POR RANGO</div>
+      <div style="font-size:7px;color:#475569;line-height:2.2;">
+        👁️ <span style="color:#94a3b8;">OBSERVER (0)</span> — Acceso básico a la terminal<br>
+        📡 <span style="color:#94a3b8;">SIGNAL (10)</span> — Insignia en terminal + acceso noticias premium<br>
+        ⚡ <span style="color:#fbbf24;">ANALYST (50)</span> — Clave GX + EP1 desbloqueado<br>
+        🔥 <span style="color:#fbbf24;">IMMORTAL (100)</span> — Todos los episodios GX + EMISARIO_IA<br>
+        💀 <span style="color:#f87171;">EMISARIO (500)</span> — Contacto directo + contenido clasificado<br>
+        👑 <span style="color:var(--neon);">ARCHITECT (1000)</span> — Socio estratégico de Geosystem
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL DONACIONES -->
 <div class="modal-overlay" id="modal-donaciones" onclick="if(event.target===this)closeModal('donaciones')">
@@ -809,6 +1087,9 @@ function selectEp(i){
   document.getElementById('gx-thumb').style.display='flex';
   renderEps(ep.ep);
   document.getElementById('gx-portal').scrollIntoView({behavior:'smooth',block:'start'});
+  // Show Immortal Agent
+  const agentSection = document.getElementById('gx-agent-section');
+  if(agentSection) agentSection.style.display='block';
 }
 function playGX(){
   const ep=GX_PLAYLIST[gxEp-1]||GX_PLAYLIST[0];
@@ -905,6 +1186,104 @@ function unlockGX(){
   document.head.appendChild(style);
 })();
 
+// TOKEN IMMORTAL
+const RANKS = [
+  {id:'rank-0', min:0,    max:9,    name:'OBSERVER',  icon:'👁️'},
+  {id:'rank-1', min:10,   max:49,   name:'SIGNAL',    icon:'📡'},
+  {id:'rank-2', min:50,   max:99,   name:'ANALYST',   icon:'⚡'},
+  {id:'rank-3', min:100,  max:499,  name:'IMMORTAL',  icon:'🔥'},
+  {id:'rank-4', min:500,  max:999,  name:'EMISARIO',  icon:'💀'},
+  {id:'rank-5', min:1000, max:99999,name:'ARCHITECT', icon:'👑'},
+];
+
+let tokBalance = parseInt(localStorage.getItem('gx_tokens')||'0');
+let tokHistory = JSON.parse(localStorage.getItem('gx_history')||'[]');
+
+function updateTokenUI(){
+  document.getElementById('tok-balance').textContent = tokBalance;
+  // Ranks
+  const currentRank = RANKS.filter(r=>tokBalance>=r.min).pop();
+  RANKS.forEach(r=>{
+    const el = document.getElementById(r.id);
+    el.classList.remove('active','unlocked');
+    if(r.id===currentRank.id) el.classList.add('active');
+    else if(tokBalance>=r.min) el.classList.add('unlocked');
+  });
+  // History
+  const hbox = document.getElementById('tok-history');
+  if(!tokHistory.length){
+    hbox.innerHTML='<div style="font-size:7px;color:#334155;text-align:center;padding:10px;">Sin transacciones aún.</div>';
+  } else {
+    hbox.innerHTML = tokHistory.slice().reverse().map(h=>
+      `<div class="th-item">
+        <span class="th-date">${h.date}</span>
+        <span class="th-type">${h.type}</span>
+        <span class="th-amt">+${h.amt} 🔥</span>
+      </div>`).join('');
+  }
+}
+
+function selToken(btn, amt){
+  document.querySelectorAll('.tpreset').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('tok-amt').value = amt;
+  document.getElementById('tok-preview').textContent = amt;
+}
+
+function updateTokenPreview(){
+  const v = parseInt(document.getElementById('tok-amt').value)||0;
+  document.getElementById('tok-preview').textContent = v;
+}
+
+function buyToken(){
+  const amt = parseInt(document.getElementById('tok-amt').value)||0;
+  if(amt<1){ alert('Ingresa la cantidad de tokens a adquirir.'); return; }
+  const usd = amt;
+  // Abrir PayPal
+  window.open('https://paypal.me/geosystemIntelligen/'+usd+'USD','_blank');
+  // Notificar WhatsApp
+  setTimeout(()=>{
+    const msg = encodeURIComponent(
+      '🔥 ADQUISICIÓN IMMORTAL TOKEN
+'+
+      '─────────────────────
+'+
+      'Tokens: '+amt+' 🔥
+'+
+      'Monto: $'+usd+' USD
+'+
+      'Fecha: '+new Date().toLocaleDateString('es-CO')+'
+'+
+      '─────────────────────
+'+
+      '> Adjunto comprobante de pago.
+'+
+      '> Por favor acreditar tokens a mi cuenta.'
+    );
+    window.open('https://wa.me/573217889102?text='+msg,'_blank');
+  }, 800);
+  // Guardar pendiente en historial local
+  alert('✅ Redirigiendo a PayPal...
+
+Cuando completes el pago, envía el comprobante al WhatsApp para que tus tokens sean acreditados en menos de 24h.');
+}
+
+// Función para acreditar tokens (uso admin o manual)
+function acreditarTokens(amt, tipo){
+  tokBalance += amt;
+  tokHistory.push({
+    date: new Date().toLocaleDateString('es-CO'),
+    type: tipo||'COMPRA',
+    amt: amt
+  });
+  localStorage.setItem('gx_tokens', tokBalance);
+  localStorage.setItem('gx_history', JSON.stringify(tokHistory));
+  updateTokenUI();
+}
+
+// Init
+updateTokenUI();
+
 // EMISARIO IA
 function usarSug(btn){document.getElementById('ia-inp').value=btn.textContent;}
 async function enviarIA(){
@@ -940,6 +1319,488 @@ async function enviarIA(){
   btn.disabled=false; btn.textContent='ENVIAR ▶';
   msgs.scrollTop=msgs.scrollHeight;
 }
+
+// ── IMMORTAL AGENT JS ──
+
+const API_URL = "https://api.anthropic.com/v1/messages";
+const MODEL = "claude-sonnet-4-20250514";
+
+// ─── API KEY ───
+function saveKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key.startsWith('sk-ant-')) { alert('⚠️ La key debe empezar con sk-ant-...\nCópiala exactamente desde console.anthropic.com'); return; }
+  sessionStorage.setItem('nexus_key', key);
+  document.getElementById('key-status').innerHTML = '⬤ KEY ACTIVA ✅';
+  document.getElementById('key-status').style.color = 'var(--green)';
+  document.getElementById('api-banner').classList.add('active');
+  document.getElementById('api-key-input').value = '••••••••••••••••••••';
+  document.getElementById('api-key-input').type = 'password';
+  alert('✅ ¡API Key guardada! Ya puedes usar los 3 módulos.');
+}
+function toggleKey() {
+  const i = document.getElementById('api-key-input'), b = document.getElementById('btn-show');
+  if (i.type==='password'){i.type='text';b.textContent='🙈 OCULTAR';}else{i.type='password';b.textContent='👁 VER';}
+}
+function getKey() { return sessionStorage.getItem('nexus_key')||''; }
+window.addEventListener('load', () => {
+  if (sessionStorage.getItem('nexus_key')) {
+    document.getElementById('key-status').innerHTML='⬤ KEY ACTIVA ✅';
+    document.getElementById('key-status').style.color='var(--green)';
+    document.getElementById('api-banner').classList.add('active');
+    document.getElementById('api-key-input').value='••••••••••••••••••••';
+  }
+});
+
+// ─── MODULES TOGGLE ───
+function toggleModule(id) {
+  const body = document.getElementById('body-'+id);
+  const arrow = document.getElementById('arrow-'+id);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  arrow.classList.toggle('open', !isOpen);
+  arrow.textContent = isOpen ? '▶' : '▼';
+}
+
+// ─── SUBTABS ───
+function showSub(module, tab) {
+  const body = document.getElementById('body-'+module);
+  body.querySelectorAll('.subpanel').forEach(p=>p.classList.remove('active'));
+  body.querySelectorAll('.subtab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(module+'-'+tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─── COPY ───
+function copyEl(id) {
+  navigator.clipboard.writeText(document.getElementById(id).innerText)
+    .then(()=>alert('✅ Copiado al portapapeles'));
+}
+
+// ─── LOADING ───
+function setLoad(id, on) {
+  const el = document.getElementById(id);
+  if(on){el.classList.add('loading');el.textContent='⏳ Procesando con IA...';}
+  else el.classList.remove('loading');
+}
+
+// ─── API CALL ───
+async function ai(prompt, sys='') {
+  const key = getKey();
+  if (!key) { alert('⚠️ Pega tu API Key en el campo de arriba y presiona GUARDAR'); throw new Error('Sin key'); }
+  const body = { model:MODEL, max_tokens:1000, messages:[{role:'user',content:prompt}] };
+  if (sys) body.system = sys;
+  const res = await fetch(API_URL, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify(body)
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.content?.[0]?.text || 'Error en respuesta.';
+}
+
+const SYS = `Eres el Agente "Immortal Emitter" — un experto en estrategia de YouTube para el nicho de Ciencia y Tecnología en español.
+Tu misión: ayudar al creador a posicionarse como una voz inmortal y única en el algoritmo de YouTube.
+Generas contenido altamente optimizado, viral, con máxima retención y CTR. Siempre en español.`;
+
+// ══════════════════════════════
+// MÓDULO 1 — VIGILANCIA
+// ══════════════════════════════
+
+async function runVigilancia() {
+  const subtema = document.getElementById('t-subtema').value||'Inteligencia Artificial';
+  const region = document.getElementById('t-region').value;
+  setLoad('out-tendencias',true);
+  try {
+    const r = await ai(`Analiza las tendencias ACTUALES de YouTube para el nicho CIENCIA Y TECNOLOGÍA.
+Subtema específico: "${subtema}"
+Región/mercado: ${region}
+
+Genera un REPORTE DE TENDENCIAS con:
+1. TOP 5 TENDENCIAS ACTIVAS: temas que el algoritmo está priorizando ahora mismo
+2. PALABRAS CLAVE EN ASCENSO: 10 términos de búsqueda con alto crecimiento
+3. FORMATOS QUE TRIUNFAN: qué tipo de videos están siendo más recomendados
+4. VENTANA DE OPORTUNIDAD: en qué momento exacto publicar para surfear la tendencia
+5. PREDICCIÓN 30 DÍAS: qué temas van a explotar el próximo mes
+6. ALERTA ALGORITMO: señales de que el algoritmo está castigando ciertos tipos de contenido`, SYS);
+    document.getElementById('out-tendencias').textContent = r;
+  } catch(e) { document.getElementById('out-tendencias').textContent = 'Error: '+e.message; }
+  setLoad('out-tendencias',false);
+}
+
+async function runCompetencia() {
+  const tema = document.getElementById('c-tema').value||'IA';
+  const vistas = document.getElementById('c-vistas').value;
+  const titulo = document.getElementById('c-titulo').value;
+  setLoad('out-competencia',true);
+  try {
+    const r = await ai(`Analiza los METADATOS y estrategia de un video viral de la competencia en CIENCIA Y TECNOLOGÍA:
+
+Tema del video: "${tema}"
+Vistas aproximadas: ${vistas}
+${titulo ? 'Título exacto: "'+titulo+'"' : ''}
+
+Realiza un análisis forense con:
+1. ESTRUCTURA DEL TÍTULO: técnicas de CTR usadas (números, palabras poder, emociones)
+2. PALABRAS CLAVE SEMÁNTICAS: términos que probablemente usa en la descripción
+3. ESTRATEGIA DE THUMBNAIL: qué elementos visuales maximizan el CTR en este tipo de video
+4. PATRÓN DE RETENCIÓN: en qué momentos del video probablemente hay picos y caídas
+5. ESTRATEGIA DE TAGS: qué tags debe estar usando para ese nivel de alcance
+6. PUNTO DÉBIL: el "hueco" que deja este video que tu canal puede explotar
+7. CÓMO SUPERARLO: estrategia concreta para crear un video mejor`, SYS);
+    document.getElementById('out-competencia').textContent = r;
+  } catch(e) { document.getElementById('out-competencia').textContent = 'Error: '+e.message; }
+  setLoad('out-competencia',false);
+}
+
+async function runHueco() {
+  const manifiesto = document.getElementById('h-manifiesto').value||'La ciencia oculta verdades que cambiarían el mundo';
+  const tendencia = document.getElementById('h-tendencia').value||'IA dominará el mundo';
+  setLoad('out-hueco',true);
+  try {
+    const r = await ai(`Eres el estratega del "Immortal Emitter". Tu misión: encontrar el HUECO NARRATIVO perfecto.
+
+MANIFIESTO DEL CANAL (verdad eterna): "${manifiesto}"
+TENDENCIA ACTUAL EN YOUTUBE: "${tendencia}"
+
+Identifica y describe:
+1. EL HUECO: qué ángulo específico nadie está cubriendo en esta tendencia
+2. LA INTERSECCIÓN PERFECTA: cómo el manifiesto del canal encaja como anillo al dedo en este hueco
+3. EL ÁNGULO ÚNICO: la perspectiva diferenciadora que hará que este video sea recordado
+4. TÍTULO DERIVADO: 3 títulos que capturen exactamente este hueco narrativo
+5. PRIMER PÁRRAFO DEL HOOK: cómo abrir el video desde este ángulo único
+6. POR QUÉ TRIUNFARÁ: razón estratégica por la que el algoritmo va a favorecer este enfoque`, SYS);
+    document.getElementById('out-hueco').textContent = r;
+  } catch(e) { document.getElementById('out-hueco').textContent = 'Error: '+e.message; }
+  setLoad('out-hueco',false);
+}
+
+async function generateTags() {
+  const topic = document.getElementById('tag-topic').value||'tecnología';
+  const count = document.getElementById('tag-count').value;
+  ['tags-viral','tags-trending','tags-niche'].forEach(id=>{
+    document.getElementById(id).innerHTML='<span style="color:var(--dim);font-size:.75rem;font-family:\'Share Tech Mono\'">⏳ Analizando...</span>';
+  });
+  setLoad('tags-all',true);
+  try {
+    const r = await ai(`Genera tags SEO para YouTube sobre: "${topic}" en CIENCIA Y TECNOLOGÍA en español.
+Responde SOLO en JSON sin markdown:
+{"viral":["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8"],"trending":["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8"],"niche":["tag1","tag2","tag3","tag4","tag5","tag6","tag7","tag8"],"all":"tag1, tag2, tag3..."}
+viral=alto volumen, trending=creciendo, niche=alta conversión. all=${count==='500'?'máximo 500 chars':count+' tags'}`, SYS);
+    const data = JSON.parse(r.replace(/```json|```/g,'').trim());
+    function chips(cid,tags,cls){
+      const c=document.getElementById(cid); c.innerHTML='';
+      (tags||[]).forEach(t=>{const d=document.createElement('div');d.className=`tag-chip ${cls}`;d.textContent=t;d.onclick=()=>navigator.clipboard.writeText(t);c.appendChild(d);});
+    }
+    chips('tags-viral',data.viral,'viral');
+    chips('tags-trending',data.trending,'trending');
+    chips('tags-niche',data.niche,'niche');
+    document.getElementById('tags-all').textContent=data.all||[...data.viral,...data.trending,...data.niche].join(', ');
+  } catch(e) {
+    ['tags-viral','tags-trending','tags-niche'].forEach(id=>{document.getElementById(id).innerHTML=`<span style="color:var(--accent2);font-size:.75rem">Error</span>`;});
+    document.getElementById('tags-all').textContent='Error: '+e.message;
+  }
+  setLoad('tags-all',false);
+}
+
+// ══════════════════════════════
+// MÓDULO 2 — ALQUIMIA NARRATIVA
+// ══════════════════════════════
+
+async function runTitulos() {
+  const tema = document.getElementById('tit-tema').value||'Inteligencia Artificial cuántica';
+  const emocion = document.getElementById('tit-emocion').value;
+  setLoad('out-titulos',true);
+  try {
+    const r = await ai(`Genera TÍTULOS DE ALTO IMPACTO para YouTube — nicho Geopolítica · IA · Economía LATAM.
+Tema: "${tema}"
+Emoción objetivo: ${emocion}
+
+Crea 8 títulos con estas categorías:
+1. PREGUNTA RETÓRICA: que genere curiosidad irresistible
+2. NÚMERO + SHOCK: con estadística o dato impactante
+3. "SECRETO/REVELADO/OCULTO": conspirativo pero legítimo
+4. CONTRAINTUITIVO: rompe una creencia popular
+5. URGENCIA/FOMO: sensación de que hay que verlo ahora
+6. AUTORIDAD: posiciona al canal como referente único
+7. STORYTELLING: basado en una historia o personaje
+8. CORTO Y BRUTAL: máximo 6 palabras, máximo impacto
+
+Para cada título indica: [Emoción principal] y [Técnica de CTR usada]`, SYS);
+    document.getElementById('out-titulos').textContent = r;
+  } catch(e) { document.getElementById('out-titulos').textContent = 'Error: '+e.message; }
+  setLoad('out-titulos',false);
+}
+
+async function runHook() {
+  const titulo = document.getElementById('hook-titulo').value||'El secreto que la IA no quiere que sepas';
+  const promesa = document.getElementById('hook-promesa').value||'revelar la verdad oculta sobre la IA';
+  const tecnica = document.getElementById('hook-tecnica').value;
+  const duracion = document.getElementById('hook-duracion').value;
+  setLoad('out-hook',true);
+  try {
+    const r = await ai(`Crea el SCRIPT EXACTO para los primeros 30 segundos del video — técnica: "${tecnica}"
+
+Título del video: "${titulo}"
+Promesa central: "${promesa}"
+Duración total: ${duracion}
+
+Escribe el script palabra por palabra con:
+— Segundo 0-5: GANCHO DE APERTURA (la frase que detiene el scroll)
+— Segundo 5-15: AMPLIFICACIÓN (desarrollar la tensión o curiosidad)
+— Segundo 15-25: PROMESA DE VALOR (qué obtendrá el viewer si sigue viendo)
+— Segundo 25-30: TRANSICIÓN (puente hacia el contenido sin perder momentum)
+
+Incluye también:
+• NOTAS DE DIRECCIÓN: tono de voz, ritmo, énfasis
+• SUGERENCIA VISUAL: qué imágenes/b-roll usar en cada segundo
+• POR QUÉ FUNCIONA: análisis psicológico del hook`, SYS);
+    document.getElementById('out-hook').textContent = r;
+  } catch(e) { document.getElementById('out-hook').textContent = 'Error: '+e.message; }
+  setLoad('out-hook',false);
+}
+
+async function runDescripcion() {
+  const titulo = document.getElementById('desc-titulo').value||'Mi video de ciencia';
+  const duracion = document.getElementById('desc-duracion').value||'10:00';
+  const contenido = document.getElementById('desc-contenido').value||'contenido de geopolítica, economía e inteligencia artificial';
+  const tags = document.getElementById('desc-tags').value;
+  setLoad('out-descripcion',true);
+  try {
+    const r = await ai(`Crea una DESCRIPCIÓN SEO COMPLETA para YouTube — diseñada para conectar semánticamente con videos de alta autoridad.
+
+Título: "${titulo}"
+Duración: ${duracion}
+Contenido: ${contenido}
+Tags principales: ${tags||'ciencia, tecnología, IA'}
+
+La descripción debe incluir:
+1. PÁRRAFO INICIAL (150 palabras): resumen del video con palabras clave naturales, las primeras 2 líneas son cruciales (aparecen sin expandir)
+2. TIMESTAMPS: genera 6-8 capítulos con tiempos estimados y títulos descriptivos
+3. PÁRRAFO SEO (100 palabras): denso en palabras clave semánticas relacionadas con el tema
+4. LINKS DE REDES (placeholder): sección de redes sociales y recursos mencionados
+5. HASHTAGS FINALES: 15 hashtags relevantes al final
+6. CTA OPTIMIZADO: llamada a acción para suscripción que no dañe la retención`, SYS);
+    document.getElementById('out-descripcion').textContent = r;
+  } catch(e) { document.getElementById('out-descripcion').textContent = 'Error: '+e.message; }
+  setLoad('out-descripcion',false);
+}
+
+async function runGuion() {
+  const tema = document.getElementById('guion-tema').value||'Computación cuántica';
+  const formato = document.getElementById('guion-formato').value;
+  const audiencia = document.getElementById('guion-audiencia').value;
+  const tono = document.getElementById('guion-tono').value;
+  setLoad('out-guion',true);
+  try {
+    const r = await ai(`Genera un GUIÓN COMPLETO y estructurado para YouTube — Geopolítica · IA · Economía LATAM.
+
+Tema: "${tema}"
+Formato: ${formato}
+Audiencia: ${audiencia}
+Tono: ${tono}
+
+Estructura obligatoria:
+[HOOK - 0:00-0:30] Script palabra por palabra del gancho de apertura
+[INTRODUCCIÓN - 0:30-1:30] Contexto y presentación del tema
+[BLOQUE 1 - 1:30-4:00] Primer punto clave con ejemplos
+[BLOQUE 2 - 4:00-7:00] Desarrollo y profundización
+[BLOQUE 3 - 7:00-9:30] Punto más impactante / revelación
+[PUNTOS DE RETENCIÓN]: marca con ★ los momentos donde hay que insertar un "loop de curiosidad" para retener audiencia
+[CONCLUSIÓN - 9:30-10:00] Cierre emocional + promesa de próximo video
+[CTA FINAL] Suscripción, like y comentario (sin sonar desesperado)
+
+Incluye: notas de tono, datos/estadísticas sugeridas, transiciones entre bloques.`, SYS);
+    document.getElementById('out-guion').textContent = r;
+  } catch(e) { document.getElementById('out-guion').textContent = 'Error: '+e.message; }
+  setLoad('out-guion',false);
+}
+
+// ══════════════════════════════
+// MÓDULO 3 — INMORTALIDAD
+// ══════════════════════════════
+
+async function runABTest() {
+  const titulo = document.getElementById('ab-titulo').value||'Mi video';
+  const ctr = parseFloat(document.getElementById('ab-ctr').value)||2;
+  const vistas = document.getElementById('ab-vistas').value||'200';
+  const tema = document.getElementById('ab-tema').value||'tecnología';
+  setLoad('out-ab-diagnostico',true);
+  try {
+    const r = await ai(`PROTOCOLO DE EMERGENCIA A/B TESTING — CTR BAJO DETECTADO
+
+Video: "${titulo}"
+CTR a las 2 horas: ${ctr}%
+Vistas en 2 horas: ${vistas}
+Tema: ${tema}
+
+DIAGNÓSTICO URGENTE:
+- Evalúa si el CTR de ${ctr}% está por debajo del umbral crítico (4%)
+- Identifica las causas probables del bajo CTR
+- Nivel de urgencia: CRÍTICO / MODERADO / ACCEPTABLE
+- Acción recomendada: cambiar ahora / esperar 1h más / no cambiar
+
+Luego genera en secciones separadas con === delimitadores:
+=== VARIANTE_A ===
+[Título conservador + descripción de miniatura alternativa A]
+
+=== VARIANTE_B ===
+[Título agresivo recomendado + descripción de miniatura alternativa B]
+
+=== THUMBNAIL ===
+[Instrucciones detalladas para rediseñar la miniatura: colores, texto, expresión facial, composición, elementos visuales — para maximizar CTR]`, SYS);
+
+    const parts = r.split('===');
+    const diagIdx = 0;
+    document.getElementById('out-ab-diagnostico').textContent = parts[diagIdx]?.trim()||r;
+
+    const aIdx = parts.findIndex(p=>p.includes('VARIANTE_A'));
+    const bIdx = parts.findIndex(p=>p.includes('VARIANTE_B'));
+    const tIdx = parts.findIndex(p=>p.includes('THUMBNAIL'));
+
+    if (aIdx>=0 || bIdx>=0) {
+      document.getElementById('ab-variants-container').style.display='grid';
+      if(aIdx>=0 && parts[aIdx+1]) document.getElementById('out-ab-a').textContent = parts[aIdx+1].trim();
+      if(bIdx>=0 && parts[bIdx+1]) document.getElementById('out-ab-b').textContent = parts[bIdx+1].trim();
+    }
+    if (tIdx>=0 && parts[tIdx+1]) {
+      document.getElementById('ab-thumbnail-card').style.display='block';
+      document.getElementById('out-ab-thumbnail').textContent = parts[tIdx+1].trim();
+    }
+  } catch(e) { document.getElementById('out-ab-diagnostico').textContent = 'Error: '+e.message; }
+  setLoad('out-ab-diagnostico',false);
+}
+
+async function runComentarios() {
+  const tema = document.getElementById('com-tema').value||'IA y tecnología';
+  const tipo = document.getElementById('com-tipo').value;
+  const tono = document.getElementById('com-tono').value;
+  const cantidad = document.getElementById('com-cantidad').value;
+  setLoad('out-comentarios',true);
+  try {
+    const r = await ai(`Genera ${cantidad} RESPUESTAS A COMENTARIOS de YouTube para el video sobre: "${tema}"
+
+Tipo de comentarios: ${tipo}
+Tono de respuesta: ${tono}
+
+Para cada respuesta:
+- Simula primero el comentario del viewer (realista)
+- Luego la respuesta del creador
+
+Las respuestas deben:
+✓ Generar respuesta o diálogo (engagement)
+✓ Invitar a que otros comenten
+✓ Posicionar al creador como experto accesible
+✓ Incluir algún emoji estratégico
+✓ Máximo 3 líneas por respuesta (legibles en móvil)
+✓ Variar el estilo para que no parezca automatizado
+✓ En algunos, hacer una pregunta de vuelta para multiplicar comentarios
+
+Al final incluye: 3 COMENTARIOS ANCLA — comentarios que el creador puede publicar él mismo para iniciar conversaciones estratégicas`, SYS);
+    document.getElementById('out-comentarios').textContent = r;
+  } catch(e) { document.getElementById('out-comentarios').textContent = 'Error: '+e.message; }
+  setLoad('out-comentarios',false);
+}
+
+async function runFeedback() {
+  const views = document.getElementById('fb-views').value;
+  const retention = document.getElementById('fb-retention').value;
+  const ctr = document.getElementById('fb-ctr').value;
+  const subs = document.getElementById('fb-subs').value;
+  const best = document.getElementById('fb-best').value;
+  if (!views||!retention||!ctr||!subs) { alert('⚠️ Completa todas las métricas'); return; }
+
+  document.getElementById('met-views').textContent = parseInt(views).toLocaleString();
+  document.getElementById('met-retention').textContent = retention+'%';
+  document.getElementById('met-ctr').textContent = ctr+'%';
+  document.getElementById('met-subs').textContent = parseInt(subs).toLocaleString();
+  const rc = parseFloat(retention);
+  document.getElementById('met-ret-c').className='metric-change '+(rc>=40?'up':'dn');
+  document.getElementById('met-ret-c').textContent=rc>=40?'▲ ÓPTIMO':'▼ MEJORAR';
+  const cc = parseFloat(ctr);
+  document.getElementById('met-ctr-c').className='metric-change '+(cc>=5?'up':'dn');
+  document.getElementById('met-ctr-c').textContent=cc>=5?'▲ BUENO':'▼ BAJO';
+
+  setLoad('out-feedback',true);
+  try {
+    const r = await ai(`ANÁLISIS MENSUAL DEL IMMORTAL EMITTER — Canal Geopolítica · IA · Economía LATAM
+
+MÉTRICAS:
+- Vistas: ${parseInt(views).toLocaleString()}
+- Retención promedio: ${retention}%
+- CTR miniatura: ${ctr}%
+- Suscriptores nuevos: ${parseInt(subs).toLocaleString()}
+- Video más exitoso: "${best||'no especificado'}"
+
+Genera el INFORME MENSUAL con:
+1. DIAGNÓSTICO EJECUTIVO: semáforo verde/amarillo/rojo para cada métrica (benchmarks: CTR óptimo 5-10%, retención óptima 40-60%)
+2. QUÉ ESTÁ FUNCIONANDO: identifica el patrón ganador del mes
+3. PUNTOS CRÍTICOS: las 2-3 cosas que están frenando el crecimiento
+4. PLAN DE ACCIÓN PRÓXIMO MES: 5 acciones concretas y medibles con fecha límite
+5. TEMAS RECOMENDADOS: 8 ideas de video basadas en el rendimiento actual
+6. EXPERIMENTO A PROBAR: 1 prueba específica de A/B testing para el próximo mes
+7. OBJETIVOS SMART: metas realistas para el próximo mes con números exactos
+8. PREDICCIÓN DE CRECIMIENTO: si se siguen estas recomendaciones, resultado esperado`, SYS);
+    document.getElementById('out-feedback').textContent = r;
+  } catch(e) { document.getElementById('out-feedback').textContent = 'Error: '+e.message; }
+  setLoad('out-feedback',false);
+}
+
+async function runCalendario() {
+  const freq = document.getElementById('cal-freq').value;
+  const time = document.getElementById('cal-time').value;
+  const enfoque = document.getElementById('cal-enfoque').value||'geopolítica, economía e inteligencia artificial';
+  const mes = document.getElementById('cal-mes').value||'próximo mes';
+  const out = document.getElementById('cal-output');
+  out.innerHTML = '<div class="output-box loading">⏳ Generando calendario IA...</div>';
+  try {
+    const r = await ai(`Genera un PLAN DE CONTENIDO MENSUAL para el Immortal Emitter — YouTube Geopolítica · IA · Economía LATAM.
+
+Frecuencia: ${freq}
+Horario de publicación: ${time}
+Enfoque del canal: "${enfoque}"
+Mes: ${mes}
+
+Responde SOLO en JSON sin markdown:
+{"weeks":[{"week":1,"theme":"tema semana","videos":[{"day":"Martes","date":4,"title":"título","type":"formato","priority":"alta","hook":"gancho breve del video"}]}]}
+
+Crea 4 semanas con videos variados. Formatos: Tutorial, Análisis, Short, Documental, Debate, Top-Lista.
+Temas Geosystem 2026: CBDC y fin del efectivo, guerra China-EEUU por LATAM, Bitcoin como soberanía financiera, IA y el nuevo orden del poder, tokenización de activos, empleos y automatización en LATAM, geopolítica del petróleo, identidad digital obligatoria.
+Incluye 1 Short viral por semana cuando la frecuencia lo permita.`, SYS);
+
+    const data = JSON.parse(r.replace(/```json|```/g,'').trim());
+    const pi = {'alta':'badge-r','media':'badge-y','baja':'badge-g'};
+    const ti = {'Tutorial':'📖','Análisis':'🔬','Short':'⚡','Documental':'🎥','Debate':'🎙️','Top':'🏆','Top-Lista':'🏆'};
+
+    let html = '';
+    data.weeks.forEach(w=>{
+      html += `<div class="cal-week"><div class="cal-week-title">SEMANA ${w.week} — ${w.theme}</div>`;
+      w.videos.forEach(v=>{
+        const ic = Object.entries(ti).find(([k])=>v.type?.includes(k))?.[1]||'🎬';
+        const bg = pi[v.priority]||'badge-g';
+        html += `<div class="cal-video">
+          <div class="cal-date"><div class="cal-day-num">${v.date}</div><div class="cal-day-name">${(v.day||'').slice(0,3).toUpperCase()}</div></div>
+          <div style="flex:1;min-width:160px">
+            <div style="font-size:.82rem;color:var(--text);margin-bottom:4px">${ic} ${v.title}</div>
+            <div style="font-size:.7rem;color:var(--dim);font-family:'Share Tech Mono',monospace;margin-bottom:4px">${v.hook||''}</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap"><span style="font-size:.62rem;color:var(--dim);font-family:'Share Tech Mono',monospace">${v.type}</span><span class="badge ${bg}">${(v.priority||'').toUpperCase()}</span></div>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+
+    out.innerHTML = `<div class="card" style="margin-top:14px">
+      <div class="card-header"><div class="card-icon">🗓️</div><span class="card-title">PLAN ${mes.toUpperCase()} — ${freq.toUpperCase()}</span></div>
+      ${html}
+      <div class="tip"><strong>⚡ PROTOCOLO INMORTALIDAD:</strong> Publica siempre en el mismo horario. El algoritmo aprende tu patrón y empieza a pre-distribuir el contenido antes de que lo publiques. Constancia = inmortalidad en el algoritmo.</div>
+    </div>`;
+  } catch(e) {
+    out.innerHTML = `<div class="output-box">Error: ${e.message}</div>`;
+  }
+}
+
+// ── END AGENT JS ──
 </script>
 </body>
 </html>
